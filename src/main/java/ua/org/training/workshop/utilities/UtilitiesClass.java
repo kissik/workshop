@@ -6,14 +6,24 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author kissik
+ */
 public class UtilitiesClass {
 
+    public static final Long DEFAULT_PAGE_VALUE = 0L;
+    public static final Long DEFAULT_SIZE_VALUE = 5L;
+    public static final String LOG4J_XML_PATH = "src/log4j.xml";
+    public static final String[] APP_ROLES = new String[]{
+            "ADMIN",
+            "MANAGER",
+            "WORKMAN",
+            "USER"};
+
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     private static Logger logger = Logger.getLogger(UtilitiesClass.class);
-    public static Long DEFAULT_PAGE_VALUE = 0L;
-    public static Long DEFAULT_SIZE_VALUE = 5L;
     public static Long tryParse(String value, Long defaultValue){
         try{
             return Long.parseLong(value);

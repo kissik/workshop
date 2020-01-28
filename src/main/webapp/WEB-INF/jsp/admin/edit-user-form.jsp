@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/" %>
 
-<c:url var="userUrl" value="/app/admin/users/${account.id}" />
+<c:url var="userUrl" value="/app/admin/accounts/${account.id}" />
 
 <fmt:requestEncoding value="UTF-8" />
 <fmt:setLocale value="${lang}" />

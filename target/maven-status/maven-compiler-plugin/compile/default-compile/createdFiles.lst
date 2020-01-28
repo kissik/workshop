@@ -21,7 +21,6 @@ ua/org/training/workshop/servlet/command/impl/ManagerPage.class
 ua/org/training/workshop/service/RoleService.class
 ua/org/training/workshop/servlet/filters/CharsetFilter.class
 ua/org/training/workshop/dao/RoleDao.class
-ua/org/training/workshop/servlet/command/impl/Users.class
 ua/org/training/workshop/servlet/command/impl/AccessDenied.class
 ua/org/training/workshop/dao/GenericDao.class
 ua/org/training/workshop/dao/impl/JDBCAccountDao.class
@@ -29,7 +28,9 @@ ua/org/training/workshop/servlet/command/impl/Registration.class
 ua/org/training/workshop/servlet/listener/SessionListener.class
 ua/org/training/workshop/servlet/command/impl/LogOut.class
 ua/org/training/workshop/dao/AccountDao.class
+ua/org/training/workshop/servlet/command/impl/Accounts.class
 ua/org/training/workshop/dao/mapper/RoleMapper.class
+ua/org/training/workshop/security/ProcessingLoggedUsers.class
 ua/org/training/workshop/servlet/command/forms/AccountFormError.class
 ua/org/training/workshop/dao/impl/ConnectionPoolHolder.class
 ua/org/training/workshop/servlet/command/forms/AccountForm.class

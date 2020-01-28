@@ -4,36 +4,34 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.security.AccountSecurity;
+import ua.org.training.workshop.security.ProcessingLoggedUsers;
 import ua.org.training.workshop.servlet.command.Command;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
 
 public class LogOut implements Command {
 
-    private static String FIRST_PAGE = "/index.jsp";
+    private static final String FIRST_PAGE = "/index.jsp";
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    static Logger logger = Logger.getLogger(LogOut.class);
+    private static Logger logger = Logger.getLogger(LogOut.class);
 
     @Override
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
-        AccountSecurity account = (AccountSecurity) request.getSession().getAttribute("user");
-        logger.info("try to log out : " + account.getUsername());
-        clear(request, account.getUsername());
-        request.getSession().setAttribute("user", null);
-        logger.debug("successful logout");
+
+        AccountSecurity account = (AccountSecurity) Optional
+                .ofNullable(
+                        request.getSession().getAttribute("user"))
+                .orElse(AccountSecurity.ACCOUNT);
+
+        ProcessingLoggedUsers.removeLoggedUser(request, account.getUsername());
+        logger.info(account.getUsername() + " was logged out");
         return FIRST_PAGE;
     }
 
-    static void clear(HttpServletRequest request, String username){
-        Set<String> loggedUsers = (HashSet<String>) request.getServletContext()
-                .getAttribute("loggedUsers");
-        loggedUsers.remove(username);
-        logger.info("logged users : " + loggedUsers);
-    }
 }

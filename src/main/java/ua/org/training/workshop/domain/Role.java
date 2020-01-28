@@ -42,9 +42,6 @@ public class Role implements GrantedAuthority {
 
     public void setName(String name) { this.name = name; }
 
-    /* (non-Javadoc)
-     * @see org.springframework.security.core.GrantedAuthority#getAuthority()
-     */
     @Override
     @Transient
     public String getAuthority() {

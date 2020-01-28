@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.servlet.command.Command;
 import ua.org.training.workshop.service.AccountService;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ public class AdminPage implements Command {
     private static String ADMIN_PAGE = "/WEB-INF/jsp/admin/page.jsp";
 
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     static Logger logger = Logger.getLogger(AdminPage.class);
 

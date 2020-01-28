@@ -1,5 +1,8 @@
 package ua.org.training.workshop.utilities;
 
+/**
+ * @author kissik
+ */
 public class Pageable {
     private Long page;
     private Long size;

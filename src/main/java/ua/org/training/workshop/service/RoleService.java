@@ -7,13 +7,14 @@ import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.domain.Role;
 import ua.org.training.workshop.exception.WorkshopErrors;
 import ua.org.training.workshop.exception.WorkshopException;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import java.util.List;
 
 public class RoleService  {
     private DaoFactory roleRepository = DaoFactory.getInstance();
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     public static Logger logger = Logger.getLogger(RoleService.class);
 

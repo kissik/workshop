@@ -3,8 +3,10 @@ package ua.org.training.workshop.servlet.filters;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.security.AccountSecurity;
+import ua.org.training.workshop.security.ProcessingLoggedUsers;
+import ua.org.training.workshop.servlet.command.impl.AccessDenied;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -12,20 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebFilter(filterName = "AuthFilter", urlPatterns = {"/*"})
 public class AuthFilter implements Filter {
-    static final String[] roles = new String[]{
-            "ADMIN",
-            "MANAGER",
-            "WORKMAN",
-            "USER"};
-
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
 
-    static Logger logger = Logger.getLogger(AuthFilter.class);
+    private static Logger logger = Logger.getLogger(AuthFilter.class);
 
     public void doFilter(ServletRequest request,
                      ServletResponse response,
@@ -41,11 +38,17 @@ public class AuthFilter implements Filter {
 
     String path = req.getRequestURI();
 
-    AccountSecurity account = (AccountSecurity) session.getAttribute("user");
+    AccountSecurity account = Optional
+            .ofNullable(
+                (AccountSecurity) session.getAttribute("user"))
+            .orElse(AccountSecurity.ACCOUNT);
+
     if (!checkAccess(path, account)) {
-        logger.debug("access-denied filter action!" + session.getAttribute("user"));
+        logger.debug("access-denied filter action!" + account.getUsername());
+        logger.debug(account.getUsername() + " invalid path : " + path);
         res.sendError(403);
-        session.setAttribute("user", null);
+        ProcessingLoggedUsers.removeLoggedUser(req, account.getUsername());
+        session.setAttribute(AccessDenied.MESSAGE_ATTRIBUTE,AccessDenied.MESSAGE);
         return;
     }
     else filterChain.doFilter(request,response);
@@ -53,7 +56,7 @@ public class AuthFilter implements Filter {
 
     private boolean checkAccess(String path, AccountSecurity account) {
 
-        for(String role : roles)
+        for(String role : UtilitiesClass.APP_ROLES)
             if (path.contains(role.toLowerCase()))
                 return account!=null && account.hasRole(role);
 

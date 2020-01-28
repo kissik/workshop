@@ -5,16 +5,22 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Role;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * @author kissik
+ */
 public class AccountSecurity extends Account {
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    static final AccountSecurity ACCOUNT = new AccountSecurity("anonymous");
-    static Logger logger = Logger.getLogger(AccountSecurity.class);
+    public static final String ANONYMOUS_ACCOUNT = "anonymous";
+    public static final AccountSecurity ACCOUNT = new AccountSecurity(ANONYMOUS_ACCOUNT);
+
+    private static Logger logger = Logger.getLogger(AccountSecurity.class);
 
     private AccountSecurity(String username){
         super(username);

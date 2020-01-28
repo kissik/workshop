@@ -1,7 +1,5 @@
 package ua.org.training.workshop.domain;
 
-import ua.org.training.workshop.security.GrantedAuthority;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;

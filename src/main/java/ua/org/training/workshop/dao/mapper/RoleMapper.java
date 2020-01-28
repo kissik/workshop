@@ -1,6 +1,5 @@
 package ua.org.training.workshop.dao.mapper;
 
-import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Role;
 
 import java.sql.ResultSet;

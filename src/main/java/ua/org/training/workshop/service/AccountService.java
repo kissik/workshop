@@ -3,16 +3,13 @@ package ua.org.training.workshop.service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.exception.WorkshopErrors;
 import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.utilities.Pageable;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -23,7 +20,7 @@ public class AccountService{
 
     private DaoFactory accountRepository = DaoFactory.getInstance();
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     private static Logger logger = Logger.getLogger(AccountService.class);
 

@@ -8,20 +8,25 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.xml.DOMConfigurator;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
+/**
+ * @author kissik
+ */
 @WebFilter(filterName = "SessionLocaleFilter", urlPatterns = {"/*"})
 public class SessionLocaleFilter implements Filter {
+    public final static String LANG_ATTRIBUTE = "lang";
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml",LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH,LogManager.getLoggerRepository());
     }
-    static Logger logger = Logger.getLogger(SessionLocaleFilter.class);
+    private static Logger logger = Logger.getLogger(SessionLocaleFilter.class);
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
 
-        if ((req.getParameter("lang") != null) && (!req.getParameter("lang").equals(req.getSession().getAttribute("lang")))) {
-            req.getSession().setAttribute("lang", req.getParameter("lang"));
-            logger.debug("locale was changed on: " + req.getParameter("lang").toString());
+        if ((req.getParameter(LANG_ATTRIBUTE) != null) && (!req.getParameter(LANG_ATTRIBUTE).equals(req.getSession().getAttribute(LANG_ATTRIBUTE)))) {
+            req.getSession().setAttribute(LANG_ATTRIBUTE, req.getParameter(LANG_ATTRIBUTE));
+            logger.debug("locale was changed on: " + req.getParameter(LANG_ATTRIBUTE).toString());
         }
 
         chain.doFilter(request, response);

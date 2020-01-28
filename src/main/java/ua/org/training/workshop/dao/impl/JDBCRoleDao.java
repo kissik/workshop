@@ -7,13 +7,14 @@ import ua.org.training.workshop.dao.RoleDao;
 import ua.org.training.workshop.dao.mapper.RoleMapper;
 import ua.org.training.workshop.domain.Role;
 import ua.org.training.workshop.utilities.Pageable;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import java.sql.*;
 import java.util.*;
 
 public class JDBCRoleDao implements RoleDao {
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     private static Logger logger = Logger.getLogger(JDBCRoleDao.class);
     private static final String FIND_BY_CODE_QUERY =

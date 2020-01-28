@@ -2,25 +2,75 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e9154a1c-f804-4076-b1f1-352dbed984ab" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/security/ProcessingLoggedUsers.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/dao/impl/JDBCAccountDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/dao/impl/JDBCAccountDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/dao/impl/JDBCRoleDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/dao/impl/JDBCRoleDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/dao/mapper/RoleMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/dao/mapper/RoleMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/domain/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/domain/Account.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/domain/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/domain/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/security/AccountSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/security/AccountSecurity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/security/AuthorizeTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/security/AuthorizeTag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/service/AccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/service/RoleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/service/RoleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/WorkshopServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/WorkshopServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/AccessDenied.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/AccessDenied.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/AdminPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/AdminPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/Exception.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/Exception.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/LogOut.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/LogOut.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/ManagerPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/ManagerPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/Registration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/Registration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/UserPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/UserPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/Accounts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/WorkmanPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/command/impl/WorkmanPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/filters/AuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/filters/AuthFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/filters/CharsetFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/filters/CharsetFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/filters/SessionLocaleFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/servlet/filters/SessionLocaleFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/utilities/Pageable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/utilities/Pageable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/utilities/UtilitiesClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/org/training/workshop/utilities/UtilitiesClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages_uk.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages_uk.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin/edit-user-form.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin/edit-user-form.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin/page.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin/page.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin/user.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin/user.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/urls.jspf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/urls.jspf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/pageable-users.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/pageable-accounts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/messages.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/messages.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/messages_uk.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/messages_uk.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/dao/impl/JDBCAccountDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/dao/impl/JDBCAccountDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/dao/impl/JDBCRoleDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/dao/impl/JDBCRoleDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/dao/mapper/RoleMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/dao/mapper/RoleMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/domain/Account.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/domain/Account.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/domain/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/domain/Role.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/security/AccountSecurity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/security/AccountSecurity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/security/AuthorizeTag.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/security/AuthorizeTag.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/service/AccountService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/service/AccountService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/service/RoleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/service/RoleService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/WorkshopServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/WorkshopServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/AccessDenied.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/AccessDenied.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/AdminPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/AdminPage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/Exception.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/Exception.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/LogOut.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/LogOut.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/Login.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/Login.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/ManagerPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/ManagerPage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/Registration.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/Registration.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/UserPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/UserPage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/Users.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/WorkmanPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/command/impl/WorkmanPage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/filters/AuthFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/filters/AuthFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/filters/CharsetFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/filters/CharsetFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/filters/SessionLocaleFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/servlet/filters/SessionLocaleFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/utilities/Pageable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/utilities/Pageable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/utilities/UtilitiesClass.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ua/org/training/workshop/utilities/UtilitiesClass.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/logs/access_log.2020-01-27" beforeDir="false" afterPath="$PROJECT_DIR$/target/tomcat/logs/access_log.2020-01-27" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/error_jsp$Helper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/error_jsp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/error_jsp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/edit_002duser_002dform_jsp$Helper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/edit_002duser_002dform_jsp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/edit_002duser_002dform_jsp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/page_jsp$Helper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/page_jsp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/page_jsp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/user_jsp$Helper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/user_jsp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/jsp/admin/user_jsp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/login_jsp$Helper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/login_jsp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/WEB_002dINF/login_jsp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/index_jsp.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/index_jsp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/logs/access_log.2020-01-27" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/index_jsp$Helper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/index_jsp.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/index_jsp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/tag/webgeneric_tag.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/tag/webgeneric_tag.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/tag/webgeneric_tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/tag/webgeneric_tag.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/workshop-webapp.war" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/workshop-webapp/WEB-INF/access-denied.jsp" beforeDir="false" />
@@ -220,7 +270,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -231,7 +283,7 @@
       <breakpoints>
         <line-breakpoint type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/ua/org/training/workshop/dao/impl/JDBCAccountDao.java</url>
-          <line>105</line>
+          <line>106</line>
           <properties class="ua.org.training.workshop.dao.impl.JDBCAccountDao" method="insertAccount">
             <option name="EMULATED" value="true" />
           </properties>

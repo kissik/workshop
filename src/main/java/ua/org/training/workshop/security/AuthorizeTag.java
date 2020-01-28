@@ -3,6 +3,7 @@ package ua.org.training.workshop.security;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -10,9 +11,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+/**
+ * @author kissik
+ */
 public class AuthorizeTag extends TagSupport {
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     static Logger logger = Logger.getLogger(AuthorizeTag.class);
 

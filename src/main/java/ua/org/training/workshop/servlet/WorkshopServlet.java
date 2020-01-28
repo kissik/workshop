@@ -7,6 +7,7 @@ import ua.org.training.workshop.servlet.command.*;
 import ua.org.training.workshop.servlet.command.impl.*;
 import ua.org.training.workshop.servlet.command.impl.Exception;
 import ua.org.training.workshop.domain.Account;
+import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -15,12 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author kissik
+ */
 public class WorkshopServlet extends HttpServlet {
     private static String WELCOME_PAGE = "WEB-INF/jsp/welcome.jsp";
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    static Logger logger = Logger.getLogger(WorkshopServlet.class);
+    private static Logger logger = Logger.getLogger(WorkshopServlet.class);
 
     private Map<String, Command> commands = new HashMap<>();
     private List<Account> users;
@@ -31,7 +35,7 @@ public class WorkshopServlet extends HttpServlet {
         commands.put("manager/page", new ManagerPage());
         commands.put("workman/page", new WorkmanPage());
         commands.put("user/page", new UserPage());
-        commands.put("admin/users", new Users());
+        commands.put("admin/accounts", new Accounts());
         commands.put("logout", new LogOut());
         commands.put("login", new Login());
         commands.put("registration", new Registration());
@@ -61,7 +65,7 @@ public class WorkshopServlet extends HttpServlet {
 
         logger.debug(path);
         path = path.replaceAll(".*/app/" , "");
-        if (path.contains("admin/users")) path="admin/users";
+        if (path.contains("admin/accounts")) path="admin/accounts";
         logger.debug(path);
 
         Command command = commands.getOrDefault(path,

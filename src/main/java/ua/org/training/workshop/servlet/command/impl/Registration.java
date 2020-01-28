@@ -37,7 +37,7 @@ public class Registration implements Command {
     private static final int MAX_FIFTY = 50;
 
     static {
-        new DOMConfigurator().doConfigure("src/log4j.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     private static Logger logger = Logger.getLogger(Registration.class);
     @Override

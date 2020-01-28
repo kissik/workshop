@@ -5,7 +5,7 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/" %>
 
 <c:set var="email" value="${account.email}" />
-<c:set var="userPath" value="/app/admin/users/${account.id}" />
+<c:set var="userPath" value="/app/admin/accounts/${account.id}" />
 <c:url var="userUrl" value="/${userPath}" />
 
 <fmt:requestEncoding value="UTF-8" />

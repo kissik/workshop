@@ -12,6 +12,7 @@
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/exception/WorkshopException.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/impl/JDBCRoleDao.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/Exception.java
+/home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/security/ProcessingLoggedUsers.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/impl/ConnectionPoolHolder.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/AccountDao.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/GenericDao.java
@@ -22,7 +23,6 @@
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/listener/SessionListener.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/forms/AccountForm.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/domain/Account.java
-/home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/Users.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/security/GrantedAuthority.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/filters/CharsetFilter.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/Login.java
@@ -38,3 +38,4 @@
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/Registration.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/ManagerPage.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/forms/AccountFormError.java
+/home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/Accounts.java
