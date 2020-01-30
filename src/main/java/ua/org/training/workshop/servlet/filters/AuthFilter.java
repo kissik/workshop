@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.security.AccountSecurity;
 import ua.org.training.workshop.security.ProcessingLoggedUsers;
-import ua.org.training.workshop.servlet.command.impl.AccessDenied;
 import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import javax.servlet.*;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Optional;
 
 @WebFilter(filterName = "AuthFilter", urlPatterns = {"/*"})
 public class AuthFilter implements Filter {
@@ -33,27 +31,22 @@ public class AuthFilter implements Filter {
 
     HttpSession session = req.getSession();
 
-    logger.debug(session);
-    logger.debug(session.getAttribute("user"));
-
     String path = req.getRequestURI();
+    AccountSecurity account = ProcessingLoggedUsers.loadAccountSecurity(req);
 
-    AccountSecurity account = Optional
-            .ofNullable(
-                (AccountSecurity) session.getAttribute("user"))
-            .orElse(AccountSecurity.ACCOUNT);
-
+    /*TODO http status code from source*/
     if (!checkAccess(path, account)) {
         logger.debug("access-denied filter action!" + account.getUsername());
         logger.debug(account.getUsername() + " invalid path : " + path);
-        res.sendError(403);
+        res.sendError(HttpServletResponse.SC_FORBIDDEN);
         ProcessingLoggedUsers.removeLoggedUser(req, account.getUsername());
-        session.setAttribute(AccessDenied.MESSAGE_ATTRIBUTE,AccessDenied.MESSAGE);
+        session.setAttribute(UtilitiesClass.APP_MESSAGE_ATTRIBUTE,
+                UtilitiesClass.BUNDLE_ACCESS_DENIED_MESSAGE);
         return;
     }
     else filterChain.doFilter(request,response);
     }
-
+/*TODO stream*/
     private boolean checkAccess(String path, AccountSecurity account) {
 
         for(String role : UtilitiesClass.APP_ROLES)

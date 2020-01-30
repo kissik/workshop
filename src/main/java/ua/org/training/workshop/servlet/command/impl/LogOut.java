@@ -10,11 +10,9 @@ import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 public class LogOut implements Command {
 
-    private static final String FIRST_PAGE = "/index.jsp";
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
@@ -24,14 +22,10 @@ public class LogOut implements Command {
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
 
-        AccountSecurity account = (AccountSecurity) Optional
-                .ofNullable(
-                        request.getSession().getAttribute("user"))
-                .orElse(AccountSecurity.ACCOUNT);
-
+        AccountSecurity account = ProcessingLoggedUsers.loadAccountSecurity(request);
         ProcessingLoggedUsers.removeLoggedUser(request, account.getUsername());
         logger.info(account.getUsername() + " was logged out");
-        return FIRST_PAGE;
+        return Pages.FIRST_PAGE;
     }
 
 }

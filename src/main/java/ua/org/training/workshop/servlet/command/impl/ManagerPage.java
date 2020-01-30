@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 public class ManagerPage implements Command {
 
     AccountService accountService = new AccountService();
-    private static final String MANAGER_PAGE = "/WEB-INF/jsp/manager/page.jsp";
 
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
@@ -23,6 +22,6 @@ public class ManagerPage implements Command {
     @Override
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
-        return MANAGER_PAGE;
+        return Pages.MANAGER_PAGE;
     }
 }

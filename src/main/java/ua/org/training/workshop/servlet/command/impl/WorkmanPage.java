@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 public class WorkmanPage implements Command {
 
     AccountService accountService = new AccountService();
-    private final static String WORKMAN_PAGE = "/WEB-INF/jsp/workman/page.jsp";
 
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
@@ -23,6 +22,6 @@ public class WorkmanPage implements Command {
     @Override
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
-        return WORKMAN_PAGE;
+        return Pages.WORKMAN_PAGE;
     }
 }

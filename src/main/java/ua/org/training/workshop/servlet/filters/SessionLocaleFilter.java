@@ -15,7 +15,7 @@ import ua.org.training.workshop.utilities.UtilitiesClass;
  */
 @WebFilter(filterName = "SessionLocaleFilter", urlPatterns = {"/*"})
 public class SessionLocaleFilter implements Filter {
-    public final static String LANG_ATTRIBUTE = "lang";
+
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH,LogManager.getLoggerRepository());
     }
@@ -24,9 +24,9 @@ public class SessionLocaleFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
 
-        if ((req.getParameter(LANG_ATTRIBUTE) != null) && (!req.getParameter(LANG_ATTRIBUTE).equals(req.getSession().getAttribute(LANG_ATTRIBUTE)))) {
-            req.getSession().setAttribute(LANG_ATTRIBUTE, req.getParameter(LANG_ATTRIBUTE));
-            logger.debug("locale was changed on: " + req.getParameter(LANG_ATTRIBUTE).toString());
+        if ((req.getParameter(UtilitiesClass.APP_LANG_ATTRIBUTE) != null) && (!req.getParameter(UtilitiesClass.APP_LANG_ATTRIBUTE).equals(req.getSession().getAttribute(UtilitiesClass.APP_LANG_ATTRIBUTE)))) {
+            req.getSession().setAttribute(UtilitiesClass.APP_LANG_ATTRIBUTE, req.getParameter(UtilitiesClass.APP_LANG_ATTRIBUTE));
+            logger.debug("locale was changed on: " + req.getParameter(UtilitiesClass.APP_LANG_ATTRIBUTE).toString());
         }
 
         chain.doFilter(request, response);

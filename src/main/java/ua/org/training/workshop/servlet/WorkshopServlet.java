@@ -20,26 +20,26 @@ import java.util.Map;
  * @author kissik
  */
 public class WorkshopServlet extends HttpServlet {
-    private static String WELCOME_PAGE = "WEB-INF/jsp/welcome.jsp";
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     private static Logger logger = Logger.getLogger(WorkshopServlet.class);
 
     private Map<String, Command> commands = new HashMap<>();
-    private List<Account> users;
 
     public void init(){
-        commands.put("admin/page", new AdminPage());
         commands.put("access-denied", new AccessDenied());
-        commands.put("manager/page", new ManagerPage());
-        commands.put("workman/page", new WorkmanPage());
-        commands.put("user/page", new UserPage());
+        commands.put("admin/page", new AdminPage());
         commands.put("admin/accounts", new Accounts());
-        commands.put("logout", new LogOut());
-        commands.put("login", new Login());
-        commands.put("registration", new Registration());
         commands.put("exception" , new Exception());
+        commands.put("login", new Login());
+        commands.put("logout", new LogOut());
+        commands.put("manager/page", new ManagerPage());
+        commands.put("registration", new Registration());
+        commands.put("user/page", new UserPage());
+        commands.put("user/requests", new Requests());
+        commands.put("user/new-request", new NewRequest());
+        commands.put("workman/page", new WorkmanPage());
     }
 
     public void doGet(HttpServletRequest request,
@@ -64,7 +64,7 @@ public class WorkshopServlet extends HttpServlet {
         String page;
 
         logger.debug(path);
-        path = path.replaceAll(".*/app/" , "");
+        path = path.replaceAll(UtilitiesClass.APP_PATH_REG_EXP , "");
         if (path.contains("admin/accounts")) path="admin/accounts";
         logger.debug(path);
 

@@ -7,6 +7,8 @@ public abstract class DaoFactory {
 
     public abstract AccountDao createAccountDao();
     public abstract RoleDao createRoleDao();
+    public abstract StatusDao createStatusDao();
+    public abstract RequestDao createRequestDao();
 
     public static DaoFactory getInstance(){
         if( daoFactory == null ){

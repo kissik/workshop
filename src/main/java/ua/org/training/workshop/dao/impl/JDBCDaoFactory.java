@@ -1,8 +1,6 @@
 package ua.org.training.workshop.dao.impl;
 
-import ua.org.training.workshop.dao.AccountDao;
-import ua.org.training.workshop.dao.DaoFactory;
-import ua.org.training.workshop.dao.RoleDao;
+import ua.org.training.workshop.dao.*;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -19,6 +17,15 @@ public class JDBCDaoFactory extends DaoFactory {
     @Override
     public RoleDao createRoleDao() {
         return new JDBCRoleDao(getConnection());
+    }
+
+    @Override
+    public StatusDao createStatusDao() {
+        return new JDBCStatusDao(getConnection());
+    }
+    @Override
+    public RequestDao createRequestDao() {
+        return new JDBCRequestDao(getConnection());
     }
 
     private Connection getConnection(){

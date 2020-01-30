@@ -11,10 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AccessDenied implements Command {
 
-    private static final String ACCESS_DENIED_PAGE = "/WEB-INF/access-denied.jsp";
-    public static final String MESSAGE_ATTRIBUTE = "message";
-    public static final String MESSAGE = "access.denied.message";
-
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
@@ -23,6 +19,6 @@ public class AccessDenied implements Command {
     @Override
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
-        return ACCESS_DENIED_PAGE;
+        return Pages.ACCESS_DENIED_PAGE;
     }
 }

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 public class UserPage implements Command {
 
     AccountService accountService = new AccountService();
-    private final static String USER_PAGE = "/WEB-INF/jsp/user/page.jsp";
 
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
@@ -23,6 +22,6 @@ public class UserPage implements Command {
     @Override
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
-        return USER_PAGE;
+        return Pages.USER_PAGE;
     }
 }

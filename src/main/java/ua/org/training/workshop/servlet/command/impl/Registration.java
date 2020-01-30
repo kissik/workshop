@@ -26,10 +26,7 @@ public class Registration implements Command {
     private AccountService accountService = new AccountService();
     private RoleService roleService = new RoleService();
 
-    private static final String REGISTRATION_FORM_PAGE = "/WEB-INF/registration-form.jsp";
-    private static final String REGISTRATION_FORM_OK = "redirect:app/login";
     private static final String DEFAULT_ROLE = "USER";
-    private static final String MESSAGES_BUNDLE_NAME = "messages";
 
     private static final int MIN_THREE = 3;
     private static final int MIN_SIX = 6;
@@ -48,20 +45,27 @@ public class Registration implements Command {
 
         if (request.getMethod().equals("GET")) {
             logger.debug("Registration form was send");
-            return REGISTRATION_FORM_PAGE;
+            return Pages.REGISTRATION_FORM_PAGE;
         } else {
 
             AccountFormError errors = new AccountFormError();
 
-            logger.debug("error is has errors = " + errors.haveErrors());
+            logger.debug("error has errors = " + errors.haveErrors());
 
             Account account = toAccount(request);
             account.setRoles(Collections.singletonList(roleService.findByCode(DEFAULT_ROLE)));
-            account.setPassword(BCrypt.hashpw(request.getParameter("password"),BCrypt.gensalt(11)));
+            account.setPassword(BCrypt.hashpw(
+                    UtilitiesClass.getParameterString(
+                    request.getParameter(
+                            UtilitiesClass.APP_PASSWORD_ATTRIBUTE),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE), BCrypt.gensalt(11)));
 
             validation(request.getLocale(),
                     account,
-                    UtilitiesClass.getUnicodeString(request.getParameter("confirmPassword")),
+                    UtilitiesClass.getParameterString(
+                            request.getParameter(
+                                    UtilitiesClass.ACCOUNT_CONFIRM_PASSWORD_ATTRIBUTE),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE),
                     errors);
 
             if (!errors.haveErrors())
@@ -69,40 +73,65 @@ public class Registration implements Command {
                     logger.debug("Try to register new account!");
                     accountService.registerAccount(account);
                 }catch (WorkshopException e){
-                    logger.info("New account error: "+ e.getMessage());
                     logger.error("New account error: "+ e.getMessage());
                 }
 
             session.setAttribute("account", account);
             session.setAttribute("errors", errors);
 
-            return (errors.haveErrors() ? REGISTRATION_FORM_PAGE : REGISTRATION_FORM_OK);
+            return (errors.haveErrors() ? Pages.REGISTRATION_FORM_PAGE : Pages.REGISTRATION_FORM_OK);
         }
     }
 
     private Account toAccount(HttpServletRequest request) {
             Account account = new Account();
             account.setUsername(
-                    UtilitiesClass.getUnicodeString(request.getParameter("username")));
+                    UtilitiesClass.getParameterString(
+                            request.getParameter(UtilitiesClass.APP_USERNAME_ATTRIBUTE),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setFirstName(
-                    UtilitiesClass.getUnicodeString(request.getParameter("firstName")));
+                    UtilitiesClass.getParameterString(
+                            request.getParameter(
+                                    UtilitiesClass.ACCOUNT_FIRST_NAME_ATTRIBUTE
+                            ),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setLastName(
-                    UtilitiesClass.getUnicodeString(request.getParameter("lastName")));
+                    UtilitiesClass.getParameterString(
+                            request.getParameter(
+                                    UtilitiesClass.ACCOUNT_LAST_NAME_ATTRIBUTE
+                            ),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setFirstNameOrigin(
-                    UtilitiesClass.getUnicodeString(request.getParameter("firstNameOrigin")));
+                    UtilitiesClass.getParameterString(
+                            request.getParameter(
+                                    UtilitiesClass.ACCOUNT_FIRST_NAME_ORIGIN_ATTRIBUTE
+                            ),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setLastNameOrigin(
-                    UtilitiesClass.getUnicodeString(request.getParameter("lastNameOrigin")));
+                    UtilitiesClass.getParameterString(
+                            request.getParameter(
+                                    UtilitiesClass.ACCOUNT_LAST_NAME_ORIGIN_ATTRIBUTE
+                            ),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setEmail(
-                    UtilitiesClass.getUnicodeString(request.getParameter("email")));
+                    UtilitiesClass.getParameterString(
+                            request.getParameter(
+                                    UtilitiesClass.ACCOUNT_EMAIL_ATTRIBUTE
+                            ),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setPhone(
-                    UtilitiesClass.getUnicodeString(request.getParameter("phone")));
+                    UtilitiesClass.getParameterString(
+                            request.getParameter(
+                                    UtilitiesClass.ACCOUNT_PHONE_ATTRIBUTE
+                            ),
+                            UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setEnabled(true);
             return account;
         }
 
     private void validation(Locale locale, Account account, String confirmPassword, AccountFormError errors){
         ResourceBundle bundle = ResourceBundle.getBundle(
-                MESSAGES_BUNDLE_NAME,
+                UtilitiesClass.APP_MESSAGES_BUNDLE_NAME,
                 locale);
 
         validateUsernameLength(account.getUsername(),errors);
@@ -248,7 +277,6 @@ public class Registration implements Command {
         }
         catch (WorkshopException e){
             logger.error("error: " + e.getMessage());
-            logger.info("error: " + e.getMessage());
             return;
         }
         errors.setUsername("error.duplicate");
@@ -261,7 +289,6 @@ public class Registration implements Command {
         }
         catch (WorkshopException e){
             logger.error("error: " + e.getMessage());
-            logger.info("error: " + e.getMessage());
             return;
         }
         logger.debug("Validation failed: duplicate email -> " + email);
@@ -274,7 +301,6 @@ public class Registration implements Command {
         }
         catch (WorkshopException e){
             logger.error("error: " + e.getMessage());
-            logger.info("error: " + e.getMessage());
             return;
         }
         logger.debug("Validation failed: duplicate phone -> " + phone);

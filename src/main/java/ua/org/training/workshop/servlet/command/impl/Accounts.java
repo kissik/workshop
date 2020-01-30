@@ -30,16 +30,12 @@ public class Accounts implements Command {
     }
     private static Logger logger = Logger.getLogger(Accounts.class);
     private static final Long DEFAULT_ID = 1L;
-    private static final String USER_INFO_PAGE = "/WEB-INF/jsp/admin/user.jsp";
-    private static final String USER_EDIT_PAGE = "/WEB-INF/jsp/admin/edit-user-form.jsp";
 
     @Override
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
         HttpSession session = request.getSession();
-        String path = request.getRequestURI();
-        path = path.replaceAll(".*/app/" , "");
-        String[] uriParts = path.split("/");
+        String[] uriParts = UtilitiesClass.getUriParts(request);
         Long id;
 
         if (uriParts.length == 2)
@@ -57,7 +53,7 @@ public class Accounts implements Command {
             session.setAttribute("rolesList", roleService.findAll());
             if (request.getMethod().equals("GET")) {
                 logger.debug("Edit user form was send");
-                return USER_EDIT_PAGE;
+                return Pages.USER_EDIT_PAGE;
             }
             else{
                 logger.debug(request.getParameterValues("role"));
@@ -71,7 +67,7 @@ public class Accounts implements Command {
                 accountService.saveAccountRoles(account);
             }
         }
-        return USER_INFO_PAGE;
+        return Pages.USER_INFO_PAGE;
     }
 
     private String createJSONUserList(HttpServletRequest request,
@@ -79,23 +75,9 @@ public class Accounts implements Command {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         logger.info("Send json page to client!");
-        Pageable page = new Pageable();
-        page.setPage(
-                UtilitiesClass.tryParse(
-                        request.getParameter("page"),
-                        UtilitiesClass.DEFAULT_PAGE_VALUE));
-        page.setSize(
-                UtilitiesClass.tryParse(
-                        request.getParameter("size"),
-                        UtilitiesClass.DEFAULT_SIZE_VALUE));
-        page.setSearch(
-                UtilitiesClass.getUnicodeString(
-                        request.getParameter("search")));
-        page.setSorting(
-                UtilitiesClass.getUnicodeString(
-                        request.getParameter("sorting")));
 
-        logger.info("page: " + page.toString());
+        Pageable page = UtilitiesClass.createPage(request);
+
         String jsonString = accountService.getPage(page);
         try {
             PrintWriter writer = response.getWriter();

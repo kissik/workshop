@@ -38,7 +38,7 @@
                      	</tbody>
                      </table>
 
-                     <script src="/js/pageable-accounts.js"></script>
+                     <script src="/js/pageable-admin-accounts.js"></script>
         </div>
     </jsp:body>
 </t:generic>

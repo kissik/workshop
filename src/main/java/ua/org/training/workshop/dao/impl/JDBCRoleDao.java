@@ -17,10 +17,6 @@ public class JDBCRoleDao implements RoleDao {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     private static Logger logger = Logger.getLogger(JDBCRoleDao.class);
-    private static final String FIND_BY_CODE_QUERY =
-            " select * from role r where scode = ?";
-    private static final String FIND_ALL_ROLES =
-            " select * from role r";
     private Connection connection;
 
     public JDBCRoleDao(Connection connection) {
@@ -30,7 +26,8 @@ public class JDBCRoleDao implements RoleDao {
     @Override
     public Optional<Role> findByCode(String code){
 
-        try (PreparedStatement pst = connection.prepareStatement(FIND_BY_CODE_QUERY)) {
+        try (PreparedStatement pst = connection.prepareStatement(MySQLQueries
+                .ROLE_FIND_BY_CODE_QUERY)) {
             pst.setString(1, code);
             ResultSet rs = pst.executeQuery();
 
@@ -49,11 +46,6 @@ public class JDBCRoleDao implements RoleDao {
     }
 
     @Override
-    public List<Role> getRoleList() {
-        return null;
-    }
-
-    @Override
     public void create(Role entity) {
 
     }
@@ -64,12 +56,18 @@ public class JDBCRoleDao implements RoleDao {
     }
 
     @Override
+    public Optional<List<Role>> getPage(Pageable page, Map<String, Object> mapJson) {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<List<Role>> findAll() {
 
         Map<Long, Role> roles = new HashMap<>();
 
         try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(FIND_ALL_ROLES);
+            ResultSet rs = st.executeQuery(MySQLQueries
+                    .ROLE_FIND_ALL_QUERY);
 
             RoleMapper roleMapper = new RoleMapper();
 
@@ -83,11 +81,6 @@ public class JDBCRoleDao implements RoleDao {
             logger.error("find all roles error : " + e.getMessage());
             }
         return Optional.of(new ArrayList<>(roles.values()));
-    }
-
-    @Override
-    public String getPage(Pageable page) {
-        return "";
     }
 
     @Override

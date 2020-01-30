@@ -2,7 +2,6 @@ package ua.org.training.workshop.dao;
 
 import ua.org.training.workshop.domain.Account;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface AccountDao extends GenericDao<Account>  {
@@ -15,7 +14,5 @@ public interface AccountDao extends GenericDao<Account>  {
     Optional<Account> findByPhone(String phone);
 
     Optional<Account> findByEmail(String email);
-
-    public List<Account> getAccountList();
 
 }

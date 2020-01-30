@@ -3,6 +3,9 @@ package ua.org.training.workshop.service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.exception.WorkshopErrors;
@@ -10,8 +13,11 @@ import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.utilities.Pageable;
 import ua.org.training.workshop.utilities.UtilitiesClass;
 
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author kissik
@@ -36,18 +42,9 @@ public class AccountService{
         }
         catch (Exception e){
             logger.error("error: " + e.getMessage());
-            logger.info("error: " + e.getMessage());
             throw new WorkshopException(WorkshopErrors.ACCOUNT_CREATE_NEW_ERROR);
         }
         logger.info("Account " + account.getFullNameOrigin() + " was successfully created");
-    }
-
-    public List<Account> getAccountList() throws WorkshopException {
-
-        return accountRepository
-                .createAccountDao()
-                .findAll()
-                .orElseThrow(() -> new WorkshopException(WorkshopErrors.ACCOUNT_LIST_IS_EMPTY_ERROR));
     }
 
     public Account getAccountById(Long id) throws WorkshopException {
@@ -56,29 +53,6 @@ public class AccountService{
                 .findById(id)
                 .orElseThrow(() -> new WorkshopException(WorkshopErrors.ACCOUNT_NOT_FOUND_ERROR));
     }
-//
-//    @Transactional
-//    public void setAccountInfo(Account account, String[] roleForm) {
-//
-//            Collection<Role> roles = new HashSet<>();
-//            for (String roleStr : roleForm) roles.add(roleService.findByCode(roleStr));
-//            account.setRoles(roles);
-//            accountRepository.saveAndFlush(account);
-//
-//    }
-//
-//    @Transactional
-//    public boolean newAccount(Account account) throws WorkshopException {
-//
-//        try{
-//            accountRepository.save(account);
-//        }catch(Exception e){
-//            logger.error("error: " + e.getMessage());
-//            logger.info("error: " + e.getMessage());
-//            throw new WorkshopException(WorkshopErrors.ACCOUNT_CREATE_NEW_ERROR);
-//        }
-//        return true;
-//    }
 
     public Account getAccountByUsername(String username) throws WorkshopException {
         return accountRepository
@@ -102,9 +76,36 @@ public class AccountService{
     }
 
     public String getPage(Pageable page) {
-        return accountRepository
+
+        String jsonString = "";
+        ObjectMapper jsonMapper = new ObjectMapper();
+
+        Map<String, Object> myMap = makeMap(page);
+
+        try{
+            jsonString = jsonMapper.writeValueAsString(myMap);
+
+        }catch (JsonGenerationException e) {
+            logger.error("JSON generation exception : " + e.getMessage());
+        } catch (JsonMappingException e) {
+            logger.error("JSON mapping exception : " + e.getMessage());
+        } catch (IOException e) {
+            logger.error("IO exception : " + e.getMessage());
+        }
+
+        return jsonString;
+    }
+
+    private Map<String, Object> makeMap(Pageable page) {
+        Map<String, Object> myMap = new HashMap<>();
+
+        myMap.put("content", accountRepository
                 .createAccountDao()
-                .getPage(page);
+                .getPage(page, myMap)
+                .orElse(Collections.emptyList()));
+        myMap.put("size", page.getSize());
+
+        return myMap;
     }
 
     public void saveAccountRoles(Account account) throws WorkshopException {

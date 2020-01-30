@@ -24,8 +24,8 @@ public class CharsetFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        servletRequest.setCharacterEncoding("UTF-8");
-        servletResponse.setCharacterEncoding("UTF-8");
+        servletRequest.setCharacterEncoding(UtilitiesClass.APP_ENCODING);
+        servletResponse.setCharacterEncoding(UtilitiesClass.APP_ENCODING);
 
         logger.debug("set charset encoding to UTF-8");
 

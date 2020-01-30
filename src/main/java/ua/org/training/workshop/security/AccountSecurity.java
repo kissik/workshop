@@ -13,12 +13,13 @@ import java.util.HashSet;
 /**
  * @author kissik
  */
+/*TODO stream*/
 public class AccountSecurity extends Account {
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    public static final String ANONYMOUS_ACCOUNT = "anonymous";
-    public static final AccountSecurity ACCOUNT = new AccountSecurity(ANONYMOUS_ACCOUNT);
+    public static final AccountSecurity ACCOUNT =
+            new AccountSecurity(UtilitiesClass.APP_ANONYMOUS_ACCOUNT_USERNAME);
 
     private static Logger logger = Logger.getLogger(AccountSecurity.class);
 
@@ -27,18 +28,13 @@ public class AccountSecurity extends Account {
     }
 
     public AccountSecurity(Account account){
-        Collection<Role> roles = new HashSet<>();
-
         this.setUsername(account.getUsername());
         this.setFirstName(account.getFirstName());
         this.setFirstNameOrigin(account.getFirstNameOrigin());
         this.setLastName(account.getLastName());
         this.setLastNameOrigin(account.getLastNameOrigin());
         this.setPassword(account.getPassword());
-
-        for(Role r: account.getRoles())
-            roles.add(r);
-        this.setRoles(roles);
+        this.setRoles(new HashSet<>(account.getRoles()));
     }
 
     public boolean isAnonymous(){

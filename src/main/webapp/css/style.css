@@ -2,6 +2,64 @@
     padding: 60px 0;
 }
 
+.input-modal-window,
+.hidden-view-request-modal-window,
+.hidden-new-request-modal-window{
+	display: none;
+}
+
+#view-request-modal-window:checked ~ #request-list-table > #pageable-list .hidden-view-request-modal-window,
+#new-request-modal-window:checked ~ .hidden-new-request-modal-window{
+	width: 100vw;
+	height: 100vh;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(3,3,3,0.7);
+	z-index: 2000;
+}
+
+.btn-form-submit, .btn-form-submit:focus, .btn-form-submit:hover{
+	width: 100%;
+	background: #007bff;
+	padding: 20px;
+	color: white;
+}
+
+form:invalid>#form-submit {
+    pointer-events: none;
+	opacity: 0.5;
+}
+
+.form-control{
+    background: #F4F7FB;
+	border: none;
+	color: black;
+	box-shadow: none;
+}
+
+.contact-form{
+    width: 50%;
+	margin: auto;
+	background: white;
+	padding: 60px;
+	border-top: 10px solid;
+	border-image: url(../img/ribbon.png) 10 0 0 0 repeat;
+}
+
+.hidden-new-request-modal-window > .center{
+    margin-top: 20px;
+}
+
+::placeholder {
+    color: #B5BCCD;
+}
+
+textarea{
+    resize: none;
+}
+
 [href^="?lang="]{
     border-right: 1px solid #2FA4E7;
     padding: 0 10px;

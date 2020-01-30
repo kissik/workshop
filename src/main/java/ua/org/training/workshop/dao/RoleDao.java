@@ -12,5 +12,5 @@ public interface RoleDao extends GenericDao<Role> {
 
     Optional<Role> findByCode(String code);
 
-    public List<Role> getRoleList();
+    Optional<List<Role>> findAll();
 }

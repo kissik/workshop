@@ -8,7 +8,6 @@ import ua.org.training.workshop.utilities.UtilitiesClass;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Optional;
 
 /**
@@ -18,7 +17,7 @@ public class AuthorizeTag extends TagSupport {
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    static Logger logger = Logger.getLogger(AuthorizeTag.class);
+    private static Logger logger = Logger.getLogger(AuthorizeTag.class);
 
     private String access;
 
@@ -34,12 +33,12 @@ public class AuthorizeTag extends TagSupport {
     public int doStartTag() throws JspException{
 
         AccountSecurity account = Optional.ofNullable(
-                (AccountSecurity) pageContext.findAttribute("user"))
+                (AccountSecurity) pageContext.findAttribute(
+                        UtilitiesClass.APP_USER_ATTRIBUTE))
                 .orElse(AccountSecurity.ACCOUNT);
 
         logger.debug(account.toString());
         try {
-            //Method method = account.getClass().getMethod(getAccess());
             if (getAccess().contains("'")){
                 if ((boolean)AccountSecurity.class.getMethod(
                         getAccess().split("'")[0],

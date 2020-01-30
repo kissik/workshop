@@ -16,17 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Optional;
 
 public class Login implements Command {
 
     private AccountService accountService = new AccountService();
-
-    private static final String LOGIN_PAGE = "/WEB-INF/login.jsp";
-    private static final String ADMIN_PAGE = "redirect:app/admin/page";
-    private static final String MANAGER_PAGE = "redirect:app/manager/page";
-    private static final String WORKMAN_PAGE = "redirect:app/workman/page";
-    private static final String USER_PAGE = "redirect:app/user/page";
 
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
@@ -36,33 +29,36 @@ public class Login implements Command {
     @Override
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        request.getSession().removeAttribute("error");
+        String username = UtilitiesClass.getParameterString(
+                request.getParameter(UtilitiesClass.APP_USERNAME_ATTRIBUTE),
+                UtilitiesClass.APP_STRING_DEFAULT_VALUE);
+        String password = UtilitiesClass.getParameterString(
+                request.getParameter(UtilitiesClass.APP_PASSWORD_ATTRIBUTE),
+                UtilitiesClass.APP_STRING_DEFAULT_VALUE);
+        request.getSession().removeAttribute(UtilitiesClass.APP_ERROR_ATTRIBUTE);
 
-        AccountSecurity account = (AccountSecurity) Optional
-                .ofNullable(
-                        request.getSession().getAttribute("user"))
-                .orElse(AccountSecurity.ACCOUNT);
+        AccountSecurity account = ProcessingLoggedUsers.loadAccountSecurity(request);
 
-        if (!account.getUsername().equals(AccountSecurity.ANONYMOUS_ACCOUNT)){
+        if (!account.getUsername().equals(UtilitiesClass.APP_ANONYMOUS_ACCOUNT_USERNAME)){
                 ProcessingLoggedUsers.removeLoggedUser(request, account.getUsername());
-                return LOGIN_PAGE;
+                return Pages.LOGIN_PAGE;
         }
 
-        if( username == null || username.equals("") || password == null || password.equals("")  ){
-            return LOGIN_PAGE;
+        if (username.equals(UtilitiesClass.APP_STRING_DEFAULT_VALUE)
+                || password.equals(UtilitiesClass.APP_STRING_DEFAULT_VALUE)){
+            return Pages.LOGIN_PAGE;
         }
 
         if (ProcessingLoggedUsers.checkUserIsLogged(request, username)){
             logger.debug("user already logged in system!");
             try {
-                response.sendError(403);
-                request.setAttribute(AccessDenied.MESSAGE_ATTRIBUTE,ProcessingLoggedUsers.ACCESS_DENIED_LOGGED_USERS);
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                request.setAttribute(UtilitiesClass.APP_MESSAGE_ATTRIBUTE,
+                        UtilitiesClass.BUNDLE_ACCESS_DENIED_LOGGED_USERS);
             }catch (IOException e){
                 logger.error("IO exception on repeat logged user action : " + e.getMessage());
             }
-            return "";
+            return UtilitiesClass.APP_STRING_DEFAULT_VALUE;
         }
 
         try {
@@ -80,19 +76,22 @@ public class Login implements Command {
                 .map(Role::getCode)
                 .toArray(String[]::new)));
 
-        if (!account.getUsername().equals(AccountSecurity.ANONYMOUS_ACCOUNT)
+        if (!account.getUsername()
+                .equals(UtilitiesClass.APP_ANONYMOUS_ACCOUNT_USERNAME)
                 && BCrypt.checkpw(password, account.getPassword())){
 
             ProcessingLoggedUsers.addLoggedUser(request, account);
 
-            if (account.hasRole("ADMIN")) return ADMIN_PAGE;
-            if (account.hasRole("MANAGER")) return MANAGER_PAGE;
-            if (account.hasRole("WORKMAN")) return WORKMAN_PAGE;
-            return USER_PAGE;
+            if (account.hasRole("ADMIN")) return Pages.ADMIN_PAGE_REDIRECT;
+            if (account.hasRole("MANAGER")) return Pages.MANAGER_PAGE_REDIRECT;
+            if (account.hasRole("WORKMAN")) return Pages.WORKMAN_PAGE_REDIRECT;
+            return Pages.USER_PAGE_REDIRECT;
         }
 
-        request.getSession().setAttribute("error","true");
-        return LOGIN_PAGE;
+        request.getSession().setAttribute(
+                UtilitiesClass.APP_ERROR_ATTRIBUTE,
+                "true");
+        return Pages.LOGIN_PAGE;
     }
 
 }
