@@ -9,7 +9,8 @@ import ua.org.training.workshop.dao.mapper.RequestMapper;
 import ua.org.training.workshop.dao.mapper.StatusMapper;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Request;
-import ua.org.training.workshop.domain.Status;
+import ua.org.training.workshop.exception.WorkshopErrors;
+import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.utilities.Pageable;
 import ua.org.training.workshop.utilities.UtilitiesClass;
 
@@ -28,9 +29,15 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public void create(Request request) throws SQLException {
-        insertRequest(request);
-        logger.debug("request was created! " + request.getTitle());
+    public void create(Request request) throws WorkshopException {
+        try {
+            logger.debug("request (id = "
+                    + insertRequest(request)
+                    + ") was created: " + request.getTitle());
+        }catch (SQLException e){
+            logger.error("SQL exception : " + e.getMessage());
+            throw new WorkshopException(WorkshopErrors.REQUEST_CREATE_NEW_ERROR);
+        }
     }
 
     @Override
@@ -42,12 +49,10 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     private Long insertRequest(Request request) throws SQLException{
-        logger.debug("create new request, with title = " + request.getTitle() + " attempt");
         Long newId;
         try(CallableStatement callableStatement =
                 connection.prepareCall(MySQLQueries
                         .REQUEST_INSERT_PREPARE_STATEMENT)) {
-            logger.debug("before callable statement");
             callableStatement.setString("stitle", request.getTitle());
             callableStatement.setString("sdescription", request.getDescription());
             callableStatement.setLong("nauthor", request.getAuthor().getId());
@@ -56,75 +61,51 @@ public class JDBCRequestDao implements RequestDao {
             callableStatement.setString("slang", request.getLanguage());
             callableStatement.setBoolean("bclosed", request.isClosed());
             callableStatement.registerOutParameter("nid", Types.BIGINT);
-            logger.debug("after prepared callable statement");
-
             callableStatement.executeUpdate();
-
-            logger.debug("after execute callable statement");
-
             newId = callableStatement.getLong("nid");
-            connection.close();
         }catch (SQLException e){
             logger.error("create new request " + e.getMessage());
             throw e;
         }
+        close();
         logger.debug("new request : " + request.getTitle() + " was successfully created");
         return newId;
     }
 
     @Override
     public Optional<Request> findById(Long id) {
-
         Request request = null;
-
         try (PreparedStatement pst =
                      connection.prepareStatement(MySQLQueries
                              .REQUEST_FIND_BY_ID_QUERY)) {
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
-
             while (rs.next()) {
                 request = loadRequest(rs);
             }
         } catch (SQLException e) {
             logger.debug("get request by " + id + " sql exception : " + e.getMessage());
         }
-        try {
-            connection.close();
-        }catch(SQLException e){
-            logger.error("cannot close connection " + e.getMessage());
-        }
+        close();
         return Optional.ofNullable(request);
     }
 
     private Request loadRequest(ResultSet rs) throws SQLException {
-        JDBCGenericDao<Account> jdbcAccount = new JDBCGenericDao<>();
-        JDBCGenericDao<Status> jdbcStatus = new JDBCGenericDao<>();
         RequestMapper requestMapper = new RequestMapper();
         AccountMapper accountMapper = new AccountMapper();
         StatusMapper statusMapper = new StatusMapper();
-        Account account;
-        Status status;
-        Request request = requestMapper.extractFromResultSet(rs);
+        Request request = requestMapper.extractFromResultSet(rs,
+                UtilitiesClass.REQUEST_QUERY_DEFAULT_PREFIX);
 
-        account = jdbcAccount.findById(
-                rs.getLong("nauthor"),
-                accountMapper,
-                MySQLQueries.ACCOUNT_FIND_BY_ID_QUERY,
-                connection);
-        request.setAuthor(account);
-        account = jdbcAccount.findById(
-                rs.getLong("nuser"),
-                accountMapper,
-                MySQLQueries.ACCOUNT_FIND_BY_ID_QUERY,
-                connection);
-        request.setUser(account);
-        status = jdbcStatus.findById(
-                rs.getLong("nstatus"),
-                statusMapper,
-                MySQLQueries.STATUS_FIND_BY_ID_QUERY,
-                connection);
-        request.setStatus(status);
+        request.setAuthor(
+                accountMapper.extractFromResultSet(rs,
+                        UtilitiesClass.REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX));
+        request.setUser(
+                accountMapper.extractFromResultSet(rs,
+                        UtilitiesClass.REQUEST_USER_QUERY_DEFAULT_PREFIX));
+        request.setStatus(
+                statusMapper.extractFromResultSet(rs,
+                        UtilitiesClass.STATUS_QUERY_DEFAULT_PREFIX));
 
         return request;
     }
@@ -139,14 +120,13 @@ public class JDBCRequestDao implements RequestDao {
         try {
             connection.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("cannot close connection" + e.getMessage());
+            throw new WorkshopException(WorkshopErrors.DATABASE_CONNECTION_ERROR);
         }
     }
 
-    public Optional<List<Request>> getPage(Pageable page, Map<String, Object> myMap){
-
+    public Pageable getPage(Pageable page){
         List<Request> requests = new ArrayList<>();
-
         try (CallableStatement callableStatement =
                      connection.prepareCall(MySQLQueries
                              .REQUEST_FIND_PAGE_CALLABLE_STATEMENT)) {
@@ -155,30 +135,23 @@ public class JDBCRequestDao implements RequestDao {
             callableStatement.setString("ssearch", page.getSearch());
             callableStatement.setString("ssorting", page.getSorting());
             callableStatement.registerOutParameter("ncount", Types.BIGINT);
-            logger.info("page : " + page.toString());
-            logger.info("callable statement query : " + callableStatement.toString());
-
             ResultSet rs = callableStatement.executeQuery();
-            myMap.put("totalElements", callableStatement.getLong("ncount"));
-
+            page.setTotalElements(callableStatement.getLong("ncount"));
             while (rs.next()) {
                 Request request = loadRequest(rs);
                 requests.add(request);
-                logger.info("reading request : " + request.getTitle());
             }
-            connection.close();
         } catch (SQLException e) {
             logger.error("find all SQL exception " + e.getMessage());
         }
-
-        return Optional.of(requests);
+        close();
+        page.setContent(Optional.of(requests));
+        return page;
     }
 
     @Override
-    public Optional<List<Request>> getPageByAuthor(Pageable page, Account author, Map<String, Object> mapJson) {
-
+    public Pageable getPageByAuthor(Pageable page, Account author) {
         List<Request> requests = new ArrayList<>();
-
         try (CallableStatement callableStatement =
                      connection.prepareCall(MySQLQueries
                              .REQUEST_FIND_PAGE_BY_AUTHOR_CALLABLE_STATEMENT)) {
@@ -188,22 +161,17 @@ public class JDBCRequestDao implements RequestDao {
             callableStatement.setString("ssearch", page.getSearch());
             callableStatement.setString("ssorting", page.getSorting());
             callableStatement.registerOutParameter("ncount", Types.BIGINT);
-            logger.info("page : " + page.toString());
-            logger.info("callable statement query : " + callableStatement.toString());
-
             ResultSet rs = callableStatement.executeQuery();
-            mapJson.put("totalElements", callableStatement.getLong("ncount"));
-
+            page.setTotalElements(callableStatement.getLong("ncount"));
             while (rs.next()) {
                 Request request = loadRequest(rs);
                 requests.add(request);
-                logger.info("reading request : " + request.getTitle());
             }
-            connection.close();
         } catch (SQLException e) {
             logger.error("find all SQL exception " + e.getMessage());
         }
-
-        return Optional.of(requests);
+        close();
+        page.setContent(Optional.of(requests));
+        return page;
     }
 }

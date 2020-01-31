@@ -8,17 +8,11 @@ import java.util.Map;
 
 public class RoleMapper implements ObjectMapper<Role> {
     @Override
-    public Role extractFromResultSet(ResultSet rs) throws SQLException {
+    public Role extractFromResultSet(ResultSet rs, String prefix) throws SQLException {
         Role role = new Role();
-        role.setId(rs.getLong("r.id"));
-        role.setCode(rs.getString("r.scode"));
-        role.setName(rs.getString("r.sname"));
+        role.setId(rs.getLong(prefix + ".id"));
+        role.setCode(rs.getString(prefix + ".scode"));
+        role.setName(rs.getString(prefix + ".sname"));
         return role;
-    }
-
-    @Override
-    public Role makeUnique(Map<Long, Role> cache, Role role) {
-
-        return null;
     }
 }

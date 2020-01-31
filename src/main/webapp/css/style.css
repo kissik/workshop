@@ -4,7 +4,8 @@
 
 .input-modal-window,
 .hidden-view-request-modal-window,
-.hidden-new-request-modal-window{
+.hidden-new-request-modal-window,
+.hidden-request-data{
 	display: none;
 }
 
@@ -27,7 +28,7 @@
 	color: white;
 }
 
-form:invalid>#form-submit {
+form:invalid #form-submit {
     pointer-events: none;
 	opacity: 0.5;
 }
@@ -44,6 +45,9 @@ form:invalid>#form-submit {
 	margin: auto;
 	background: white;
 	padding: 60px;
+}
+
+.contact-form-ribbon-top{
 	border-top: 10px solid;
 	border-image: url(../img/ribbon.png) 10 0 0 0 repeat;
 }
@@ -81,7 +85,7 @@ table {
 td, th {
 	border-bottom: 1px solid #bbb;
 	height: 40px;
-	padding: 5px;
+	padding: 10px 15px;
     position: relative;
     overflow: hidden;
 	display: inline-block;
@@ -115,6 +119,7 @@ td:hover::after{
   z-index: 10;
   pointer-events: none;
 }
+
 .workshop-sessionInfo{
     color: #fff;
 }
@@ -164,4 +169,10 @@ a.page-btn:hover{
     border-radius: 5px;
     background: #e9ecef;
     color: #2FA4E7;
+}
+
+@media (max-width: 768px){
+.contact-form{
+    width: 100%;
+}
 }

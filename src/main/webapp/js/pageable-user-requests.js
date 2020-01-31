@@ -1,88 +1,116 @@
-var	size;
-var	sorting = 'asc';
-var search;
-var requests = "requests";
 var urlPath = `/app/user/${requests}`;
 
 window.onload = function(){
-    size = document.querySelector(`#size`);
-    search = document.querySelector(`#search`);
-    sorting_desc = document.querySelector(`#desc`);
-    sorting_asc = document.querySelector(`#asc`);
-    sorting_desc.onclick = function(){
-        sorting = sorting_desc.value;
-        showResults(`${urlPath}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
-    }
-    sorting_asc.onclick = function(){
-        sorting = sorting_asc.value;
-        showResults(`${urlPath}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
-    }
-    size.onkeyup = function(){
-         showResults(`${urlPath}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
-    }
-    search.onkeyup = function(){
-        showResults(`${urlPath}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
-    }
-	showResults(urlPath);
+    wizard(urlPath);
 }
 
-const makePageNavigation = pages => {
-    let str = '';
-    for(let i = 0; i < pages; i++)
-        str += `<a class="page-btn" name="page${i}">${i+1}</a>`;
-    return str;
-}
+const makeRow = (rowData, index) => {
+    let tableRow = document.createElement('tr');
+    let tableData = document.createElement('td');
+    let anchor = document.createElement('a');
+    let label = document.createElement('label');
+    let hiddenId = `hidden-request-data-${index}`;
 
-const makeHTML = data => {
-    let str = '';
-	for(let index in data){
-		console.log((data)[index]);
-        str += `<tr>`
-            + `<td><a href="#"><label class="label" for="view-request-modal-window">${(data)[index].title}</label></a></td>`
-            + `<td>${(data)[index].status.code}</td>`
-            + `<td>${(data)[index].description}</td>`
-            + `<td>${(data)[index].author.fullName}</td>`
-            + `<div class="hidden-view-request-modal-window"><label class="label" for="view-request-modal-window">${(data)[index].title}</label></div>`
-        + `</tr>`;
-     }
-     return str;
-}
+    tableRow.appendChild(createHiddenRequestDiv(hiddenId, rowData));
 
-function addListeners(pages){
-    let a;
-    for(let i = 0; i < pages; i++){
-        a = document.querySelector(`[name="page${i}"]`);
-        a.onclick = function(){
-            showResults(`${urlPath}?page=${i}&size=${size.value}&search=${search.value}&sorting=${sorting}`);
-        }
+    anchor.setAttribute('href', '#');
+    anchor.onclick = () => {
+        let div = document.getElementById(hiddenId);
+        div.style.width = '100vw';
+        div.style.height = '100vh';
+        div.style.display = 'flex';
+        div.style.position = 'absolute';
+        div.style.top = 0;
+        div.style.left = 0;
+        div.style.background = 'rgba(3,3,3,0.7)';
+        div.style.zIndex = 2000;
     }
+
+    label.setAttribute('for', 'view-request-modal-window');
+
+    label.appendChild(document.createTextNode(rowData.title));
+    anchor.appendChild(label);
+    tableData.appendChild(anchor);
+    tableData.style.width = '25%';
+    tableRow.appendChild(tableData);
+
+    tableData = document.createElement('td');
+    tableData.style.width = '25%';
+    tableData.appendChild(
+        document
+            .createTextNode(rowData.status.code))
+    tableRow.appendChild(tableData);
+
+    tableData = document.createElement('td');
+    tableData.style.width = '25%';
+    tableData.appendChild(
+        document
+            .createTextNode(rowData.description))
+    tableRow.appendChild(tableData);
+    tableData = document.createElement('td');
+    tableData.style.width = '25%';
+    tableData.appendChild(
+        document
+            .createTextNode(rowData.author.fullName))
+    tableRow.appendChild(tableData);
+    return tableRow;
 }
 
-function showResults(url){
-	ajaxJS(url, function(response){
-        let tbody = document.getElementById('pageable-list');
-        let div = document.getElementById('page-navigation');
+const createHiddenRequestDiv = (hiddenId, rowData) => {
 
-        let totalElements = response.totalElements;
-        let pageSize = response.size;
-        let pages = Math.ceil(totalElements/pageSize);
+    let hiddenRequestDiv = document.createElement('div');
 
-        tbody.innerHTML = makeHTML(response.content);
-        div.innerHTML = makePageNavigation(pages);
+    hiddenRequestDiv.setAttribute('id', hiddenId);
+    hiddenRequestDiv.setAttribute('class', 'hidden-request-data');
+    hiddenRequestDiv.style.display = 'none';
 
-        addListeners(pages);
-	});
-}
+    let hiddenDesk = document.createElement('div');
+    hiddenDesk.setAttribute('class','contact-form');
+    hiddenDesk.style.textAlign = "left";
+    hiddenDesk.style.padding = "30px 15px";
+    hiddenDesk.style.background = "#F4F7FB";
 
-function ajaxJS(url, callback){
-    let xhr = new XMLHttpRequest();
-    console.log(xhr);
-    xhr.onreadystatechange = function(){
-        if (xhr.status === 200 && xhr.readyState === 4){
-            console.log(xhr.response);
-            callback(JSON.parse(xhr.response));
-        }
+    let labelClose = document.createElement('button');
+    labelClose.setAttribute('type','button');
+    labelClose.setAttribute('class','close');
+    labelClose.setAttribute('aria-label','Close');
+    labelClose.appendChild(document.createTextNode('\u274c'));
+    labelClose.style.color = "#007bff";
+    labelClose.style.fontSize = "250%";
+    labelClose.onclick = () => {
+        let div = document.getElementById(hiddenId);
+        div.style.display = 'none';
     }
-    xhr.open('GET', url, true);
-    xhr.send();
+    hiddenDesk.appendChild(labelClose);
+
+    let fieldHeading = document.createElement('h1');
+    fieldHeading.appendChild(document.createTextNode(rowData.title));
+    hiddenDesk.appendChild(fieldHeading);
+
+    fieldHeading = document.createElement('h2');
+    let field = document.createElement('span');
+    field.appendChild(document.createTextNode(rowData.status.code));
+    field.setAttribute('class','badge badge-info');
+    fieldHeading.appendChild(field);
+    hiddenDesk.appendChild(fieldHeading);
+
+    field = document.createElement('a');
+    field.setAttribute('class','badge badge-primary');
+    field.setAttribute('title','author');
+    field.setAttribute('href',`mailto:${rowData.author.email}`);
+    field.appendChild(document.createTextNode(`${rowData.author.username}`));
+    hiddenDesk.appendChild(field);
+
+    field = document.createElement('a');
+    field.setAttribute('class','badge badge-success');
+    field.setAttribute('title','modified by');
+    field.setAttribute('href',`mailto:${rowData.user.email}`);
+    field.appendChild(document.createTextNode(`${rowData.user.username}`));
+    hiddenDesk.appendChild(field);
+
+    field = document.createElement('p');
+    field.appendChild(document.createTextNode(rowData.description));
+    hiddenDesk.appendChild(field);
+    hiddenRequestDiv.appendChild(hiddenDesk);
+    return hiddenRequestDiv;
 }

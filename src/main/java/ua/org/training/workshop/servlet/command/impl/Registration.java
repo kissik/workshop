@@ -53,20 +53,29 @@ public class Registration implements Command {
             logger.debug("error has errors = " + errors.haveErrors());
 
             Account account = toAccount(request);
-            account.setRoles(Collections.singletonList(roleService.findByCode(DEFAULT_ROLE)));
-            account.setPassword(BCrypt.hashpw(
-                    UtilitiesClass.getParameterString(
+            String password = UtilitiesClass.getUTF8String(
                     request.getParameter(
                             UtilitiesClass.APP_PASSWORD_ATTRIBUTE),
-                            UtilitiesClass.APP_STRING_DEFAULT_VALUE), BCrypt.gensalt(11)));
+                    UtilitiesClass.APP_STRING_DEFAULT_VALUE);
+            String confirmPassword = UtilitiesClass.getUTF8String(
+                    request.getParameter(
+                            UtilitiesClass.ACCOUNT_CONFIRM_PASSWORD_ATTRIBUTE),
+                    UtilitiesClass.APP_STRING_DEFAULT_VALUE);
+            logger.info(password + " = " + confirmPassword);
+            account.setRoles(Collections.singletonList(roleService.findByCode(DEFAULT_ROLE)));
+            validatePasswordLength(password, errors);
+            validateConfirmPassword(
+                    password,
+                    confirmPassword,
+                    errors);
+            account.setPassword(BCrypt.hashpw(
+                    password, BCrypt.gensalt(UtilitiesClass.APP_BCRYPT_SALT)));
+            logger.debug("error has errors = " + errors.haveErrors());
 
             validation(request.getLocale(),
                     account,
-                    UtilitiesClass.getParameterString(
-                            request.getParameter(
-                                    UtilitiesClass.ACCOUNT_CONFIRM_PASSWORD_ATTRIBUTE),
-                            UtilitiesClass.APP_STRING_DEFAULT_VALUE),
                     errors);
+            logger.debug("error has errors = " + errors.haveErrors());
 
             if (!errors.haveErrors())
                 try {
@@ -75,7 +84,6 @@ public class Registration implements Command {
                 }catch (WorkshopException e){
                     logger.error("New account error: "+ e.getMessage());
                 }
-
             session.setAttribute("account", account);
             session.setAttribute("errors", errors);
 
@@ -86,50 +94,54 @@ public class Registration implements Command {
     private Account toAccount(HttpServletRequest request) {
             Account account = new Account();
             account.setUsername(
-                    UtilitiesClass.getParameterString(
+                    UtilitiesClass.getUTF8String(
                             request.getParameter(UtilitiesClass.APP_USERNAME_ATTRIBUTE),
                             UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setFirstName(
-                    UtilitiesClass.getParameterString(
+                    UtilitiesClass.getUTF8String(
                             request.getParameter(
                                     UtilitiesClass.ACCOUNT_FIRST_NAME_ATTRIBUTE
                             ),
                             UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setLastName(
-                    UtilitiesClass.getParameterString(
+                    UtilitiesClass.getUTF8String(
                             request.getParameter(
                                     UtilitiesClass.ACCOUNT_LAST_NAME_ATTRIBUTE
                             ),
                             UtilitiesClass.APP_STRING_DEFAULT_VALUE));
+            logger.info("firstNameOrigin : " + request.getParameter(
+                    UtilitiesClass.ACCOUNT_FIRST_NAME_ORIGIN_ATTRIBUTE
+            ));
             account.setFirstNameOrigin(
-                    UtilitiesClass.getParameterString(
+                    UtilitiesClass.getUTF8String(
                             request.getParameter(
                                     UtilitiesClass.ACCOUNT_FIRST_NAME_ORIGIN_ATTRIBUTE
                             ),
                             UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setLastNameOrigin(
-                    UtilitiesClass.getParameterString(
+                    UtilitiesClass.getUTF8String(
                             request.getParameter(
                                     UtilitiesClass.ACCOUNT_LAST_NAME_ORIGIN_ATTRIBUTE
                             ),
                             UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setEmail(
-                    UtilitiesClass.getParameterString(
+                    UtilitiesClass.getUTF8String(
                             request.getParameter(
                                     UtilitiesClass.ACCOUNT_EMAIL_ATTRIBUTE
                             ),
                             UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setPhone(
-                    UtilitiesClass.getParameterString(
+                    UtilitiesClass.getUTF8String(
                             request.getParameter(
                                     UtilitiesClass.ACCOUNT_PHONE_ATTRIBUTE
                             ),
                             UtilitiesClass.APP_STRING_DEFAULT_VALUE));
             account.setEnabled(true);
+            logger.info("try to paste to DB: " + account.getFullNameOrigin());
             return account;
         }
 
-    private void validation(Locale locale, Account account, String confirmPassword, AccountFormError errors){
+    private void validation(Locale locale, Account account, AccountFormError errors){
         ResourceBundle bundle = ResourceBundle.getBundle(
                 UtilitiesClass.APP_MESSAGES_BUNDLE_NAME,
                 locale);
@@ -140,12 +152,6 @@ public class Registration implements Command {
                 bundle.getString("pattern.username"),
                 errors);
         validateUsername(account.getUsername(), errors);
-
-        validateConfirmPassword(
-                account.getPassword(),
-                confirmPassword,
-                errors);
-        validatePasswordLength(account.getPassword(),errors);
 
         validateFirstNameLength(account.getFirstName(),errors);
         validateFirstNamePattern(
@@ -171,10 +177,10 @@ public class Registration implements Command {
                 bundle.getString("pattern.ukr.name"),
                 errors);
 
-        validateEmailPattern(
+        /*validateEmailPattern(
                 account.getEmail(),
                 bundle.getString("pattern.email"),
-                errors);
+                errors);*/
         validateEmailLength(account.getEmail(),errors);
         validateEmail(account.getEmail(), errors);
 

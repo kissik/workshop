@@ -5,7 +5,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.utilities.UtilitiesClass;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -13,7 +15,7 @@ import java.util.Set;
 /**
  * @author kissik
  */
-public class ProcessingLoggedUsers {
+public class ProcessingLoggedUsers implements Serializable {
 
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
@@ -28,17 +30,25 @@ public class ProcessingLoggedUsers {
     }
 
     private static HashSet<String> getLoggedUsers(HttpServletRequest request){
+        return getLoggedUsersContext(request
+                .getServletContext());
+    }
+
+    private static HashSet<String> getLoggedUsersContext(ServletContext context){
         return Optional
                 .ofNullable(
-                        (HashSet<String>) request
-                                .getServletContext()
+                        (HashSet<String>) context
                                 .getAttribute(UtilitiesClass
                                         .APP_LOGGED_USERS_HASH_SET_ATTRIBUTE))
                 .orElse(new HashSet<>());
     }
 
     private static void saveLoggedUser(HttpServletRequest request, Set<String> loggedUsers){
-        request.getServletContext()
+        saveLoggedUserContext(request.getServletContext(), loggedUsers);
+    }
+
+    private static void saveLoggedUserContext(ServletContext context, Set<String> loggedUsers){
+        context
                 .setAttribute(UtilitiesClass
                         .APP_LOGGED_USERS_HASH_SET_ATTRIBUTE, loggedUsers);
         logger.info("logged users : " + loggedUsers);
@@ -68,4 +78,9 @@ public class ProcessingLoggedUsers {
         saveLoggedUser(request, loggedUsers);
     }
 
+    public static void removeLoggedUserContext(ServletContext context, String username){
+        Set<String> loggedUsers = getLoggedUsersContext(context);
+        loggedUsers.remove(username);
+        saveLoggedUserContext(context, loggedUsers);
+    }
 }

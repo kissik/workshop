@@ -30,8 +30,8 @@
                 <label class="btn btn-primary" for="new-request-modal-window" ><fmt:message key="request.create" /></label>
                 <div class="hidden-new-request-modal-window">
                     <div class="center">
-                        <div class="contact-form">
-                            <form id="contactForm" action="/app/user/new-request">
+                        <div class="contact-form contact-form-ribbon-top">
+                            <form id="contactForm" data-toggle="validator" novalidate="true" action="/app/user/new-request">
                                 <h1><fmt:message key="newRequest.pageTitle" /></h1>
 							    <div class="form-group">
 								    <input type="text" class="form-control caps" name="title" placeholder="Title" required>
@@ -62,7 +62,7 @@
                 <div id="page-navigation"></div>
              </div>
              <input type="checkbox" class="input-modal-window" id="view-request-modal-window">
-             <table id="request-list-table" class="sortable">
+             <table id="request-list-table" class="">
                 <thead>
                     <tr>
                         <th class="string"><fmt:message key="requestsList.table.title" /></th>

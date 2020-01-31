@@ -1,20 +1,29 @@
 package ua.org.training.workshop.utilities;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 /**
  * @author kissik
  */
 public class Pageable {
-    private Long page;
+    private Long pageNumber;
     private Long size;
     private String sorting;
     private String search;
+    private Long totalElements;
+    private Object content;
 
-    public Long getPage() {
-        return page;
+    public Long getPageNumber() {
+        return pageNumber;
     }
 
-    public void setPage(Long page) {
-        this.page = page;
+    public void setPageNumber(Long pageNumber) {
+        this.pageNumber = pageNumber;
     }
 
     public Long getSize() {
@@ -42,12 +51,54 @@ public class Pageable {
     }
 
     public long getOffset() {
-        return size*page;
+        return size*pageNumber;
     }
+
+    public Long getTotalElements() {
+        return totalElements;
+    }
+
+    public void setTotalElements(Long totalElements) {
+        this.totalElements = totalElements;
+    }
+
+    public Object getContent() {
+        return content;
+    }
+
+    public void setContent(Object content) {
+        this.content = content;
+    }
+
+    public String getPage() {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        String jsonString = "";
+
+        try{
+            jsonString = jsonMapper.writeValueAsString(makeMap());
+        } catch (IOException ignored) {
+
+        }
+
+        return jsonString;
+    }
+
+    private Map<String, Object> makeMap() {
+
+        Map<String, Object> mappedObject = new HashMap<>();
+
+        mappedObject.put("content", ((Optional)content).orElse(
+                UtilitiesClass.APP_STRING_DEFAULT_VALUE
+        ));
+        mappedObject.put("size", size);
+        mappedObject.put("totalElements", totalElements);
+
+        return mappedObject;
+   }
 
     @Override
     public String toString(){
-        return "page: " + page + ", size: " + size + ", search : " +
+        return "page: " + pageNumber + ", size: " + size + ", search : " +
                 search + ", sorting by " + sorting;
     }
 }

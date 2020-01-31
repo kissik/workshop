@@ -3,9 +3,6 @@ package ua.org.training.workshop.service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.exception.WorkshopErrors;
@@ -13,11 +10,7 @@ import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.utilities.Pageable;
 import ua.org.training.workshop.utilities.UtilitiesClass;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author kissik
@@ -76,36 +69,9 @@ public class AccountService{
     }
 
     public String getPage(Pageable page) {
-
-        String jsonString = "";
-        ObjectMapper jsonMapper = new ObjectMapper();
-
-        Map<String, Object> myMap = makeMap(page);
-
-        try{
-            jsonString = jsonMapper.writeValueAsString(myMap);
-
-        }catch (JsonGenerationException e) {
-            logger.error("JSON generation exception : " + e.getMessage());
-        } catch (JsonMappingException e) {
-            logger.error("JSON mapping exception : " + e.getMessage());
-        } catch (IOException e) {
-            logger.error("IO exception : " + e.getMessage());
-        }
-
-        return jsonString;
-    }
-
-    private Map<String, Object> makeMap(Pageable page) {
-        Map<String, Object> myMap = new HashMap<>();
-
-        myMap.put("content", accountRepository
+        return accountRepository
                 .createAccountDao()
-                .getPage(page, myMap)
-                .orElse(Collections.emptyList()));
-        myMap.put("size", page.getSize());
-
-        return myMap;
+                .getPage(page).getPage();
     }
 
     public void saveAccountRoles(Account account) throws WorkshopException {

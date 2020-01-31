@@ -8,6 +8,8 @@ import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.security.AccountSecurity;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -26,6 +28,7 @@ public class UtilitiesClass {
     public static final String ACCOUNT_PHONE_ATTRIBUTE = "phone";
 
     public static final String APP_ANONYMOUS_ACCOUNT_USERNAME = "anonymous";
+    public static final int APP_BCRYPT_SALT = 11;
     public static final String APP_ENCODING = "UTF-8";
     public static final String APP_ERROR_ATTRIBUTE = "error";
     public static final String APP_DEFAULT_LANGUAGE = "en";
@@ -49,6 +52,12 @@ public class UtilitiesClass {
     public static final String BUNDLE_LANGUAGE_FOR_REQUEST = "locale.string";
 
     public static final String LOG4J_XML_PATH = "src/log4j.xml";
+    public static final String ROLE_QUERY_DEFAULT_PREFIX = "r";
+    public static final String STATUS_QUERY_DEFAULT_PREFIX = "s";
+    public static final String ACCOUNT_QUERY_DEFAULT_PREFIX = "u";
+    public static final String REQUEST_QUERY_DEFAULT_PREFIX = "r";
+    public static final String REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX = "a";
+    public static final String REQUEST_USER_QUERY_DEFAULT_PREFIX = "u";
 
     private static final Long PAGEABLE_PAGE_DEFAULT_VALUE = 0L;
     private static final String PAGEABLE_PAGE_ATTRIBUTE = "page";
@@ -96,7 +105,7 @@ public class UtilitiesClass {
 
     public static Pageable createPage(HttpServletRequest request) {
         Pageable page = new Pageable();
-        page.setPage(
+        page.setPageNumber(
                 tryParse(
                         request.getParameter(PAGEABLE_PAGE_ATTRIBUTE),
                         PAGEABLE_PAGE_DEFAULT_VALUE));
@@ -125,4 +134,13 @@ public class UtilitiesClass {
         return accountSecurity.getUsername();
     }
 
+    public static String getUTF8String(String latin1String, String appStringDefaultValue) {
+        try {
+            return new String(latin1String.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        }
+        catch(Exception e){
+            logger.error("error convert : " + e.getMessage());
+            return appStringDefaultValue;
+        }
+    }
 }

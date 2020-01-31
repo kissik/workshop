@@ -44,11 +44,11 @@ ua/org/training/workshop/dao/GenericDao.class
 ua/org/training/workshop/dao/impl/MySQLQueries.class
 ua/org/training/workshop/servlet/command/impl/Requests.class
 ua/org/training/workshop/service/RequestService.class
-ua/org/training/workshop/dao/impl/JDBCGenericDao.class
 ua/org/training/workshop/servlet/command/impl/LogOut.class
 ua/org/training/workshop/servlet/command/impl/Accounts.class
 ua/org/training/workshop/dao/mapper/RoleMapper.class
 ua/org/training/workshop/security/ProcessingLoggedUsers.class
+ua/org/training/workshop/servlet/filters/CacheFilter.class
 ua/org/training/workshop/dao/RequestDao.class
 ua/org/training/workshop/servlet/command/forms/AccountFormError.class
 ua/org/training/workshop/utilities/Pageable.class

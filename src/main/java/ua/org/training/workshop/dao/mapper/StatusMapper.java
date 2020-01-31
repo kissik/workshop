@@ -8,17 +8,12 @@ import java.util.Map;
 
 public class StatusMapper implements ObjectMapper<Status> {
     @Override
-    public Status extractFromResultSet(ResultSet rs) throws SQLException {
+    public Status extractFromResultSet(ResultSet rs, String prefix) throws SQLException {
         Status status = new Status();
-        status.setId(rs.getLong("s.id"));
-        status.setCode(rs.getString("s.scode"));
-        status.setName(rs.getString("s.sname"));
-        status.setClose(rs.getBoolean("s.bclose"));
+        status.setId(rs.getLong(prefix + ".id"));
+        status.setCode(rs.getString(prefix + ".scode"));
+        status.setName(rs.getString(prefix + ".sname"));
+        status.setClose(rs.getBoolean(prefix + ".bclose"));
         return status;
-    }
-
-    @Override
-    public Status makeUnique(Map<Long, Status> cache, Status status) {
-        return null;
     }
 }
