@@ -45,6 +45,7 @@
                 <tbody id="pageable-list">
                 </tbody>
             </table>
+            <script src="/js/pageable-requests.js"></script>
             <script src="/js/pageable-workman-requests.js"></script>
         </div>
     </jsp:body>

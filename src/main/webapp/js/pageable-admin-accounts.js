@@ -1,3 +1,4 @@
+var accounts = "accounts";
 var urlPath = `/app/admin/${accounts}`;
 
 window.onload = () => {

@@ -1,8 +1,6 @@
-var accounts = "accounts";
 var	size;
 var	sorting = 'asc';
 var search;
-var requests = "requests";
 
 const ajaxJS = (url, callback) => {
     let xhr = new XMLHttpRequest();

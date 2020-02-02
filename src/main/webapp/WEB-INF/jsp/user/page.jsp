@@ -74,7 +74,8 @@
                 <tbody id="pageable-list">
                 </tbody>
              </table>
-             <script src="/js/pageable-user-requests.js"></script>
+            <script src="/js/pageable-requests.js"></script>
+            <script src="/js/pageable-user-requests.js"></script>
         </div>
     </jsp:body>
 </t:generic>
