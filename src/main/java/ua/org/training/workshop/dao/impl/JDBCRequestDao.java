@@ -9,6 +9,7 @@ import ua.org.training.workshop.dao.mapper.RequestMapper;
 import ua.org.training.workshop.dao.mapper.StatusMapper;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Request;
+import ua.org.training.workshop.domain.Status;
 import ua.org.training.workshop.exception.WorkshopErrors;
 import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.utilities.Pageable;
@@ -29,15 +30,18 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public void create(Request request) throws WorkshopException {
+    public Long create(Request request) throws WorkshopException {
+        Long newId;
         try {
+            newId = insertRequest(request);
             logger.debug("request (id = "
-                    + insertRequest(request)
+                    + newId
                     + ") was created: " + request.getTitle());
         }catch (SQLException e){
             logger.error("SQL exception : " + e.getMessage());
             throw new WorkshopException(WorkshopErrors.REQUEST_CREATE_NEW_ERROR);
         }
+        return newId;
     }
 
     @Override
@@ -158,6 +162,63 @@ public class JDBCRequestDao implements RequestDao {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
             callableStatement.setLong("nauthor", author.getId());
+            callableStatement.setString("ssearch", page.getSearch());
+            callableStatement.setString("ssorting", page.getSorting());
+            callableStatement.registerOutParameter("ncount", Types.BIGINT);
+            ResultSet rs = callableStatement.executeQuery();
+            page.setTotalElements(callableStatement.getLong("ncount"));
+            while (rs.next()) {
+                Request request = loadRequest(rs);
+                requests.add(request);
+            }
+        } catch (SQLException e) {
+            logger.error("find all SQL exception " + e.getMessage());
+        }
+        close();
+        page.setContent(Optional.of(requests));
+        return page;
+    }
+
+    @Override
+    public Pageable getPageByLanguageAndAuthor(Pageable page, String language, Account author) {
+        List<Request> requests = new ArrayList<>();
+        try (CallableStatement callableStatement =
+                     connection.prepareCall(MySQLQueries
+                             .REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT)) {
+            callableStatement.setLong("nlimit", page.getSize());
+            callableStatement.setLong("noffset", page.getOffset());
+            callableStatement.setLong("nauthor", author.getId());
+            callableStatement.setString("slang", language);
+            callableStatement.setString("ssearch", page.getSearch());
+            callableStatement.setString("ssorting", page.getSorting());
+            callableStatement.registerOutParameter("ncount", Types.BIGINT);
+            ResultSet rs = callableStatement.executeQuery();
+            page.setTotalElements(callableStatement.getLong("ncount"));
+            while (rs.next()) {
+                Request request = loadRequest(rs);
+                requests.add(request);
+            }
+        } catch (SQLException e) {
+            logger.error("find all SQL exception " + e.getMessage());
+        }
+        close();
+        page.setContent(Optional.of(requests));
+        return page;
+    }
+
+    @Override
+    public Pageable getPageByLanguageAndStatus(
+            Pageable page,
+            String language,
+            Status status) {
+        List<Request> requests = new ArrayList<>();
+        try (CallableStatement callableStatement =
+                     connection.prepareCall(MySQLQueries
+                             .REQUEST_FIND_PAGE_BY_LANGUAGE_AND_STATUS_CALLABLE_STATEMENT)) {
+            callableStatement.setLong("nlimit", page.getSize());
+            callableStatement.setLong("noffset", page.getOffset());
+            callableStatement.setLong("nstatus", status.getId());
+            callableStatement.setString("slang", language);
             callableStatement.setString("ssearch", page.getSearch());
             callableStatement.setString("ssorting", page.getSorting());
             callableStatement.registerOutParameter("ncount", Types.BIGINT);

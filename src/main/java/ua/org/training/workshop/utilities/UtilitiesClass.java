@@ -69,6 +69,7 @@ public class UtilitiesClass {
     public static final String REQUEST_DESCRIPTION_ATTRIBUTE = "description";
     public static final String REQUEST_DEFAULT_STATUS = "REGISTER";
     public static final String REQUEST_TITLE_ATTRIBUTE = "title";
+    public static final String REQUEST_WORKMAN_STATUS = "ACCEPT";
 
     static {
         new DOMConfigurator().doConfigure(LOG4J_XML_PATH, LogManager.getLoggerRepository());
@@ -142,5 +143,15 @@ public class UtilitiesClass {
             logger.error("error convert : " + e.getMessage());
             return appStringDefaultValue;
         }
+    }
+
+    public static String getLanguageString(HttpServletRequest request) {
+        return getBundleMessage(
+                new Locale(getParameterString(
+                        (String)request
+                                .getSession()
+                                .getAttribute(APP_LANG_ATTRIBUTE),
+                        APP_DEFAULT_LANGUAGE)),
+                BUNDLE_LANGUAGE_FOR_REQUEST);
     }
 }

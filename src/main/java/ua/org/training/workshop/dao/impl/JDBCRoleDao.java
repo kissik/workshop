@@ -46,8 +46,8 @@ public class JDBCRoleDao implements RoleDao {
     }
 
     @Override
-    public void create(Role entity) {
-
+    public Long create(Role entity) {
+        return 0L;
     }
 
     @Override

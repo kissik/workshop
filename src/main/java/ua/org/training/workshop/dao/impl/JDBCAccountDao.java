@@ -28,11 +28,12 @@ public class JDBCAccountDao implements AccountDao {
     }
 
     @Override
-    public void create(Account account) throws SQLException{
+    public Long create(Account account) throws SQLException{
+        Long newId;
         logger.info("Start transaction! --------------------------------> ");
         connection.setAutoCommit(false);
         try {
-            Long newId = insertAccount(account);
+            newId = insertAccount(account);
             addRoles(account, newId);
             connection.commit();
         }catch (SQLException e) {
@@ -43,6 +44,7 @@ public class JDBCAccountDao implements AccountDao {
         }
         logger.info("Transaction was successfully committed! <--------------------------------");
         close();
+        return newId;
     }
 
     @Override

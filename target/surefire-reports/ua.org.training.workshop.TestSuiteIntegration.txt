@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: ua.org.training.workshop.TestSuiteIntegration
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.852 s - in ua.org.training.workshop.TestSuiteIntegration

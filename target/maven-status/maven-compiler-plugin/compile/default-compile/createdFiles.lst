@@ -11,6 +11,7 @@ ua/org/training/workshop/dao/impl/JDBCAccountDao.class
 ua/org/training/workshop/servlet/command/impl/Registration.class
 ua/org/training/workshop/dao/mapper/RequestMapper.class
 ua/org/training/workshop/servlet/listener/SessionListener.class
+ua/org/training/workshop/servlet/command/impl/UserRequests.class
 ua/org/training/workshop/dao/impl/JDBCStatusDao.class
 ua/org/training/workshop/domain/Status.class
 ua/org/training/workshop/dao/AccountDao.class
@@ -27,6 +28,7 @@ ua/org/training/workshop/dao/impl/JDBCRoleDao.class
 ua/org/training/workshop/servlet/command/impl/Pages.class
 ua/org/training/workshop/servlet/command/impl/WorkmanPage.class
 ua/org/training/workshop/utilities/UtilitiesClass.class
+ua/org/training/workshop/servlet/command/impl/WorkmanRequests.class
 ua/org/training/workshop/domain/Account.class
 ua/org/training/workshop/servlet/command/impl/Login.class
 ua/org/training/workshop/servlet/command/impl/Exception.class
@@ -42,7 +44,6 @@ ua/org/training/workshop/dao/mapper/StatusMapper.class
 ua/org/training/workshop/servlet/command/impl/AccessDenied.class
 ua/org/training/workshop/dao/GenericDao.class
 ua/org/training/workshop/dao/impl/MySQLQueries.class
-ua/org/training/workshop/servlet/command/impl/Requests.class
 ua/org/training/workshop/service/RequestService.class
 ua/org/training/workshop/servlet/command/impl/LogOut.class
 ua/org/training/workshop/servlet/command/impl/Accounts.class
@@ -54,3 +55,4 @@ ua/org/training/workshop/servlet/command/forms/AccountFormError.class
 ua/org/training/workshop/utilities/Pageable.class
 ua/org/training/workshop/exception/WorkshopException.class
 ua/org/training/workshop/servlet/command/impl/NewRequest.class
+ua/org/training/workshop/servlet/command/impl/ManagerRequests.class

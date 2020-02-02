@@ -73,8 +73,8 @@ public class JDBCStatusDao implements StatusDao {
     }
 
     @Override
-    public void create(Status entity) {
-
+    public Long create(Status entity) {
+        return 0L;
     }
 
     @Override

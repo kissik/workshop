@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class Requests implements Command {
+public class UserRequests implements Command {
 
     private RequestService requestService = new RequestService();
     private AccountService accountService = new AccountService();
@@ -24,7 +24,7 @@ public class Requests implements Command {
     static {
         new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    private static Logger logger = Logger.getLogger(Requests.class);
+    private static Logger logger = Logger.getLogger(UserRequests.class);
 
     @Override
     public String execute(HttpServletRequest request,
@@ -43,7 +43,7 @@ public class Requests implements Command {
         Pageable page = UtilitiesClass.createPage(request);
         Account author = accountService.getAccountByUsername(
                 UtilitiesClass.getCurrentUserName(request));
-        String jsonString = requestService.getPageByAuthor(page, author);
+        String jsonString = requestService.getPageByLanguageAndAuthor(page, UtilitiesClass.getLanguageString(request), author);
         try {
             PrintWriter writer = response.getWriter();
             writer.print(jsonString);

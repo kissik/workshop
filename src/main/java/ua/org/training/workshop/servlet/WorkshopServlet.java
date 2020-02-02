@@ -6,14 +6,12 @@ import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.servlet.command.*;
 import ua.org.training.workshop.servlet.command.impl.*;
 import ua.org.training.workshop.servlet.command.impl.Exception;
-import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,11 +33,13 @@ public class WorkshopServlet extends HttpServlet {
         commands.put("login", new Login());
         commands.put("logout", new LogOut());
         commands.put("manager/page", new ManagerPage());
+        commands.put("manager/requests", new ManagerRequests());
         commands.put("registration", new Registration());
         commands.put("user/page", new UserPage());
-        commands.put("user/requests", new Requests());
+        commands.put("user/requests", new UserRequests());
         commands.put("user/new-request", new NewRequest());
         commands.put("workman/page", new WorkmanPage());
+        commands.put("workman/requests", new WorkmanRequests());
     }
 
     public void doGet(HttpServletRequest request,

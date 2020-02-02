@@ -6,6 +6,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Request;
+import ua.org.training.workshop.domain.Status;
 import ua.org.training.workshop.exception.WorkshopErrors;
 import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.utilities.Pageable;
@@ -24,9 +25,13 @@ public class RequestService {
     }
     private static Logger logger = Logger.getLogger(RequestService.class);
 
-    public void createRequest(Request request) throws WorkshopException {
+    public void setDaoFactory(DaoFactory daoFactory){
+        requestRepository = daoFactory;
+    }
+
+    public Long createRequest(Request request) throws WorkshopException {
         try {
-            requestRepository
+            return requestRepository
                     .createRequestDao()
                     .create(request);
         }
@@ -38,7 +43,6 @@ public class RequestService {
             logger.error("error: " + e.getMessage());
             throw new WorkshopException(WorkshopErrors.REQUEST_CREATE_NEW_ERROR);
         }
-        logger.info("Request " + request.getTitle() + " was successfully created");
     }
 
     public Request getRequestById(Long id) throws WorkshopException {
@@ -61,4 +65,17 @@ public class RequestService {
                 .getPage();
     }
 
+    public String getPageByLanguageAndAuthor(Pageable page, String language, Account author) throws WorkshopException{
+        return requestRepository
+                .createRequestDao()
+                .getPageByLanguageAndAuthor(page, language, author)
+                .getPage();
+    }
+
+    public String getPageByLanguageAndStatus(Pageable page, String language, Status status) throws WorkshopException{
+        return requestRepository
+                .createRequestDao()
+                .getPageByLanguageAndStatus(page, language, status)
+                .getPage();
+    }
 }

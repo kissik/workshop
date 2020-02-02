@@ -11,6 +11,7 @@
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/Exception.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/security/ProcessingLoggedUsers.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/impl/ConnectionPoolHolder.java
+/home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/UserRequests.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/GenericDao.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/exception/WorkshopErrors.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/RoleDao.java
@@ -38,15 +39,16 @@
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/impl/JDBCRoleDao.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/domain/Status.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/AccountDao.java
+/home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/WorkmanRequests.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/impl/MySQLQueries.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/security/AuthorizeTag.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/domain/Account.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/security/GrantedAuthority.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/service/RoleService.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/impl/JDBCRequestDao.java
-/home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/Requests.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/utilities/Pageable.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/mapper/AccountMapper.java
+/home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/servlet/command/impl/ManagerRequests.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/security/AccountSecurity.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/domain/Role.java
 /home/irochka/project/temp/java/workshop-webapp/src/main/java/ua/org/training/workshop/dao/StatusDao.java

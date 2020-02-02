@@ -23,10 +23,14 @@ public class AccountService{
     }
     private static Logger logger = Logger.getLogger(AccountService.class);
 
-    public void registerAccount(Account account) throws WorkshopException {
+    public void setDaoFactory(DaoFactory daoFactory){
+        accountRepository = daoFactory;
+    }
 
+    public Long registerAccount(Account account) throws WorkshopException {
+        logger.info("Register account : " + account.getUsername());
         try {
-            accountRepository
+            return accountRepository
                     .createAccountDao()
                     .create(account);
         }
@@ -38,6 +42,7 @@ public class AccountService{
             throw new WorkshopException(WorkshopErrors.ACCOUNT_CREATE_NEW_ERROR);
         }
         logger.info("Account " + account.getFullNameOrigin() + " was successfully created");
+        return 0L;
     }
 
     public Account getAccountById(Long id) throws WorkshopException {

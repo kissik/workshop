@@ -29,8 +29,16 @@ public interface MySQLQueries {
             "CALL APP_PAGINATION_REQUEST_LIST (?, ?, ?, ?, ?);";
     String REQUEST_FIND_PAGE_BY_AUTHOR_CALLABLE_STATEMENT =
             "CALL APP_PAGINATION_REQUEST_LIST_BY_AUTHOR (?, ?, ?, ?, ?, ?);";
+    String REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_REQUEST_LIST_BY_LANGUAGE_AND_AUTHOR (?, ?, ?, ?, ?, ?, ?);";
+    String REQUEST_FIND_PAGE_BY_LANGUAGE_AND_STATUS_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_REQUEST_LIST_BY_LANGUAGE_AND_STATUS (?, ?, ?, ?, ?, ?, ?);";
     String REQUEST_FIND_BY_ID_QUERY =
-            " select * from request_list r where r.id = ?";
+            " select * from request_list r " +
+                    " inner join user_list a on r.nauthor = a.id " +
+                    " inner join user_list u on r.nuser = u.id " +
+                    " inner join status s on r.nstatus = s.id " +
+                    " where r.id = ?";
     String REQUEST_INSERT_PREPARE_STATEMENT =
             "CALL APP_INSERT_REQUEST_LIST (?,?,?,?,?,?,?,?);";
 
@@ -50,5 +58,4 @@ public interface MySQLQueries {
             " select * from status s where id = ?";
     String STATUS_FIND_ALL_QUERY =
             " select * from status s";
-
 }
