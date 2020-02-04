@@ -36,6 +36,7 @@ public class WorkshopServlet extends HttpServlet {
         commands.put("manager/requests", new ManagerRequests());
         commands.put("registration", new Registration());
         commands.put("user/page", new UserPage());
+        commands.put("user/history-requests", new UserHistoryRequests());
         commands.put("user/requests", new UserRequests());
         commands.put("user/new-request", new NewRequest());
         commands.put("workman/page", new WorkmanPage());
@@ -46,10 +47,6 @@ public class WorkshopServlet extends HttpServlet {
                       HttpServletResponse response)
             throws IOException, ServletException {
         processRequest(request, response);
-/*
-        httpServletRequest
-                .getRequestDispatcher(WELCOME_PAGE)
-                .forward(httpServletRequest, httpServletResponse);*/
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)

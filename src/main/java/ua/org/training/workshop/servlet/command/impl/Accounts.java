@@ -40,7 +40,7 @@ public class Accounts implements Command {
 
         if (uriParts.length == 2)
            return createJSONUserList(request, response);
-        id = UtilitiesClass.tryParse(uriParts[2], DEFAULT_ID);
+        id = UtilitiesClass.tryParseLong(uriParts[2], DEFAULT_ID);
         Account account = accountService.getAccountById(id);
         session.setAttribute("account", account);
         if (uriParts.length == 4 && uriParts[3].equals("edit")) {

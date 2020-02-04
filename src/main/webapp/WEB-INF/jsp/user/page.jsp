@@ -25,43 +25,54 @@
              <h1>
                 <fmt:message key="requestsList.pageTitle" />
              </h1>
-             <div class="form-group">
-             	<input type="checkbox" class="input-modal-window" id="new-request-modal-window">
-                <label class="btn btn-primary" for="new-request-modal-window" ><fmt:message key="request.create" /></label>
-                <div class="hidden-new-request-modal-window">
-                    <div class="center">
-                        <div class="contact-form contact-form-ribbon-top">
-                            <form id="contactForm" data-toggle="validator" novalidate="true" action="/app/user/new-request">
-                                <h1><fmt:message key="newRequest.pageTitle" /></h1>
-							    <div class="form-group">
-								    <input type="text" class="form-control caps" name="title" placeholder="Title" required>
-								</div>
-								<div class="form-group">
-								    <textarea class="form-control caps" rows="5" placeholder="Description" name="description" required></textarea>
-								</div>
-								<div class="form-group">
-                                    <button type="submit" id="form-submit" class="btn btn-form-submit">
-								        <span><fmt:message key="newRequest.label.submit" /></span>
-								    </button>
-								</div>
-								<div class="form-group">
-                                    <label class="btn btn-form-submit" for="new-request-modal-window">
-                                        <fmt:message key="newRequest.label.reset" />
-                                    </label>
-                                </div>
-							</form>
-                        </div>
-                	</div>
+             <input type="checkbox" class="input-modal-window" id="new-request-modal-window">
+             <div class="modal hidden-new-request-modal-window">
+                                 <div class="center">
+                                     <div class="contact-form contact-form-ribbon-top">
+                                         <form id="contactForm" data-toggle="validator" novalidate="true" action="/app/user/new-request">
+                                             <h1><fmt:message key="newRequest.pageTitle" /></h1>
+             							    <div class="form-group">
+             								    <input type="text" class="form-control caps" name="title" placeholder="<fmt:message key="newRequest.label.title" />" required>
+             								</div>
+             								<div class="form-group">
+             								    <textarea class="form-control caps" rows="5" placeholder="<fmt:message key="newRequest.label.description" />" name="description" required></textarea>
+             								</div>
+             								<div class="form-group">
+                                                 <button type="submit" id="form-submit" class="btn btn-form-submit">
+             								        <span><fmt:message key="newRequest.label.submit" /></span>
+             								    </button>
+             								</div>
+             								<div class="form-group">
+                                                 <label class="btn btn-form-submit btn-form-reset" for="new-request-modal-window">
+                                                     <fmt:message key="newRequest.label.reset" />
+                                                 </label>
+                                             </div>
+             							</form>
+                                     </div>
+                             	</div>
+                             </div>
+             <div class="workshop-grid-container">
+             <div class="workshop-grid-left-3 wrapper">
+                <div class="list-group-flush components">
+                    <label class="workshop-create-request-btn btn-lg" for="new-request-modal-window" >
+                        <fmt:message key="request.create" />
+                    </label>
+                    <label class="list-group-item list-group-item-action" onclick="onWork()">
+                        <fmt:message key="request.in.work" />
+                    </label>
+                    <label class="list-group-item list-group-item-action" onclick="closed()">
+                        <fmt:message key="request.were.closed" />
+                    </label>
                 </div>
              </div>
+             <div class="workshop-grid-right-9">
              <div class="form-group">
-                <input id="search" class="col-4 rounded border" type="texp" placeholder="search">
+                <input id="search" class="col-4 rounded border" type="texp" placeholder="<fmt:message key="table.search" />">
                 <input id="size" class="col-2 rounded border" type="number" min="2" max="6" value="5">
-                <input name="sorting" class="hidden" type="radio" id="asc" value="asc" checked><label class="col-2" for="asc">asc</label>
-                <input name="sorting" class="hidden" type="radio" id="desc" value="desc"><label class="col-2" for="desc">desc</label>
+                <input name="sorting" class="hidden" type="radio" id="asc" value="asc" checked><label class="col-2" for="asc"><fmt:message key="table.asc" /></label>
+                <input name="sorting" class="hidden" type="radio" id="desc" value="desc"><label class="col-2" for="desc"><fmt:message key="table.desc" /></label>
                 <div id="page-navigation"></div>
              </div>
-             <input type="checkbox" class="input-modal-window" id="view-request-modal-window">
              <table id="request-list-table" class="">
                 <thead>
                     <tr>
@@ -76,6 +87,8 @@
              </table>
             <script src="/js/pageable-requests.js"></script>
             <script src="/js/pageable-user-requests.js"></script>
+            </div>
+            </div>
         </div>
     </jsp:body>
 </t:generic>

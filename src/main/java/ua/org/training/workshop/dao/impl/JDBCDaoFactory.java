@@ -27,6 +27,10 @@ public class JDBCDaoFactory extends DaoFactory {
     public RequestDao createRequestDao() {
         return new JDBCRequestDao(getConnection());
     }
+    @Override
+    public HistoryRequestDao createHistoryRequestDao() {
+        return new JDBCHistoryRequestDao(getConnection());
+    }
 
     private Connection getConnection(){
         try {

@@ -17,13 +17,18 @@ const makeRow = (rowData, index) => {
     tableData = document.createElement('td');
     tableData.appendChild(
         document
-            .createTextNode(rowData.firstName))
+            .createTextNode(
+                language==='uk' ? rowData.firstNameOrigin : rowData.firstName
+            ));
+
     tableRow.appendChild(tableData);
 
     tableData = document.createElement('td');
     tableData.appendChild(
         document
-            .createTextNode(rowData.lastName))
+            .createTextNode(
+                language==='uk' ? rowData.lastNameOrigin : rowData.lastName
+            ))
     tableRow.appendChild(tableData);
     tableData = document.createElement('td');
     tableData.appendChild(

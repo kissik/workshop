@@ -34,7 +34,7 @@ const makeRow = (rowData, index) => {
     tableData.style.width = '25%';
     tableData.appendChild(
         document
-            .createTextNode(rowData.status.code))
+            .createTextNode(rowData.status.value))
     tableRow.appendChild(tableData);
 
     tableData = document.createElement('td');
@@ -47,7 +47,8 @@ const makeRow = (rowData, index) => {
     tableData.style.width = '25%';
     tableData.appendChild(
         document
-            .createTextNode(rowData.author.fullName))
+            .createTextNode(
+            language === 'uk' ? rowData.author.fullNameOrigin : rowData.author.fullName))
     tableRow.appendChild(tableData);
     return tableRow;
 }
@@ -85,7 +86,7 @@ const createHiddenRequestDiv = (hiddenId, rowData) => {
 
     fieldHeading = document.createElement('h2');
     let field = document.createElement('span');
-    field.appendChild(document.createTextNode(rowData.status.code));
+    field.appendChild(document.createTextNode(rowData.status.value));
     field.setAttribute('class','badge badge-info');
     fieldHeading.appendChild(field);
     hiddenDesk.appendChild(fieldHeading);
@@ -104,9 +105,21 @@ const createHiddenRequestDiv = (hiddenId, rowData) => {
     field.appendChild(document.createTextNode(`${rowData.user.username}`));
     hiddenDesk.appendChild(field);
 
-    field = document.createElement('p');
+    field = document.createElement('div');
+    field.setAttribute("class", "card-header");
     field.appendChild(document.createTextNode(rowData.description));
     hiddenDesk.appendChild(field);
+
+    field = document.createElement('h1');
+    field.setAttribute("class","card-title pricing-card-title");
+    field.appendChild(document.createTextNode(rowData.price));
+    hiddenDesk.appendChild(field);
+
+    field = document.createElement('em');
+    field.appendChild(document.createTextNode(rowData.cause));
+    hiddenDesk.appendChild(field);
+
     hiddenRequestDiv.appendChild(hiddenDesk);
+
     return hiddenRequestDiv;
 }

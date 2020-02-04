@@ -8,8 +8,9 @@ import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.security.AccountSecurity;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -41,6 +42,7 @@ public class UtilitiesClass {
     public static final String APP_STRING_DEFAULT_VALUE = "";
     public static final String APP_USER_ATTRIBUTE = "user";
     public static final String APP_USERNAME_ATTRIBUTE = "username";
+    public static final Integer APP_DEFAULT_PRICE = 0;
     public static final String[] APP_ROLES = new String[]{
             "ADMIN",
             "MANAGER",
@@ -50,6 +52,8 @@ public class UtilitiesClass {
     public static final String BUNDLE_ACCESS_DENIED_LOGGED_USERS = "access.denied.logged.user";
     public static final String BUNDLE_ACCESS_DENIED_MESSAGE = "access.denied.message";
     public static final String BUNDLE_LANGUAGE_FOR_REQUEST = "locale.string";
+    public static final String BUNDLE_CURRENCY_STRING = "locale.currency.alpha";
+    public static final String BUNDLE_CURRENCY_RATE_INTEGER = "locale.currency.rate";
 
     public static final String LOG4J_XML_PATH = "src/log4j.xml";
     public static final String ROLE_QUERY_DEFAULT_PREFIX = "r";
@@ -58,6 +62,10 @@ public class UtilitiesClass {
     public static final String REQUEST_QUERY_DEFAULT_PREFIX = "r";
     public static final String REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX = "a";
     public static final String REQUEST_USER_QUERY_DEFAULT_PREFIX = "u";
+    public static final String HISTORY_REQUEST_USER_QUERY_DEFAULT_PREFIX = "u";
+    public static final String HISTORY_REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX = "a";
+    public static final String HISTORY_REQUEST_QUERY_DEFAULT_PREFIX = "h";
+    public static final Object BUNDLE_REQUEST_STATUS_PREFIX = "app.request.";
 
     private static final Long PAGEABLE_PAGE_DEFAULT_VALUE = 0L;
     private static final String PAGEABLE_PAGE_ATTRIBUTE = "page";
@@ -75,9 +83,19 @@ public class UtilitiesClass {
         new DOMConfigurator().doConfigure(LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
     private static Logger logger = Logger.getLogger(UtilitiesClass.class);
-    public static Long tryParse(String value, Long defaultValue){
+    public static Long tryParseLong(String value, Long defaultValue){
         try{
             return Long.parseLong(value);
+        }
+        catch(NumberFormatException e){
+            logger.error("Number format exception : " + e.getMessage());
+            logger.info("set default value = " + defaultValue);
+        }
+        return defaultValue;
+    }
+    public static Integer tryParseInteger(String value, Integer defaultValue){
+        try{
+            return Integer.parseInt(value);
         }
         catch(NumberFormatException e){
             logger.error("Number format exception : " + e.getMessage());
@@ -107,11 +125,11 @@ public class UtilitiesClass {
     public static Pageable createPage(HttpServletRequest request) {
         Pageable page = new Pageable();
         page.setPageNumber(
-                tryParse(
+                tryParseLong(
                         request.getParameter(PAGEABLE_PAGE_ATTRIBUTE),
                         PAGEABLE_PAGE_DEFAULT_VALUE));
         page.setSize(
-                tryParse(
+                tryParseLong(
                         request.getParameter(PAGEABLE_SIZE_ATTRIBUTE),
                         PAGEABLE_SIZE_DEFAULT_VALUE));
         page.setSearch(
@@ -122,6 +140,9 @@ public class UtilitiesClass {
                 getParameterString(
                         request.getParameter(PAGEABLE_SORTING_ATTRIBUTE),
                         APP_STRING_DEFAULT_VALUE));
+        page.setLanguage(
+                getCurrentLanguage(request)
+        );
 
         logger.info("page: " + page.toString());
         return page;
@@ -145,13 +166,33 @@ public class UtilitiesClass {
         }
     }
 
-    public static String getLanguageString(HttpServletRequest request) {
+    public static String getLanguageString(Locale locale) {
         return getBundleMessage(
-                new Locale(getParameterString(
-                        (String)request
-                                .getSession()
-                                .getAttribute(APP_LANG_ATTRIBUTE),
-                        APP_DEFAULT_LANGUAGE)),
+                locale,
                 BUNDLE_LANGUAGE_FOR_REQUEST);
+    }
+
+    private static String getCurrentLanguage(HttpServletRequest request){
+        return getParameterString(
+                (String)request
+                        .getSession()
+                        .getAttribute(APP_LANG_ATTRIBUTE),
+                APP_DEFAULT_LANGUAGE);
+    }
+
+    public static Locale getLocale(HttpServletRequest request){
+        return new Locale(getCurrentLanguage(request));
+    }
+
+    public static String getLocaleDate(Locale locale, LocalDate dateCreated) {
+        return APP_STRING_DEFAULT_VALUE;
+    }
+
+    public static String getLocalePrice(Locale locale, BigDecimal price) {
+        String result = getBundleMessage(locale, BUNDLE_CURRENCY_STRING);
+        Integer rate = tryParseInteger(getBundleMessage(locale, BUNDLE_CURRENCY_RATE_INTEGER),
+                APP_DEFAULT_PRICE);
+        result = price.multiply(BigDecimal.valueOf(rate)) + " " + result;
+        return result;
     }
 }

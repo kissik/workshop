@@ -21,11 +21,20 @@
 	z-index: 2000;
 }
 
-.btn-form-submit, .btn-form-submit:focus, .btn-form-submit:hover{
+.btn-form-submit, .btn-form-submit:focus{
 	width: 100%;
 	background: #007bff;
 	padding: 20px;
 	color: white;
+	border-radius: 35px;
+}
+
+.btn-form-submit:hover{
+    background: rgba(0, 255, 0,0.5);
+}
+
+.btn-form-reset:hover{
+    background: rgba(255,0, 0,0.5);
 }
 
 form:invalid #form-submit {
@@ -64,10 +73,22 @@ textarea{
     resize: none;
 }
 
-[href^="?lang="]{
-    border-right: 1px solid #2FA4E7;
-    padding: 0 10px;
+[href^="?lang="],
+.workshop-login-logout-btn{
+    color: #2FA4E7;
+    padding: 10px;
+    margin: 0 5px 0 0;
 }
+
+[href^="?lang="]:hover,
+.workshop-login-logout-btn:hover{
+    border-radius: 24px;
+    color: black;
+    background: rgba(47,164, 231, 1);
+    padding: 5px 10px;
+    text-decoration: none;
+}
+
 
 * {
     box-sizing: border-box;
@@ -148,7 +169,7 @@ a.page-btn:hover{
     border: solid 3px #2FA4E7;
     background: #e9ecef;
     color: #2FA4E7;
-    border-radius: 10px;
+    border-radius: 24px;
     padding: 7px 12px;
 }
 
@@ -156,19 +177,49 @@ a.page-btn:hover{
     display: none;
 }
 
-[for="asc"], [for="desc"]{
-    border: solid 3px #aaa;
-    border-radius: 5px;
-    color: #aaa;
+.workshop-grid-container{
+    display: grid;
+    grid-template-areas: 'left right right right';
+    grid-template-columns: 190px auto auto auto;
+}
 
+.workshop-grid-left-3{
+    grid-area: left;
+}
+
+.workshop-grid-right-9{
+    grid-area: right;
+    padding-left: 10px;
+}
+
+[for="asc"], [for="desc"]{
+    background: white;
+    color: #2FA4E7;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302),
+    0 1px 3px 1px rgba(60,64,67,0.149);
+    border-radius: 24px;
+    display: inline-flex;
+}
+
+.workshop-create-request-btn{
+    background: white;
+    color: #2FA4E7;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302),
+    0 1px 3px 1px rgba(60,64,67,0.149);
+    border-radius: 24px;
+    display: inline-flex;
 }
 
 #asc:checked ~ [for="asc"],
-#desc:checked ~ [for="desc"]{
-    border: solid 3px #2FA4E7;
-    border-radius: 5px;
-    background: #e9ecef;
-    color: #2FA4E7;
+#desc:checked ~ [for="desc"],
+.workshop-create-request-btn:hover{
+    color: white;
+    background: rgba(47,164, 231,0.5);
+}
+
+[for="desc"]:hover,
+[for="asc"]:hover{
+    background: rgba(47,164, 231,0.1);
 }
 
 @media (max-width: 768px){

@@ -119,8 +119,4 @@ public class Request {
     public void setClosed(boolean closed) {
         this.closed = closed;
     }
-
-    public String getClosedLiteral(){
-        return "app.literal." + String.valueOf(closed);
-    }
 }

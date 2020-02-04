@@ -72,7 +72,7 @@ public class Registration implements Command {
                     password, BCrypt.gensalt(UtilitiesClass.APP_BCRYPT_SALT)));
             logger.debug("error has errors = " + errors.haveErrors());
 
-            validation(request.getLocale(),
+            validation(UtilitiesClass.getLocale(request),
                     account,
                     errors);
             logger.debug("error has errors = " + errors.haveErrors());

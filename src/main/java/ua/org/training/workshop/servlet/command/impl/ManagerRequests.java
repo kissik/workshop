@@ -44,7 +44,7 @@ public class ManagerRequests implements Command {
         Pageable page = UtilitiesClass.createPage(request);
         String jsonString = requestService
                 .getPageByLanguageAndStatus(page,
-                        UtilitiesClass.getLanguageString(request),
+                        UtilitiesClass.getLocale(request),
                         statusService.findByCode(UtilitiesClass.REQUEST_DEFAULT_STATUS));
         try {
             PrintWriter writer = response.getWriter();

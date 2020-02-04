@@ -25,6 +25,17 @@ public interface MySQLQueries {
                     "(`nuser`,`nrole`) " +
                     "VALUES (?,?)";
 
+    String HISTORY_REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_HISTORY_REQUEST_LIST_BY_LANGUAGE_AND_AUTHOR (?, ?, ?, ?, ?, ?, ?);";
+    String HISTORY_REQUEST_FIND_PAGE_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_HISTORY_REQUEST_LIST (?, ?, ?, ?, ?);";
+    String HISTORY_REQUEST_FIND_BY_ID_QUERY =
+            " select * from request_list_history h " +
+                    " inner join user_list a on h.nauthor = a.id " +
+                    " inner join user_list u on h.nuser = u.id " +
+                    " inner join status s on h.nstatus = s.id " +
+                    " where h.id = ?";
+
     String REQUEST_FIND_PAGE_CALLABLE_STATEMENT =
             "CALL APP_PAGINATION_REQUEST_LIST (?, ?, ?, ?, ?);";
     String REQUEST_FIND_PAGE_BY_AUTHOR_CALLABLE_STATEMENT =

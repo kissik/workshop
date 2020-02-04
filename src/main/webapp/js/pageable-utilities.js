@@ -1,6 +1,9 @@
+var defaultSizeValue = 5;
+var defaultStringValue = '';
 var	size;
 var	sorting = 'asc';
 var search;
+var language = 'en';
 
 const ajaxJS = (url, callback) => {
     let xhr = new XMLHttpRequest();
@@ -13,6 +16,11 @@ const ajaxJS = (url, callback) => {
     }
     xhr.open('GET', url, true);
     xhr.send();
+}
+
+const clearTextFields = () => {
+    search = document.querySelector(`#search`);
+    search.value = defaultStringValue;
 }
 
 const clear = tag => {
@@ -46,7 +54,7 @@ const makePages = i => {
     return anchor;
 }
 
-const showResults = url => {
+const showResults = (url) => {
 	ajaxJS(url, (response) => {
         let tbody = document.getElementById('pageable-list');
         let div = document.getElementById('page-navigation');
@@ -58,29 +66,39 @@ const showResults = url => {
         let totalElements = response.totalElements;
         let pageSize = response.size;
         let pages = Math.ceil(totalElements/pageSize);
+        language = response.language;
         tbody.appendChild(makeHTML(response.content));
         div.appendChild(makePageNavigation(pages));
 	});
 }
 
-const wizard = urlPath => {
+const setSize = () => {
+    size = document.querySelector(`#size`);
+    size.value = defaultSizeValue;
+}
+
+const addListeners = (url) => {
+    sorting_desc.onclick = () => {
+        sorting = sorting_desc.value;
+        showResults(`${url}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
+    }
+    sorting_asc.onclick = () => {
+        sorting = sorting_asc.value;
+        showResults(`${url}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
+    }
+    size.onkeyup = () => {
+         showResults(`${url}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
+    }
+    search.onkeyup = () => {
+        showResults(`${url}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
+    }
+}
+
+const wizard = (urlPath) => {
     size = document.querySelector(`#size`);
     search = document.querySelector(`#search`);
     sorting_desc = document.querySelector(`#desc`);
     sorting_asc = document.querySelector(`#asc`);
-    sorting_desc.onclick = () => {
-        sorting = sorting_desc.value;
-        showResults(`${urlPath}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
-    }
-    sorting_asc.onclick = () => {
-        sorting = sorting_asc.value;
-        showResults(`${urlPath}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
-    }
-    size.onkeyup = () => {
-         showResults(`${urlPath}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
-    }
-    search.onkeyup = () => {
-        showResults(`${urlPath}?size=${size.value}&search=${search.value}&sorting=${sorting}`);
-    }
+    addListeners(urlPath);
 	showResults(urlPath);
 }

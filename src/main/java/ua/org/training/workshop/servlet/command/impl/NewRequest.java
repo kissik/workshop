@@ -55,7 +55,9 @@ public class NewRequest implements Command {
             newRequest.setAuthor(author);
             newRequest.setUser(author);
             newRequest.setClosed(status.isClose());
-            newRequest.setLanguage(UtilitiesClass.getLanguageString(request));
+            newRequest.setLanguage(
+                    UtilitiesClass.getLanguageString(
+                            UtilitiesClass.getLocale(request)));
             logger.info("new request form creation: " + newRequest.toString());
             requestService.createRequest(newRequest);
         }

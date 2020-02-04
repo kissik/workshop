@@ -102,7 +102,7 @@
                         <kissik:authorize access="isAnonymous()">
                             <div class="workshop-sessionInfo">
                                 <fmt:message key="subhead.welcome" />
-                                <a href="/app${loginUrl}">
+                                <a class="workshop-login-logout-btn" href="/app${loginUrl}">
                                     <fmt:message key="subhead.login" />
                                 </a>
                             </div>
@@ -119,7 +119,7 @@
                                         ${user.fullName}
                                     </c:otherwise>
                                 </c:choose>
-                                <a href="/app${logoutUrl}">
+                                <a class="workshop-login-logout-btn" href="/app${logoutUrl}">
                                     <fmt:message key="subhead.logout" />
                                 </a>
                             </div>
@@ -134,7 +134,7 @@
     </div>
     <footer class="footer">
         <div class="container">
-            <p class="text-center text-uppercase text-muted">&copy;1984, no monkey was injured</p>
+            <p class="text-center text-uppercase text-muted">&copy;<fmt:message key="app.footer" /></p>
         </div>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

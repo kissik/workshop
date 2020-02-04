@@ -16,6 +16,7 @@ public class Pageable {
     private String sorting;
     private String search;
     private Long totalElements;
+    private String language;
     private Object content;
 
     public Long getPageNumber() {
@@ -92,6 +93,7 @@ public class Pageable {
         ));
         mappedObject.put("size", size);
         mappedObject.put("totalElements", totalElements);
+        mappedObject.put("language", language);
 
         return mappedObject;
    }
@@ -100,5 +102,13 @@ public class Pageable {
     public String toString(){
         return "page: " + pageNumber + ", size: " + size + ", search : " +
                 search + ", sorting by " + sorting;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

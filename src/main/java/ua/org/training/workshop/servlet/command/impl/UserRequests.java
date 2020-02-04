@@ -43,7 +43,11 @@ public class UserRequests implements Command {
         Pageable page = UtilitiesClass.createPage(request);
         Account author = accountService.getAccountByUsername(
                 UtilitiesClass.getCurrentUserName(request));
-        String jsonString = requestService.getPageByLanguageAndAuthor(page, UtilitiesClass.getLanguageString(request), author);
+        String jsonString = requestService
+                .getPageByLanguageAndAuthor(
+                        page,
+                        UtilitiesClass.getLocale(request),
+                        author);
         try {
             PrintWriter writer = response.getWriter();
             writer.print(jsonString);

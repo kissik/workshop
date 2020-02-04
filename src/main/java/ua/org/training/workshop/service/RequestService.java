@@ -9,10 +9,15 @@ import ua.org.training.workshop.domain.Request;
 import ua.org.training.workshop.domain.Status;
 import ua.org.training.workshop.exception.WorkshopErrors;
 import ua.org.training.workshop.exception.WorkshopException;
+import ua.org.training.workshop.service.dto.RequestDTO;
 import ua.org.training.workshop.utilities.Pageable;
 import ua.org.training.workshop.utilities.UtilitiesClass;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author kissik
@@ -52,30 +57,53 @@ public class RequestService {
                 .orElseThrow(() -> new WorkshopException(WorkshopErrors.REQUEST_NOT_FOUND_ERROR));
     }
 
-    public String getPage(Pageable page) {
-        return requestRepository
+    public String getPage(Locale locale, Pageable page) {
+        return getDTOPage(locale, requestRepository
                 .createRequestDao()
-                .getPage(page).getPage();
+                .getPage(page));
     }
 
-    public String getPageByAuthor(Pageable page, Account author) {
-        return requestRepository
+    public String getPageByAuthor(Pageable page, Locale locale, Account author) {
+        return getDTOPage(locale, requestRepository
                 .createRequestDao()
-                .getPageByAuthor(page, author)
-                .getPage();
+                .getPageByAuthor(page, author));
     }
 
-    public String getPageByLanguageAndAuthor(Pageable page, String language, Account author) throws WorkshopException{
-        return requestRepository
+    public String getPageByLanguageAndAuthor(Pageable page,
+                                             Locale locale,
+                                             Account author) throws WorkshopException{
+        return getDTOPage(locale, requestRepository
                 .createRequestDao()
-                .getPageByLanguageAndAuthor(page, language, author)
-                .getPage();
+                .getPageByLanguageAndAuthor(page,
+                        UtilitiesClass.getLanguageString(locale),
+                        author));
     }
 
-    public String getPageByLanguageAndStatus(Pageable page, String language, Status status) throws WorkshopException{
-        return requestRepository
+    public String getPageByLanguageAndStatus(Pageable page,
+                                             Locale locale,
+                                             Status status) throws WorkshopException{
+        return getDTOPage(locale, requestRepository
                 .createRequestDao()
-                .getPageByLanguageAndStatus(page, language, status)
-                .getPage();
+                .getPageByLanguageAndStatus(page,
+                        UtilitiesClass.getLanguageString(locale),
+                        status));
+    }
+
+    private String getDTOPage(Locale locale, Pageable page){
+
+        page.setContent(formatRequest(locale, (Optional<List<Request>>) page.getContent()));
+
+        return page.getPage();
+    }
+
+    private Optional<List<RequestDTO>> formatRequest(Locale locale, Optional<List<Request>> requestsList) {
+        return requestsList
+                .map(requestList -> Optional.of(
+                        requestList
+                                .stream()
+                                .map(request -> new RequestDTO(locale, request))
+                                .collect(Collectors.toList()))
+                )
+                .orElse(null);
     }
 }

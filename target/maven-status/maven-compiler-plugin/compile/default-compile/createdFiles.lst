@@ -1,10 +1,16 @@
 ua/org/training/workshop/exception/WorkshopErrors.class
 ua/org/training/workshop/servlet/filters/AuthFilter.class
 ua/org/training/workshop/service/StatusService.class
+ua/org/training/workshop/service/HistoryRequestService.class
 ua/org/training/workshop/dao/StatusDao.class
+ua/org/training/workshop/service/dto/RequestDTO.class
 ua/org/training/workshop/dao/impl/JDBCRequestDao.class
+ua/org/training/workshop/service/dto/HistoryRequestDTO.class
 ua/org/training/workshop/dao/mapper/AccountMapper.class
 ua/org/training/workshop/servlet/command/impl/AdminPage.class
+ua/org/training/workshop/dao/HistoryRequestDao.class
+ua/org/training/workshop/service/dto/StatusDTO.class
+ua/org/training/workshop/dao/impl/JDBCHistoryRequestDao.class
 ua/org/training/workshop/servlet/command/impl/UserPage.class
 ua/org/training/workshop/servlet/filters/CharsetFilter.class
 ua/org/training/workshop/dao/impl/JDBCAccountDao.class
@@ -15,6 +21,7 @@ ua/org/training/workshop/servlet/command/impl/UserRequests.class
 ua/org/training/workshop/dao/impl/JDBCStatusDao.class
 ua/org/training/workshop/domain/Status.class
 ua/org/training/workshop/dao/AccountDao.class
+ua/org/training/workshop/service/dto/AccountDTO.class
 ua/org/training/workshop/dao/impl/ConnectionPoolHolder.class
 ua/org/training/workshop/servlet/command/forms/AccountForm.class
 ua/org/training/workshop/security/AuthorizeTag.class
@@ -23,6 +30,8 @@ ua/org/training/workshop/servlet/WorkshopServlet.class
 ua/org/training/workshop/security/AccountSecurity.class
 ua/org/training/workshop/security/GrantedAuthority.class
 ua/org/training/workshop/servlet/command/Command.class
+ua/org/training/workshop/servlet/command/impl/UserHistoryRequests.class
+ua/org/training/workshop/domain/HistoryRequest.class
 ua/org/training/workshop/dao/DaoFactory.class
 ua/org/training/workshop/dao/impl/JDBCRoleDao.class
 ua/org/training/workshop/servlet/command/impl/Pages.class
@@ -33,6 +42,7 @@ ua/org/training/workshop/domain/Account.class
 ua/org/training/workshop/servlet/command/impl/Login.class
 ua/org/training/workshop/servlet/command/impl/Exception.class
 ua/org/training/workshop/domain/Role.class
+ua/org/training/workshop/dao/mapper/HistoryRequestMapper.class
 ua/org/training/workshop/dao/impl/JDBCDaoFactory.class
 ua/org/training/workshop/servlet/filters/SessionLocaleFilter.class
 ua/org/training/workshop/service/AccountService.class

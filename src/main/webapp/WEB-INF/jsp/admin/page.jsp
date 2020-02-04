@@ -20,10 +20,10 @@
                      	<li class="breadcrumb-item active"><a href="${homeUrl}"><fmt:message key="home.pageTitle" /></a></li>
                      </ol>
                      <h1><fmt:message key="usersList.pageTitle" /></h1>
-                     <input id="search" class="col-4 rounded border" type="texp" placeholder="search">
+                     <input id="search" class="col-4 rounded border" type="texp" placeholder="<fmt:message key="table.search" />">
                      <input id="size" class="col-2 rounded border" type="number" min="2" max="6" value="5">
-                     <input name="sorting" class="hidden" type="radio" id="asc" value="asc" checked><label class="col-2" for="asc">asc</label>
-                     <input name="sorting" class="hidden" type="radio" id="desc" value="desc"><label class="col-2" for="desc">desc</label>
+                     <input name="sorting" class="hidden" type="radio" id="asc" value="asc" checked><label class="col-2" for="asc"><fmt:message key="table.asc" /></label>
+                     <input name="sorting" class="hidden" type="radio" id="desc" value="desc"><label class="col-2" for="desc"><fmt:message key="table.desc" /></label>
                      <div id="page-navigation"></div>
                      <table id="request-list-table" class="sortable">
                          <thead>
