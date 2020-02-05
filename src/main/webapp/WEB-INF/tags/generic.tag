@@ -21,12 +21,13 @@
         <script src="/js/pageable-utilities.js"></script>
         <link rel="stylesheet" type="text/css" href="/css/style.css">
         <link rel="stylesheet" type="text/css" href="/css/error-style.css">
+        <link href="https://fonts.googleapis.com/css?family=Pattaya&display=swap" rel="stylesheet">
   </head>
   <body>
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-              <a class="navbar-brand" href="/">
-               <fmt:message key="app.title"/>
+              <a class="navbar-brand" href="/" title="<fmt:message key="app.title"/>">
+                <fmt:message key="app.title"/>
               </a>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                  aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">

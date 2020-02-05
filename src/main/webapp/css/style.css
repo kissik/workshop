@@ -73,6 +73,21 @@ textarea{
     resize: none;
 }
 
+.workshop-index-page-btn{
+    color: white;
+    background: rgba(47,164, 231, 1);
+    font-size: 2.0rem;
+    border-radius: 36px;
+    padding: 20px;
+    text-decoration: none;
+}
+
+.workshop-index-page-btn:hover{
+    background: white;
+    color: #2FA4E7;
+    text-decoration: none;
+}
+
 [href^="?lang="],
 .workshop-login-logout-btn{
     color: #2FA4E7;
@@ -220,6 +235,25 @@ a.page-btn:hover{
 [for="desc"]:hover,
 [for="asc"]:hover{
     background: rgba(47,164, 231,0.1);
+}
+
+.navbar-dark .navbar-brand{
+    font-family: "Pattaya", sans-serif;
+    color: #2FA4E7;
+    font-size: 1.5rem;
+    padding: 5px 10px;
+    margin: 0 5px 0 0;
+}
+
+h2{
+font-family: "Pattaya", sans-serif;
+}
+
+.navbar-dark .navbar-brand:hover{
+   border-radius: 24px;
+   color: black;
+   background: rgba(47,164, 231, 1);
+   text-decoration: none;
 }
 
 @media (max-width: 768px){
