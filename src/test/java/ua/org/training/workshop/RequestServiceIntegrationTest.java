@@ -7,21 +7,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import ua.org.training.workshop.dao.AccountDao;
 import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.dao.RequestDao;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Request;
-import ua.org.training.workshop.domain.Role;
-import ua.org.training.workshop.security.AccountSecurity;
-import ua.org.training.workshop.service.AccountService;
 import ua.org.training.workshop.service.RequestService;
-import ua.org.training.workshop.service.RoleService;
 import ua.org.training.workshop.service.StatusService;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,13 +24,15 @@ import static org.mockito.Mockito.when;
 public class RequestServiceIntegrationTest {
 
     private Long id = 0L;
-    @Mock private DaoFactory daoFactory;
-    @Mock private RequestDao requestDao;
+    @Mock
+    private DaoFactory daoFactory;
+    @Mock
+    private RequestDao requestDao;
     private RequestService requestService;
     private StatusService statusService;
 
     @Before
-    public void testInit(){
+    public void testInit() {
         MockitoAnnotations.initMocks(this);
         requestService = new RequestService();
         statusService = new StatusService();
@@ -67,7 +63,7 @@ public class RequestServiceIntegrationTest {
         request.setStatus(statusService.findByCode("REGISTER"));
 
         when(daoFactory.createRequestDao())
-            .thenReturn(requestDao);
+                .thenReturn(requestDao);
         when(requestDao.create(request)).thenReturn(id);
 
         Assert.assertEquals(id,
@@ -77,7 +73,7 @@ public class RequestServiceIntegrationTest {
     }
 
     @Test
-    public void testGetRequestById(){
+    public void testGetRequestById() {
         Long id = 16L;
         Request request = requestService.getRequestById(id);
         Assert.assertEquals("Kettle", request.getTitle());

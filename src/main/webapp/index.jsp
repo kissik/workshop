@@ -33,11 +33,11 @@
             							<div class="row">
             								<div class="col-md-12 col-sm-12 text-right">
             									<div class="big-tagline">
-            										<h2><strong>Shared Hosting</strong> Company</h2>
-            										<p class="lead">With Landigoo responsive landing page template, you can promote your all hosting, domain and email services. </p>
-            											<a href="/app/registration" class="workshop-index-page-btn"><span>Registration</span></a>
+            										<h2><strong><fmt:message key="app.pageTitle" /></strong> Company</h2>
+            										<p class="lead">Turn It On Again!</p>
+            											<a href="/app/registration" class="workshop-index-page-btn"><fmt:message key="app.registration"/></a>
             											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            											<a href="/app/login" class="workshop-index-page-btn"><span>Login</span></a>
+            											<a href="/app/login" class="workshop-index-page-btn"><fmt:message key="subhead.login" /></a>
             									</div>
             								</div>
             							</div><!-- end row -->
@@ -52,11 +52,11 @@
             							<div class="row">
             								<div class="col-md-12 col-sm-12 text-left">
             									<div class="big-tagline">
-            										<h2 data-animation="animated zoomInRight">Find the right <strong>Hosting</strong></h2>
-            										<p class="lead" data-animation="animated fadeInLeft">With Landigoo responsive landing page template, you can promote your all hosting, domain and email services. </p>
-            											<a href="/app/registration" class="workshop-index-page-btn"><span>Registration</span></a>
+            										<h2 data-animation="animated zoomInRight">Find the right <strong><fmt:message key="app.pageTitle" /></strong></h2>
+            										<p class="lead" data-animation="animated fadeInLeft">Turn It On Again!</p>
+            											<a href="/app/registration" class="workshop-index-page-btn"><fmt:message key="app.registration"/></a>
             											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            											<a href="/app/login" class="workshop-index-page-btn"><span>Login</span></a>
+            											<a href="/app/login" class="workshop-index-page-btn"><fmt:message key="subhead.login" /></a>
             									</div>
             								</div>
             							</div><!-- end row -->
@@ -71,13 +71,11 @@
             							<div class="row">
             								<div class="col-md-12 col-sm-12 text-center">
             									<div class="big-tagline">
-            										<h2 data-animation="animated zoomInRight"><strong>VPS Servers</strong> Company</h2>
-            										<p class="lead" data-animation="animated fadeInLeft">1 IP included with each server
-            											Your Choice of any OS (CentOS, Windows, Debian, Fedora)
-            											FREE Reboots</p>
-            											<a href="/app/registration" class="workshop-index-page-btn"><span>Registration</span></a>
+            										<h2 data-animation="animated zoomInRight"><strong><fmt:message key="app.pageTitle" /></strong> Company</h2>
+            										<p class="lead" data-animation="animated fadeInLeft">Turn It On Again!</p>
+            											<a href="/app/registration" class="workshop-index-page-btn"><fmt:message key="app.registration"/></a>
             											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            											<a href="/app/login" class="workshop-index-page-btn"><span>Login</span></a>
+            											<a href="/app/login" class="workshop-index-page-btn"><fmt:message key="subhead.login" /></a>
             									</div>
             								</div>
             							</div><!-- end row -->

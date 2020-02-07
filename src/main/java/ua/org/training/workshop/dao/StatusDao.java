@@ -2,7 +2,6 @@ package ua.org.training.workshop.dao;
 
 import ua.org.training.workshop.domain.Status;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -12,5 +11,4 @@ public interface StatusDao extends GenericDao<Status> {
 
     Optional<Status> findByCode(String code);
 
-    public List<Status> getStatusList();
 }

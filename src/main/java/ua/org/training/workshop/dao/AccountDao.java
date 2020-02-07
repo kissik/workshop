@@ -4,7 +4,7 @@ import ua.org.training.workshop.domain.Account;
 
 import java.util.Optional;
 
-public interface AccountDao extends GenericDao<Account>  {
+public interface AccountDao extends GenericDao<Account> {
     void create(Account account, String password);
 
     void update(Account account, String password);

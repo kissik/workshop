@@ -1,16 +1,14 @@
 package ua.org.training.workshop.service;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.HistoryRequest;
-import ua.org.training.workshop.exception.WorkshopErrors;
+import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
-import ua.org.training.workshop.service.dto.HistoryRequestDTO;
-import ua.org.training.workshop.utilities.Pageable;
-import ua.org.training.workshop.utilities.UtilitiesClass;
+import ua.org.training.workshop.utility.Page;
+import ua.org.training.workshop.utility.PageService;
+import ua.org.training.workshop.utility.Utility;
+import ua.org.training.workshop.web.dto.HistoryRequestDTO;
 
 import java.util.List;
 import java.util.Locale;
@@ -23,12 +21,8 @@ import java.util.stream.Collectors;
 public class HistoryRequestService {
 
     private DaoFactory historyRequestRepository = DaoFactory.getInstance();
-    static {
-        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
-    }
-    private static Logger logger = Logger.getLogger(HistoryRequestService.class);
 
-    public void setDaoFactory(DaoFactory daoFactory){
+    public void setDaoFactory(DaoFactory daoFactory) {
         historyRequestRepository = daoFactory;
     }
 
@@ -36,31 +30,31 @@ public class HistoryRequestService {
         return historyRequestRepository
                 .createHistoryRequestDao()
                 .findById(id)
-                .orElseThrow(() -> new WorkshopException(WorkshopErrors.REQUEST_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new WorkshopException(WorkshopError.REQUEST_NOT_FOUND_ERROR));
     }
 
-    public String getPage(Locale locale, Pageable page) {
+    public String getPage(Locale locale, Page page) {
         return getDTOPage(locale, historyRequestRepository
                 .createHistoryRequestDao()
                 .getPage(page));
     }
 
     public String getPageByLanguageAndAuthor(
-            Pageable page,
+            Page page,
             Locale locale,
-            Account author) throws WorkshopException{
+            Account author) throws WorkshopException {
         return getDTOPage(locale, historyRequestRepository
                 .createHistoryRequestDao()
                 .getPageByLanguageAndAuthor(page,
-                        UtilitiesClass.getLanguageString(locale),
+                        Utility.getLanguageString(locale),
                         author));
     }
 
-    private String getDTOPage(Locale locale, Pageable page){
+    private String getDTOPage(Locale locale, Page page) {
 
         page.setContent(formatRequest(locale, (Optional<List<HistoryRequest>>) page.getContent()));
 
-        return page.getPage();
+        return PageService.getPage(page);
     }
 
     private Optional<List<HistoryRequestDTO>> formatRequest(Locale locale, Optional<List<HistoryRequest>> requestsList) {

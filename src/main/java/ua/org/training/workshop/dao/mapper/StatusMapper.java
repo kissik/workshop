@@ -4,7 +4,6 @@ import ua.org.training.workshop.domain.Status;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class StatusMapper implements ObjectMapper<Status> {
     @Override

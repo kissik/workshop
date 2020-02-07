@@ -7,11 +7,13 @@ import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Request;
 import ua.org.training.workshop.domain.Status;
-import ua.org.training.workshop.exception.WorkshopErrors;
+import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
-import ua.org.training.workshop.service.dto.RequestDTO;
-import ua.org.training.workshop.utilities.Pageable;
-import ua.org.training.workshop.utilities.UtilitiesClass;
+import ua.org.training.workshop.utility.ApplicationConstants;
+import ua.org.training.workshop.utility.Page;
+import ua.org.training.workshop.utility.PageService;
+import ua.org.training.workshop.utility.Utility;
+import ua.org.training.workshop.web.dto.RequestDTO;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,13 +26,15 @@ import java.util.stream.Collectors;
  */
 public class RequestService {
 
-    private DaoFactory requestRepository = DaoFactory.getInstance();
-    static {
-        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
-    }
-    private static Logger logger = Logger.getLogger(RequestService.class);
+    private final static Logger LOGGER = Logger.getLogger(RequestService.class);
 
-    public void setDaoFactory(DaoFactory daoFactory){
+    static {
+        new DOMConfigurator().doConfigure(ApplicationConstants.LOG4J_XML_PATH, LogManager.getLoggerRepository());
+    }
+
+    private DaoFactory requestRepository = DaoFactory.getInstance();
+
+    public void setDaoFactory(DaoFactory daoFactory) {
         requestRepository = daoFactory;
     }
 
@@ -39,14 +43,12 @@ public class RequestService {
             return requestRepository
                     .createRequestDao()
                     .create(request);
-        }
-        catch(SQLException e){
-            logger.error("SQL exception after create account : " + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.REQUEST_CREATE_NEW_ERROR);
-        }
-        catch (Exception e){
-            logger.error("error: " + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.REQUEST_CREATE_NEW_ERROR);
+        } catch (SQLException e) {
+            LOGGER.error("SQL exception after create account : " + e.getMessage());
+            throw new WorkshopException(WorkshopError.REQUEST_CREATE_NEW_ERROR);
+        } catch (Exception e) {
+            LOGGER.error("error: " + e.getMessage());
+            throw new WorkshopException(WorkshopError.REQUEST_CREATE_NEW_ERROR);
         }
     }
 
@@ -54,46 +56,46 @@ public class RequestService {
         return requestRepository
                 .createRequestDao()
                 .findById(id)
-                .orElseThrow(() -> new WorkshopException(WorkshopErrors.REQUEST_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new WorkshopException(WorkshopError.REQUEST_NOT_FOUND_ERROR));
     }
 
-    public String getPage(Locale locale, Pageable page) {
+    public String getPage(Locale locale, Page page) {
         return getDTOPage(locale, requestRepository
                 .createRequestDao()
                 .getPage(page));
     }
 
-    public String getPageByAuthor(Pageable page, Locale locale, Account author) {
+    public String getPageByAuthor(Page page, Locale locale, Account author) {
         return getDTOPage(locale, requestRepository
                 .createRequestDao()
                 .getPageByAuthor(page, author));
     }
 
-    public String getPageByLanguageAndAuthor(Pageable page,
+    public String getPageByLanguageAndAuthor(Page page,
                                              Locale locale,
-                                             Account author) throws WorkshopException{
+                                             Account author) throws WorkshopException {
         return getDTOPage(locale, requestRepository
                 .createRequestDao()
                 .getPageByLanguageAndAuthor(page,
-                        UtilitiesClass.getLanguageString(locale),
+                        Utility.getLanguageString(locale),
                         author));
     }
 
-    public String getPageByLanguageAndStatus(Pageable page,
+    public String getPageByLanguageAndStatus(Page page,
                                              Locale locale,
-                                             Status status) throws WorkshopException{
+                                             Status status) throws WorkshopException {
         return getDTOPage(locale, requestRepository
                 .createRequestDao()
                 .getPageByLanguageAndStatus(page,
-                        UtilitiesClass.getLanguageString(locale),
+                        Utility.getLanguageString(locale),
                         status));
     }
 
-    private String getDTOPage(Locale locale, Pageable page){
+    private String getDTOPage(Locale locale, Page page) {
 
         page.setContent(formatRequest(locale, (Optional<List<Request>>) page.getContent()));
 
-        return page.getPage();
+        return PageService.getPage(page);
     }
 
     private Optional<List<RequestDTO>> formatRequest(Locale locale, Optional<List<Request>> requestsList) {

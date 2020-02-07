@@ -92,7 +92,7 @@ public class Request {
         this.cause = cause;
     }
 
-    public String toString(){
+    public String toString() {
         return this.title + ": " + this.description;
     }
 

@@ -6,19 +6,26 @@ import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.RoleDao;
 import ua.org.training.workshop.dao.mapper.RoleMapper;
 import ua.org.training.workshop.domain.Role;
-import ua.org.training.workshop.exception.WorkshopErrors;
+import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
-import ua.org.training.workshop.utilities.Pageable;
-import ua.org.training.workshop.utilities.UtilitiesClass;
+import ua.org.training.workshop.utility.ApplicationConstants;
+import ua.org.training.workshop.utility.Page;
 
 import java.sql.*;
 import java.util.*;
 
 public class JDBCRoleDao implements RoleDao {
+
     static {
-        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(ApplicationConstants.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    private static Logger logger = Logger.getLogger(JDBCRoleDao.class);
+
+    private final static Logger LOGGER = Logger.getLogger(JDBCRoleDao.class);
+    private final static String ROLE_FIND_BY_CODE_QUERY =
+            " select * from role r where scode = ?";
+    private final static String ROLE_FIND_ALL_QUERY =
+            " select * from role r";
+
     private Connection connection;
 
     public JDBCRoleDao(Connection connection) {
@@ -26,20 +33,20 @@ public class JDBCRoleDao implements RoleDao {
     }
 
     @Override
-    public Optional<Role> findByCode(String code){
-        try (PreparedStatement pst = connection.prepareStatement(MySQLQueries
-                .ROLE_FIND_BY_CODE_QUERY)) {
+    public Optional<Role> findByCode(String code) {
+        try (PreparedStatement pst = connection.prepareStatement(
+                ROLE_FIND_BY_CODE_QUERY)) {
             pst.setString(1, code);
             ResultSet rs = pst.executeQuery();
             RoleMapper roleMapper = new RoleMapper();
             Role role = null;
             while (rs.next()) {
                 role = roleMapper
-                        .extractFromResultSet(rs,UtilitiesClass.ROLE_QUERY_DEFAULT_PREFIX);
+                        .extractFromResultSet(rs, ApplicationConstants.ROLE_QUERY_DEFAULT_PREFIX);
             }
             return Optional.ofNullable(role);
         } catch (SQLException e) {
-            logger.debug("get account by username sql exception : " + e.getMessage());
+            LOGGER.debug("get account by username sql exception : " + e.getMessage());
         }
         close();
         return Optional.empty();
@@ -56,7 +63,7 @@ public class JDBCRoleDao implements RoleDao {
     }
 
     @Override
-    public Pageable getPage(Pageable page) {
+    public Page getPage(Page page) {
         return null;
     }
 
@@ -64,17 +71,17 @@ public class JDBCRoleDao implements RoleDao {
     public Optional<List<Role>> findAll() {
         Map<Long, Role> roles = new HashMap<>();
         try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(MySQLQueries
-                    .ROLE_FIND_ALL_QUERY);
+            ResultSet rs = st.executeQuery(
+                    ROLE_FIND_ALL_QUERY);
             RoleMapper roleMapper = new RoleMapper();
             while (rs.next()) {
                 Role role = roleMapper
-                        .extractFromResultSet(rs, UtilitiesClass.ROLE_QUERY_DEFAULT_PREFIX);
+                        .extractFromResultSet(rs, ApplicationConstants.ROLE_QUERY_DEFAULT_PREFIX);
                 roles.put(role.getId(), role);
             }
-            } catch (SQLException e) {
-            logger.error("find all roles error : " + e.getMessage());
-            }
+        } catch (SQLException e) {
+            LOGGER.error("find all roles error : " + e.getMessage());
+        }
         close();
         return Optional.of(new ArrayList<>(roles.values()));
     }
@@ -94,8 +101,8 @@ public class JDBCRoleDao implements RoleDao {
         try {
             connection.close();
         } catch (SQLException e) {
-            logger.error("cannot close connection : " + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.DATABASE_CONNECTION_ERROR);
+            LOGGER.error("cannot close connection : " + e.getMessage());
+            throw new WorkshopException(WorkshopError.DATABASE_CONNECTION_ERROR);
         }
     }
 }

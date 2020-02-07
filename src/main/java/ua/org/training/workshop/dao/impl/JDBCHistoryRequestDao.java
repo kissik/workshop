@@ -9,10 +9,10 @@ import ua.org.training.workshop.dao.mapper.HistoryRequestMapper;
 import ua.org.training.workshop.dao.mapper.StatusMapper;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.HistoryRequest;
-import ua.org.training.workshop.exception.WorkshopErrors;
+import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
-import ua.org.training.workshop.utilities.Pageable;
-import ua.org.training.workshop.utilities.UtilitiesClass;
+import ua.org.training.workshop.utility.ApplicationConstants;
+import ua.org.training.workshop.utility.Page;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,12 +20,25 @@ import java.util.List;
 import java.util.Optional;
 
 public class JDBCHistoryRequestDao implements HistoryRequestDao {
+
     static {
-        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(ApplicationConstants.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    private static Logger logger = Logger.getLogger(JDBCHistoryRequestDao.class);
+
+    private final static String HISTORY_REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_HISTORY_REQUEST_LIST_BY_LANGUAGE_AND_AUTHOR (?, ?, ?, ?, ?, ?, ?);";
+    private final static String HISTORY_REQUEST_FIND_PAGE_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_HISTORY_REQUEST_LIST (?, ?, ?, ?, ?);";
+    private final static String HISTORY_REQUEST_FIND_BY_ID_QUERY =
+            " select * from request_list_history h " +
+                    " inner join user_list a on h.nauthor = a.id " +
+                    " inner join user_list u on h.nuser = u.id " +
+                    " inner join status s on h.nstatus = s.id " +
+                    " where h.id = ?";
+    private final static Logger LOGGER = Logger.getLogger(JDBCHistoryRequestDao.class);
 
     private Connection connection;
+
     public JDBCHistoryRequestDao(Connection connection) {
         this.connection = connection;
     }
@@ -36,13 +49,13 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
     }
 
     @Override
-    public void update(HistoryRequest historyRequest) throws SQLException{
+    public void update(HistoryRequest historyRequest) throws SQLException {
     }
 
     private void updateStatus(HistoryRequest historyRequest) {
     }
 
-    private Long insertRequest(HistoryRequest historyRequest) throws SQLException{
+    private Long insertRequest(HistoryRequest historyRequest) throws SQLException {
         return 0L;
     }
 
@@ -50,15 +63,15 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
     public Optional<HistoryRequest> findById(Long id) {
         HistoryRequest historyRequest = null;
         try (PreparedStatement pst =
-                     connection.prepareStatement(MySQLQueries
-                             .HISTORY_REQUEST_FIND_BY_ID_QUERY)) {
+                     connection.prepareStatement(
+                             HISTORY_REQUEST_FIND_BY_ID_QUERY)) {
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 historyRequest = loadHistoryRequest(rs);
             }
         } catch (SQLException e) {
-            logger.debug("get request by " + id + " sql exception : " + e.getMessage());
+            LOGGER.debug("get request by " + id + " sql exception : " + e.getMessage());
         }
         close();
         return Optional.ofNullable(historyRequest);
@@ -69,18 +82,16 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
         AccountMapper accountMapper = new AccountMapper();
         StatusMapper statusMapper = new StatusMapper();
         HistoryRequest historyRequest = historyRequestMapper.extractFromResultSet(rs,
-                UtilitiesClass.HISTORY_REQUEST_QUERY_DEFAULT_PREFIX);
-
+                ApplicationConstants.HISTORY_REQUEST_QUERY_DEFAULT_PREFIX);
         historyRequest.setAuthor(
                 accountMapper.extractFromResultSet(rs,
-                        UtilitiesClass.HISTORY_REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX));
+                        ApplicationConstants.HISTORY_REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX));
         historyRequest.setUser(
                 accountMapper.extractFromResultSet(rs,
-                        UtilitiesClass.HISTORY_REQUEST_USER_QUERY_DEFAULT_PREFIX));
+                        ApplicationConstants.HISTORY_REQUEST_USER_QUERY_DEFAULT_PREFIX));
         historyRequest.setStatus(
                 statusMapper.extractFromResultSet(rs,
-                        UtilitiesClass.STATUS_QUERY_DEFAULT_PREFIX));
-
+                        ApplicationConstants.STATUS_QUERY_DEFAULT_PREFIX));
         return historyRequest;
     }
 
@@ -90,20 +101,20 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
     }
 
     @Override
-    public void close()  {
+    public void close() {
         try {
             connection.close();
         } catch (SQLException e) {
-            logger.error("cannot close connection" + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.DATABASE_CONNECTION_ERROR);
+            LOGGER.error("cannot close connection" + e.getMessage());
+            throw new WorkshopException(WorkshopError.DATABASE_CONNECTION_ERROR);
         }
     }
 
-    public Pageable getPage(Pageable page){
+    public Page getPage(Page page) {
         List<HistoryRequest> historyRequests = new ArrayList<>();
         try (CallableStatement callableStatement =
-                     connection.prepareCall(MySQLQueries
-                             .HISTORY_REQUEST_FIND_PAGE_CALLABLE_STATEMENT)) {
+                     connection.prepareCall(
+                             HISTORY_REQUEST_FIND_PAGE_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
             callableStatement.setString("ssearch", page.getSearch());
@@ -116,7 +127,7 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
                 historyRequests.add(historyRequest);
             }
         } catch (SQLException e) {
-            logger.error("find all SQL exception " + e.getMessage());
+            LOGGER.error("find all SQL exception " + e.getMessage());
         }
         close();
         page.setContent(Optional.of(historyRequests));
@@ -124,11 +135,11 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
     }
 
     @Override
-    public Pageable getPageByLanguageAndAuthor(Pageable page, String language, Account author) {
+    public Page getPageByLanguageAndAuthor(Page page, String language, Account author) {
         List<HistoryRequest> historyRequests = new ArrayList<>();
         try (CallableStatement callableStatement =
-                     connection.prepareCall(MySQLQueries
-                             .HISTORY_REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT)) {
+                     connection.prepareCall(
+                             HISTORY_REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
             callableStatement.setLong("nauthor", author.getId());
@@ -143,7 +154,7 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
                 historyRequests.add(historyRequest);
             }
         } catch (SQLException e) {
-            logger.error("find all SQL exception " + e.getMessage());
+            LOGGER.error("find all SQL exception " + e.getMessage());
         }
         close();
         page.setContent(Optional.of(historyRequests));

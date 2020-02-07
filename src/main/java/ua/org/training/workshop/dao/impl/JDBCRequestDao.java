@@ -10,21 +10,41 @@ import ua.org.training.workshop.dao.mapper.StatusMapper;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Request;
 import ua.org.training.workshop.domain.Status;
-import ua.org.training.workshop.exception.WorkshopErrors;
+import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
-import ua.org.training.workshop.utilities.Pageable;
-import ua.org.training.workshop.utilities.UtilitiesClass;
+import ua.org.training.workshop.utility.ApplicationConstants;
+import ua.org.training.workshop.utility.Page;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class JDBCRequestDao implements RequestDao {
-    static {
-        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
-    }
-    private static Logger logger = Logger.getLogger(JDBCRequestDao.class);
 
+    static {
+        new DOMConfigurator().doConfigure(ApplicationConstants.LOG4J_XML_PATH, LogManager.getLoggerRepository());
+    }
+
+    private final static String REQUEST_FIND_PAGE_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_REQUEST_LIST (?, ?, ?, ?, ?);";
+    private final static String REQUEST_FIND_PAGE_BY_AUTHOR_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_REQUEST_LIST_BY_AUTHOR (?, ?, ?, ?, ?, ?);";
+    private final static String REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_REQUEST_LIST_BY_LANGUAGE_AND_AUTHOR (?, ?, ?, ?, ?, ?, ?);";
+    private final static String REQUEST_FIND_PAGE_BY_LANGUAGE_AND_STATUS_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_REQUEST_LIST_BY_LANGUAGE_AND_STATUS (?, ?, ?, ?, ?, ?, ?);";
+    private final static String REQUEST_FIND_BY_ID_QUERY =
+            " select * from request_list r " +
+                    " inner join user_list a on r.nauthor = a.id " +
+                    " inner join user_list u on r.nuser = u.id " +
+                    " inner join status s on r.nstatus = s.id " +
+                    " where r.id = ?";
+    private final static String REQUEST_INSERT_PREPARE_STATEMENT =
+            "CALL APP_INSERT_REQUEST_LIST (?,?,?,?,?,?,?,?);";
+    private final static Logger LOGGER = Logger.getLogger(JDBCRequestDao.class);
     private Connection connection;
+
     public JDBCRequestDao(Connection connection) {
         this.connection = connection;
     }
@@ -34,29 +54,29 @@ public class JDBCRequestDao implements RequestDao {
         Long newId;
         try {
             newId = insertRequest(request);
-            logger.debug("request (id = "
+            LOGGER.debug("request (id = "
                     + newId
                     + ") was created: " + request.getTitle());
-        }catch (SQLException e){
-            logger.error("SQL exception : " + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.REQUEST_CREATE_NEW_ERROR);
+        } catch (SQLException e) {
+            LOGGER.error("SQL exception : " + e.getMessage());
+            throw new WorkshopException(WorkshopError.REQUEST_CREATE_NEW_ERROR);
         }
         return newId;
     }
 
     @Override
-    public void update(Request request) throws SQLException{
+    public void update(Request request) throws SQLException {
         updateStatus(request);
     }
 
     private void updateStatus(Request request) {
     }
 
-    private Long insertRequest(Request request) throws SQLException{
+    private Long insertRequest(Request request) throws SQLException {
         Long newId;
-        try(CallableStatement callableStatement =
-                connection.prepareCall(MySQLQueries
-                        .REQUEST_INSERT_PREPARE_STATEMENT)) {
+        try (CallableStatement callableStatement =
+                     connection.prepareCall(
+                             REQUEST_INSERT_PREPARE_STATEMENT)) {
             callableStatement.setString("stitle", request.getTitle());
             callableStatement.setString("sdescription", request.getDescription());
             callableStatement.setLong("nauthor", request.getAuthor().getId());
@@ -67,12 +87,12 @@ public class JDBCRequestDao implements RequestDao {
             callableStatement.registerOutParameter("nid", Types.BIGINT);
             callableStatement.executeUpdate();
             newId = callableStatement.getLong("nid");
-        }catch (SQLException e){
-            logger.error("create new request " + e.getMessage());
+        } catch (SQLException e) {
+            LOGGER.error("create new request " + e.getMessage());
             throw e;
         }
         close();
-        logger.debug("new request : " + request.getTitle() + " was successfully created");
+        LOGGER.debug("new request : " + request.getTitle() + " was successfully created");
         return newId;
     }
 
@@ -80,15 +100,15 @@ public class JDBCRequestDao implements RequestDao {
     public Optional<Request> findById(Long id) {
         Request request = null;
         try (PreparedStatement pst =
-                     connection.prepareStatement(MySQLQueries
-                             .REQUEST_FIND_BY_ID_QUERY)) {
+                     connection.prepareStatement(
+                             REQUEST_FIND_BY_ID_QUERY)) {
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 request = loadRequest(rs);
             }
         } catch (SQLException e) {
-            logger.debug("get request by " + id + " sql exception : " + e.getMessage());
+            LOGGER.debug("get request by " + id + " sql exception : " + e.getMessage());
         }
         close();
         return Optional.ofNullable(request);
@@ -99,17 +119,17 @@ public class JDBCRequestDao implements RequestDao {
         AccountMapper accountMapper = new AccountMapper();
         StatusMapper statusMapper = new StatusMapper();
         Request request = requestMapper.extractFromResultSet(rs,
-                UtilitiesClass.REQUEST_QUERY_DEFAULT_PREFIX);
+                ApplicationConstants.REQUEST_QUERY_DEFAULT_PREFIX);
 
         request.setAuthor(
                 accountMapper.extractFromResultSet(rs,
-                        UtilitiesClass.REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX));
+                        ApplicationConstants.REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX));
         request.setUser(
                 accountMapper.extractFromResultSet(rs,
-                        UtilitiesClass.REQUEST_USER_QUERY_DEFAULT_PREFIX));
+                        ApplicationConstants.REQUEST_USER_QUERY_DEFAULT_PREFIX));
         request.setStatus(
                 statusMapper.extractFromResultSet(rs,
-                        UtilitiesClass.STATUS_QUERY_DEFAULT_PREFIX));
+                        ApplicationConstants.STATUS_QUERY_DEFAULT_PREFIX));
 
         return request;
     }
@@ -120,20 +140,20 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public void close()  {
+    public void close() {
         try {
             connection.close();
         } catch (SQLException e) {
-            logger.error("cannot close connection" + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.DATABASE_CONNECTION_ERROR);
+            LOGGER.error("cannot close connection" + e.getMessage());
+            throw new WorkshopException(WorkshopError.DATABASE_CONNECTION_ERROR);
         }
     }
 
-    public Pageable getPage(Pageable page){
+    public Page getPage(Page page) {
         List<Request> requests = new ArrayList<>();
         try (CallableStatement callableStatement =
-                     connection.prepareCall(MySQLQueries
-                             .REQUEST_FIND_PAGE_CALLABLE_STATEMENT)) {
+                     connection.prepareCall(
+                             REQUEST_FIND_PAGE_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
             callableStatement.setString("ssearch", page.getSearch());
@@ -146,7 +166,7 @@ public class JDBCRequestDao implements RequestDao {
                 requests.add(request);
             }
         } catch (SQLException e) {
-            logger.error("find all SQL exception " + e.getMessage());
+            LOGGER.error("find all SQL exception " + e.getMessage());
         }
         close();
         page.setContent(Optional.of(requests));
@@ -154,11 +174,11 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public Pageable getPageByAuthor(Pageable page, Account author) {
+    public Page getPageByAuthor(Page page, Account author) {
         List<Request> requests = new ArrayList<>();
         try (CallableStatement callableStatement =
-                     connection.prepareCall(MySQLQueries
-                             .REQUEST_FIND_PAGE_BY_AUTHOR_CALLABLE_STATEMENT)) {
+                     connection.prepareCall(
+                             REQUEST_FIND_PAGE_BY_AUTHOR_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
             callableStatement.setLong("nauthor", author.getId());
@@ -172,7 +192,7 @@ public class JDBCRequestDao implements RequestDao {
                 requests.add(request);
             }
         } catch (SQLException e) {
-            logger.error("find all SQL exception " + e.getMessage());
+            LOGGER.error("find all SQL exception " + e.getMessage());
         }
         close();
         page.setContent(Optional.of(requests));
@@ -180,11 +200,11 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public Pageable getPageByLanguageAndAuthor(Pageable page, String language, Account author) {
+    public Page getPageByLanguageAndAuthor(Page page, String language, Account author) {
         List<Request> requests = new ArrayList<>();
         try (CallableStatement callableStatement =
-                     connection.prepareCall(MySQLQueries
-                             .REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT)) {
+                     connection.prepareCall(
+                             REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
             callableStatement.setLong("nauthor", author.getId());
@@ -199,7 +219,7 @@ public class JDBCRequestDao implements RequestDao {
                 requests.add(request);
             }
         } catch (SQLException e) {
-            logger.error("find all SQL exception " + e.getMessage());
+            LOGGER.error("find all SQL exception " + e.getMessage());
         }
         close();
         page.setContent(Optional.of(requests));
@@ -207,14 +227,14 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public Pageable getPageByLanguageAndStatus(
-            Pageable page,
+    public Page getPageByLanguageAndStatus(
+            Page page,
             String language,
             Status status) {
         List<Request> requests = new ArrayList<>();
         try (CallableStatement callableStatement =
-                     connection.prepareCall(MySQLQueries
-                             .REQUEST_FIND_PAGE_BY_LANGUAGE_AND_STATUS_CALLABLE_STATEMENT)) {
+                     connection.prepareCall(
+                             REQUEST_FIND_PAGE_BY_LANGUAGE_AND_STATUS_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
             callableStatement.setLong("nstatus", status.getId());
@@ -229,7 +249,7 @@ public class JDBCRequestDao implements RequestDao {
                 requests.add(request);
             }
         } catch (SQLException e) {
-            logger.error("find all SQL exception " + e.getMessage());
+            LOGGER.error("find all SQL exception " + e.getMessage());
         }
         close();
         page.setContent(Optional.of(requests));

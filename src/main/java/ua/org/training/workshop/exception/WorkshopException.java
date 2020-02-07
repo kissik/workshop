@@ -1,14 +1,16 @@
 package ua.org.training.workshop.exception;
 
-public class WorkshopException extends RuntimeException{
-    private WorkshopErrors workshopError;
+import ua.org.training.workshop.enums.WorkshopError;
 
-    public WorkshopException(WorkshopErrors workshopError) {
+public class WorkshopException extends RuntimeException {
+    private WorkshopError workshopError;
+
+    public WorkshopException(WorkshopError workshopError) {
         super(workshopError.message());
         this.workshopError = workshopError;
     }
 
-    public WorkshopException(Throwable cause, WorkshopErrors workshopError) {
+    public WorkshopException(Throwable cause, WorkshopError workshopError) {
         super(workshopError.message(), cause);
         this.workshopError = workshopError;
     }
@@ -17,7 +19,7 @@ public class WorkshopException extends RuntimeException{
         return workshopError.code();
     }
 
-    public WorkshopErrors getWorkshopError(){
+    public WorkshopError getWorkshopError() {
         return workshopError;
     }
 }

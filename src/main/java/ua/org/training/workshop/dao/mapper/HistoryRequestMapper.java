@@ -11,15 +11,12 @@ public class HistoryRequestMapper implements ObjectMapper<HistoryRequest> {
         HistoryRequest historyRequest = new HistoryRequest();
         historyRequest.setId(rs.getLong(prefix + ".id"));
         historyRequest.setTitle(rs.getString(prefix + ".stitle"));
-        historyRequest.setDescription(rs.getString(prefix+".sdescription"));
-
-        historyRequest.setPrice(rs.getBigDecimal(prefix+".nprice"));
-        historyRequest.setCause(rs.getString(prefix+".scause"));
-        historyRequest.setLanguage(rs.getString(prefix+".slang"));
-        historyRequest.setReview(rs.getString(prefix+".sreview"));
-        historyRequest.setRating(rs.getLong(prefix+".nrating"));
-
+        historyRequest.setDescription(rs.getString(prefix + ".sdescription"));
+        historyRequest.setPrice(rs.getBigDecimal(prefix + ".nprice"));
+        historyRequest.setCause(rs.getString(prefix + ".scause"));
+        historyRequest.setLanguage(rs.getString(prefix + ".slang"));
+        historyRequest.setReview(rs.getString(prefix + ".sreview"));
+        historyRequest.setRating(rs.getLong(prefix + ".nrating"));
         return historyRequest;
     }
-
 }

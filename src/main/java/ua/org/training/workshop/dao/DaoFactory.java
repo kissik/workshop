@@ -5,16 +5,10 @@ import ua.org.training.workshop.dao.impl.JDBCDaoFactory;
 public abstract class DaoFactory {
     private static DaoFactory daoFactory;
 
-    public abstract AccountDao createAccountDao();
-    public abstract RoleDao createRoleDao();
-    public abstract StatusDao createStatusDao();
-    public abstract RequestDao createRequestDao();
-    public abstract HistoryRequestDao createHistoryRequestDao();
-
-    public static DaoFactory getInstance(){
-        if( daoFactory == null ){
-            synchronized (DaoFactory.class){
-                if(daoFactory==null){
+    public static DaoFactory getInstance() {
+        if (daoFactory == null) {
+            synchronized (DaoFactory.class) {
+                if (daoFactory == null) {
                     DaoFactory temp = new JDBCDaoFactory();
                     daoFactory = temp;
                 }
@@ -22,5 +16,15 @@ public abstract class DaoFactory {
         }
         return daoFactory;
     }
+
+    public abstract AccountDao createAccountDao();
+
+    public abstract RoleDao createRoleDao();
+
+    public abstract StatusDao createStatusDao();
+
+    public abstract RequestDao createRequestDao();
+
+    public abstract HistoryRequestDao createHistoryRequestDao();
 }
 

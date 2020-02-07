@@ -28,13 +28,13 @@
 
   <listener>
     <listener-class>
-      ua.org.training.workshop.servlet.listener.SessionListener
+        ua.org.training.workshop.web.listener.SessionListener
     </listener-class>
   </listener>
 
   <servlet>
     <servlet-name>WorkshopServlet</servlet-name>
-    <servlet-class>ua.org.training.workshop.servlet.WorkshopServlet</servlet-class>
+    <servlet-class>ua.org.training.workshop.web.MainServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>

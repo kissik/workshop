@@ -8,103 +8,128 @@ import ua.org.training.workshop.dao.mapper.AccountMapper;
 import ua.org.training.workshop.dao.mapper.RoleMapper;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Role;
-import ua.org.training.workshop.exception.WorkshopErrors;
+import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
-import ua.org.training.workshop.utilities.Pageable;
-import ua.org.training.workshop.utilities.UtilitiesClass;
+import ua.org.training.workshop.utility.ApplicationConstants;
+import ua.org.training.workshop.utility.Page;
 
 import java.sql.*;
 import java.util.*;
 
 public class JDBCAccountDao implements AccountDao {
+
     static {
-        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure(ApplicationConstants.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
-    private static Logger logger = Logger.getLogger(JDBCAccountDao.class);
+
+    private final static String ACCOUNT_FIND_PAGE_CALLABLE_STATEMENT =
+            "CALL APP_PAGINATION_USER_LIST (?, ?, ?, ?, ?);";
+    private final static String ACCOUNT_DELETE_ROLES_BY_USER_ID_QUERY =
+            " delete from user_role where nuser = ? ";
+    private final static String ACCOUNT_FIND_ROLES_BY_USER_ID_QUERY =
+            " select * from user_role ur" +
+                    " inner join role r " +
+                    " on ur.nrole = r.id" +
+                    " where ur.nuser = ? ";
+    private final static String ACCOUNT_FIND_BY_ID_QUERY =
+            " select * from user_list u where u.id = ?";
+    private final static String ACCOUNT_FIND_BY_USERNAME_QUERY =
+            " select * from user_list u where slogin = ?";
+    private final static String ACCOUNT_FIND_BY_PHONE_QUERY =
+            " select * from user_list u where sphone = ?";
+    private final static String ACCOUNT_FIND_BY_EMAIL_QUERY =
+            " select * from user_list u where semail = ?";
+    private final static String ACCOUNT_INSERT_CALLABLE_STATEMENT =
+            "CALL APP_INSERT_USER_LIST (?,?,?,?,?,?,?,?,?, ?);";
+    private final static String ACCOUNT_INSERT_ROLE_PREPARE_STATEMENT =
+            "INSERT INTO `user_role`" +
+                    "(`nuser`,`nrole`) " +
+                    "VALUES (?,?)";
+
+    private final static Logger LOGGER = Logger.getLogger(JDBCAccountDao.class);
 
     private Connection connection;
+
     public JDBCAccountDao(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public Long create(Account account) throws SQLException{
+    public Long create(Account account) throws SQLException {
         Long newId;
-        logger.info("Start transaction! --------------------------------> ");
+        LOGGER.info("Start transaction! --------------------------------> ");
         connection.setAutoCommit(false);
         try {
             newId = insertAccount(account);
             addRoles(account, newId);
             connection.commit();
-        }catch (SQLException e) {
-            logger.error("SQL exception : " + e.getMessage());
-            logger.info("Transaction was rollback! <--------------------------------");
+        } catch (SQLException e) {
+            LOGGER.error("SQL exception : " + e.getMessage());
+            LOGGER.info("Transaction was rollback! <--------------------------------");
             connection.rollback();
-            throw new WorkshopException(WorkshopErrors.ACCOUNT_CREATE_NEW_ERROR);
+            throw new WorkshopException(WorkshopError.ACCOUNT_CREATE_NEW_ERROR);
         }
-        logger.info("Transaction was successfully committed! <--------------------------------");
+        LOGGER.info("Transaction was successfully committed! <--------------------------------");
         close();
         return newId;
     }
 
     @Override
-    public void update(Account account) throws SQLException{
-        logger.info("Start transaction! --------------------------------> ");
+    public void update(Account account) throws SQLException {
+        LOGGER.info("Start transaction! --------------------------------> ");
         connection.setAutoCommit(false);
-        try{
+        try {
             deleteAllAccountRoles(account.getId());
             addRoles(account, account.getId());
             connection.commit();
-        }catch (SQLException e) {
-            logger.error("SQL exception : " + e.getMessage());
-            logger.info("Transaction was rollback! <--------------------------------");
+        } catch (SQLException e) {
+            LOGGER.error("SQL exception : " + e.getMessage());
+            LOGGER.info("Transaction was rollback! <--------------------------------");
             connection.rollback();
-            throw new WorkshopException(WorkshopErrors.ACCOUNT_UPDATE_ERROR);
+            throw new WorkshopException(WorkshopError.ACCOUNT_UPDATE_ERROR);
         }
-        logger.info("Transaction was successfully committed! <--------------------------------");
+        LOGGER.info("Transaction was successfully committed! <--------------------------------");
         close();
     }
 
     private void addRoles(Account account, Long id) throws SQLException {
-        for(Role r : account.getRoles())
+        for (Role r : account.getRoles())
             insertAccountRole(id, r.getId());
-        logger.info("account have new role(s)");
+        LOGGER.info("account have new role(s)");
     }
 
-    private void deleteAllAccountRoles(Long nuser){
-        try(PreparedStatement preparedStatement =
-                    connection.prepareStatement(MySQLQueries
-                            .ACCOUNT_DELETE_ROLES_BY_USER_ID_QUERY)) {
+    private void deleteAllAccountRoles(Long nuser) {
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement(
+                             ACCOUNT_DELETE_ROLES_BY_USER_ID_QUERY)) {
             preparedStatement.setLong(1, nuser);
             preparedStatement.execute();
+        } catch (SQLException e) {
+            LOGGER.error("delete roles of user " + nuser + e.getMessage());
         }
-        catch(SQLException e){
-            logger.error("delete roles of user " + nuser + e.getMessage());
-        }
-        logger.info("users roles were deleted " + nuser);
+        LOGGER.info("users roles were deleted " + nuser);
     }
 
-    private void insertAccountRole(Long nuser, Long nrole) throws SQLException{
-        try(PreparedStatement preparedStatement =
-            connection.prepareStatement(MySQLQueries
-                    .ACCOUNT_INSERT_ROLE_PREPARE_STATEMENT)) {
+    private void insertAccountRole(Long nuser, Long nrole) throws SQLException {
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement(
+                             ACCOUNT_INSERT_ROLE_PREPARE_STATEMENT)) {
             preparedStatement.setLong(1, nuser);
             preparedStatement.setLong(2, nrole);
             preparedStatement.execute();
-        }
-        catch(SQLException e){
-            logger.error("add roles to user " + e.getMessage());
+        } catch (SQLException e) {
+            LOGGER.error("add roles to user " + e.getMessage());
             throw e;
         }
-        logger.info("user has role: " + nrole.toString());
+        LOGGER.info("user has role: " + nrole.toString());
     }
 
-    private Long insertAccount(Account account) throws SQLException{
-        logger.info("create new user, with username = " + account.getUsername() + " attempt");
+    private Long insertAccount(Account account) throws SQLException {
+        LOGGER.info("create new user, with username = " + account.getUsername() + " attempt");
         Long newId;
-        try(CallableStatement callableStatement =
-                connection.prepareCall(MySQLQueries
-                        .ACCOUNT_INSERT_CALLABLE_STATEMENT)) {
+        try (CallableStatement callableStatement =
+                     connection.prepareCall(
+                             ACCOUNT_INSERT_CALLABLE_STATEMENT)) {
             callableStatement.setString("slogin", account.getUsername());
             callableStatement.setString("sfirst_name", account.getFirstName());
             callableStatement.setString("slast_name", account.getLastName());
@@ -117,11 +142,11 @@ public class JDBCAccountDao implements AccountDao {
             callableStatement.registerOutParameter("nid", java.sql.Types.BIGINT);
             callableStatement.executeUpdate();
             newId = callableStatement.getLong("nid");
-        }catch (SQLException e){
-            logger.error("create new user " + e.getMessage());
+        } catch (SQLException e) {
+            LOGGER.error("create new user " + e.getMessage());
             throw e;
         }
-        logger.info("new user : " + account.getUsername() + " was successfully created");
+        LOGGER.info("new user : " + account.getUsername() + " was successfully created");
         return newId;
     }
 
@@ -132,17 +157,17 @@ public class JDBCAccountDao implements AccountDao {
 
         try (PreparedStatement pst =
                      connection.prepareStatement(
-                             MySQLQueries.ACCOUNT_FIND_BY_ID_QUERY)) {
+                             ACCOUNT_FIND_BY_ID_QUERY)) {
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
                 account = accountMapper.extractFromResultSet(rs,
-                        UtilitiesClass.ACCOUNT_QUERY_DEFAULT_PREFIX);
+                        ApplicationConstants.ACCOUNT_QUERY_DEFAULT_PREFIX);
             }
 
         } catch (SQLException e) {
-            logger.debug("get account by " + id + " sql exception : " + e.getMessage());
+            LOGGER.debug("get account by " + id + " sql exception : " + e.getMessage());
         }
 
         if (account != null) account.setRoles(findRolesById(account.getId()));
@@ -152,28 +177,28 @@ public class JDBCAccountDao implements AccountDao {
 
     private List<Role> findRolesById(Long id) {
         Map<Long, Role> roles = new HashMap<>();
-        try (PreparedStatement pst = connection.prepareStatement(MySQLQueries
-                .ACCOUNT_FIND_ROLES_BY_USER_ID_QUERY)) {
+        try (PreparedStatement pst = connection.prepareStatement(
+                ACCOUNT_FIND_ROLES_BY_USER_ID_QUERY)) {
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
             RoleMapper roleMapper = new RoleMapper();
             while (rs.next()) {
                 Role role = roleMapper
-                            .extractFromResultSet(rs,
-                                    UtilitiesClass.ROLE_QUERY_DEFAULT_PREFIX);
+                        .extractFromResultSet(rs,
+                                ApplicationConstants.ROLE_QUERY_DEFAULT_PREFIX);
                 roles.put(role.getId(), role);
             }
         } catch (SQLException e) {
-            logger.error("find roles for user by id" + e.getMessage());
+            LOGGER.error("find roles for user by id" + e.getMessage());
         }
         return new ArrayList<>(roles.values());
     }
 
     @Override
-    public Pageable getPage(Pageable page){
+    public Page getPage(Page page) {
         List<Account> accounts = new ArrayList<>();
         try (CallableStatement callableStatement =
-                     connection.prepareCall(MySQLQueries.ACCOUNT_FIND_PAGE_CALLABLE_STATEMENT)) {
+                     connection.prepareCall(ACCOUNT_FIND_PAGE_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
             callableStatement.setString("ssearch", page.getSearch());
@@ -185,11 +210,11 @@ public class JDBCAccountDao implements AccountDao {
             while (rs.next()) {
                 Account account = accountMapper
                         .extractFromResultSet(rs,
-                                UtilitiesClass.ACCOUNT_QUERY_DEFAULT_PREFIX);
+                                ApplicationConstants.ACCOUNT_QUERY_DEFAULT_PREFIX);
                 accounts.add(account);
             }
         } catch (SQLException e) {
-            logger.error("find all SQL exception " + e.getMessage());
+            LOGGER.error("find all SQL exception " + e.getMessage());
         }
         close();
         page.setContent(Optional.of(accounts));
@@ -202,12 +227,12 @@ public class JDBCAccountDao implements AccountDao {
     }
 
     @Override
-    public void close()  {
+    public void close() {
         try {
             connection.close();
         } catch (SQLException e) {
-            logger.error("cannot close connection " + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.DATABASE_CONNECTION_ERROR);
+            LOGGER.error("cannot close connection " + e.getMessage());
+            throw new WorkshopException(WorkshopError.DATABASE_CONNECTION_ERROR);
         }
     }
 
@@ -222,25 +247,25 @@ public class JDBCAccountDao implements AccountDao {
     }
 
     @Override
-    public Optional<Account> findByUsername(String username){
-        return findByUniqueAttribute(username, MySQLQueries
-                .ACCOUNT_FIND_BY_USERNAME_QUERY);
+    public Optional<Account> findByUsername(String username) {
+        return findByUniqueAttribute(username,
+                ACCOUNT_FIND_BY_USERNAME_QUERY);
     }
 
     @Override
     public Optional<Account> findByPhone(String phone) {
-        return findByUniqueAttribute(phone, MySQLQueries
-                .ACCOUNT_FIND_BY_PHONE_QUERY);
+        return findByUniqueAttribute(phone,
+                ACCOUNT_FIND_BY_PHONE_QUERY);
     }
 
     @Override
     public Optional<Account> findByEmail(String email) {
-        return findByUniqueAttribute(email, MySQLQueries
-                .ACCOUNT_FIND_BY_EMAIL_QUERY);
+        return findByUniqueAttribute(email,
+                ACCOUNT_FIND_BY_EMAIL_QUERY);
     }
 
     private Optional<Account> findByUniqueAttribute(String uniqueAttribute,
-                                                    String query){
+                                                    String query) {
         Account account = null;
         try (PreparedStatement pst =
                      connection.prepareStatement(query)) {
@@ -250,11 +275,11 @@ public class JDBCAccountDao implements AccountDao {
             while (rs.next()) {
                 account = accountMapper
                         .extractFromResultSet(rs,
-                                UtilitiesClass.ACCOUNT_QUERY_DEFAULT_PREFIX);
+                                ApplicationConstants.ACCOUNT_QUERY_DEFAULT_PREFIX);
             }
             if (account != null) account.setRoles(findRolesById(account.getId()));
         } catch (SQLException e) {
-            logger.error("get account by " + uniqueAttribute + " sql exception : " + e.getMessage());
+            LOGGER.error("get account by " + uniqueAttribute + " sql exception : " + e.getMessage());
         }
         close();
         return Optional.ofNullable(account);

@@ -5,43 +5,44 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.DaoFactory;
 import ua.org.training.workshop.domain.Account;
-import ua.org.training.workshop.exception.WorkshopErrors;
+import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
-import ua.org.training.workshop.utilities.Pageable;
-import ua.org.training.workshop.utilities.UtilitiesClass;
+import ua.org.training.workshop.utility.ApplicationConstants;
+import ua.org.training.workshop.utility.Page;
+import ua.org.training.workshop.utility.PageService;
 
 import java.sql.SQLException;
 
 /**
  * @author kissik
  */
-public class AccountService{
+public class AccountService {
+
+    private final static Logger LOGGER = Logger.getLogger(AccountService.class);
+
+    static {
+        new DOMConfigurator().doConfigure(ApplicationConstants.LOG4J_XML_PATH, LogManager.getLoggerRepository());
+    }
 
     private DaoFactory accountRepository = DaoFactory.getInstance();
-    static {
-        new DOMConfigurator().doConfigure(UtilitiesClass.LOG4J_XML_PATH, LogManager.getLoggerRepository());
-    }
-    private static Logger logger = Logger.getLogger(AccountService.class);
 
-    public void setDaoFactory(DaoFactory daoFactory){
+    public void setDaoFactory(DaoFactory daoFactory) {
         accountRepository = daoFactory;
     }
 
     public Long registerAccount(Account account) throws WorkshopException {
-        logger.info("Register account : " + account.getUsername());
+        LOGGER.info("Register account : " + account.getUsername());
         try {
             return accountRepository
                     .createAccountDao()
                     .create(account);
+        } catch (SQLException e) {
+            LOGGER.error("SQLException after create account : " + e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("error: " + e.getMessage());
+            throw new WorkshopException(WorkshopError.ACCOUNT_CREATE_NEW_ERROR);
         }
-        catch(SQLException e){
-            logger.error("SQLException after create account : " + e.getMessage());
-        }
-        catch (Exception e){
-            logger.error("error: " + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.ACCOUNT_CREATE_NEW_ERROR);
-        }
-        logger.info("Account " + account.getFullNameOrigin() + " was successfully created");
+        LOGGER.info("Account " + account.getFullNameOrigin() + " was successfully created");
         return 0L;
     }
 
@@ -49,34 +50,34 @@ public class AccountService{
         return accountRepository
                 .createAccountDao()
                 .findById(id)
-                .orElseThrow(() -> new WorkshopException(WorkshopErrors.ACCOUNT_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR));
     }
 
     public Account getAccountByUsername(String username) throws WorkshopException {
         return accountRepository
                 .createAccountDao()
                 .findByUsername(username)
-                .orElseThrow(() -> new WorkshopException(WorkshopErrors.ACCOUNT_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR));
     }
 
     public Account getAccountByPhone(String phone) throws WorkshopException {
         return accountRepository
                 .createAccountDao()
                 .findByPhone(phone)
-                .orElseThrow(() -> new WorkshopException(WorkshopErrors.ACCOUNT_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR));
     }
 
     public Account getAccountByEmail(String email) throws WorkshopException {
         return accountRepository
                 .createAccountDao()
                 .findByEmail(email)
-                .orElseThrow(() -> new WorkshopException(WorkshopErrors.ACCOUNT_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR));
     }
 
-    public String getPage(Pageable page) {
-        return accountRepository
+    public String getPage(Page page) {
+        return PageService.getPage(accountRepository
                 .createAccountDao()
-                .getPage(page).getPage();
+                .getPage(page));
     }
 
     public void saveAccountRoles(Account account) throws WorkshopException {
@@ -85,8 +86,8 @@ public class AccountService{
                     .createAccountDao()
                     .update(account);
         } catch (SQLException e) {
-            logger.error("cannot update account : " + e.getMessage());
-            throw new WorkshopException(WorkshopErrors.ACCOUNT_UPDATE_ERROR);
+            LOGGER.error("cannot update account : " + e.getMessage());
+            throw new WorkshopException(WorkshopError.ACCOUNT_UPDATE_ERROR);
         }
     }
 }

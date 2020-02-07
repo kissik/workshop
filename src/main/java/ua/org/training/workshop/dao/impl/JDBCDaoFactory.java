@@ -14,6 +14,7 @@ public class JDBCDaoFactory extends DaoFactory {
     public AccountDao createAccountDao() {
         return new JDBCAccountDao(getConnection());
     }
+
     @Override
     public RoleDao createRoleDao() {
         return new JDBCRoleDao(getConnection());
@@ -23,16 +24,18 @@ public class JDBCDaoFactory extends DaoFactory {
     public StatusDao createStatusDao() {
         return new JDBCStatusDao(getConnection());
     }
+
     @Override
     public RequestDao createRequestDao() {
         return new JDBCRequestDao(getConnection());
     }
+
     @Override
     public HistoryRequestDao createHistoryRequestDao() {
         return new JDBCHistoryRequestDao(getConnection());
     }
 
-    private Connection getConnection(){
+    private Connection getConnection() {
         try {
             return dataSource.getConnection();
         } catch (SQLException e) {

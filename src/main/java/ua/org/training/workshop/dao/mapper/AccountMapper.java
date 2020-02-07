@@ -4,7 +4,6 @@ import ua.org.training.workshop.domain.Account;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class AccountMapper implements ObjectMapper<Account> {
     @Override
@@ -22,5 +21,4 @@ public class AccountMapper implements ObjectMapper<Account> {
         account.setEnabled(rs.getBoolean(prefix + ".benabled"));
         return account;
     }
-
 }

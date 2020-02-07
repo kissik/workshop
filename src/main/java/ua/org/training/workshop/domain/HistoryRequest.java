@@ -94,7 +94,7 @@ public class HistoryRequest {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.title + ": " + this.description;
     }
 

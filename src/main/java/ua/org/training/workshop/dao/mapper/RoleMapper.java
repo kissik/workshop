@@ -4,7 +4,6 @@ import ua.org.training.workshop.domain.Role;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class RoleMapper implements ObjectMapper<Role> {
     @Override

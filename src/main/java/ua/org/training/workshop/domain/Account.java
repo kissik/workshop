@@ -22,16 +22,28 @@ public class Account {
     private LocalDate dateCreated;
     private Collection<Role> roles = new HashSet<>();
 
-    public Account(){}
-    public Account(String username) { this.username = username; }
+    public Account() {
+    }
 
-    public Long getId() { return id; }
+    public Account(String username) {
+        this.username = username;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getUsername() { return username; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public void setUsername(String username) { this.username = username; }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getPassword() {
         return password;
@@ -41,9 +53,13 @@ public class Account {
         this.password = password;
     }
 
-    public String getFirstName() { return firstName; }
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
     public String getFirstNameOrigin() {
         return firstNameOrigin;
@@ -61,35 +77,65 @@ public class Account {
         this.lastNameOrigin = lastNameOrigin;
     }
 
-    public String getLastName() { return lastName; }
+    public String getLastName() {
+        return lastName;
+    }
 
-    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-    public String getFullName() { return this.firstName + " " + this.lastName;}
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
 
-    public String getFullNameOrigin() { return this.firstNameOrigin + " " + this.lastNameOrigin;}
+    public String getFullNameOrigin() {
+        return this.firstNameOrigin + " " + this.lastNameOrigin;
+    }
 
-    public String getEmail() { return email; }
+    public String getEmail() {
+        return email;
+    }
 
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getPhone() { return phone; }
+    public String getPhone() {
+        return phone;
+    }
 
-    public void setPhone(String phone) { this.phone = phone; }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-    public boolean isEnabled() { return enabled; }
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-    public Collection<Role> getRoles() { return roles; }
+    public Collection<Role> getRoles() {
+        return roles;
+    }
 
-    public void setRoles(Collection<Role> roles) { this.roles = roles; }
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
 
-    public LocalDate getDateCreated() { return dateCreated; }
+    public LocalDate getDateCreated() {
+        return dateCreated;
+    }
 
-    public void setDateCreated(LocalDate dateCreated) { this.dateCreated = dateCreated; }
+    public void setDateCreated(LocalDate dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 
     @Override
-    public String toString() { return username; }
+    public String toString() {
+        return username;
+    }
 
 }
