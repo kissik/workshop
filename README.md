@@ -1,7 +1,7 @@
 [![Awesome][icon-awesome]][awesome]
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-#Workshop  
+# Workshop  
 <div align="center">
 	<img src="src/main/webapp/img/print-screen.png" alt="workshop">
 </div>
@@ -17,7 +17,7 @@
 1. Clone project  
 1. You can use default settings and work with database on zanner.org.ua MySql server or [install and configure MySQL](my-sql.md)  
 1. Run in terminal command: ```mvn clean tomcat7:run```  
-1. Go to link: ```localhost:8080```  
+1. Go to link: [```localhost:8080```](http://localhost:8080/)  
 
 [icon-awesome]: https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg
 [awesome]: https://github.com/sindresorhus/awesome
