@@ -49,14 +49,14 @@ form:invalid #form-submit {
 	box-shadow: none;
 }
 
-.contact-form{
+.request-form{
     width: 50%;
 	margin: auto;
 	background: white;
 	padding: 60px;
 }
 
-.contact-form-ribbon-top{
+.request-form-ribbon-top{
 	border-top: 10px solid;
 	border-image: url(../img/ribbon.png) 10 0 0 0 repeat;
 }
@@ -256,8 +256,12 @@ font-family: "Pattaya", sans-serif;
    text-decoration: none;
 }
 
+input.form-control{
+    border: 1px solid #dee2e6;
+}
+
 @media (max-width: 768px){
-.contact-form{
+.request-form{
     width: 100%;
 }
 }

@@ -32,6 +32,7 @@ public class MainServlet extends HttpServlet {
         commands.put("exception", new ExceptionCommand());
         commands.put("login", new LogInCommand());
         commands.put("logout", new LogOutCommand());
+        commands.put("manager/edit-request", new ManagerEditRequestCommand());
         commands.put("manager/page", new ManagerPageCommand());
         commands.put("manager/requests", new ManagerRequestsCommand());
         commands.put("registration", new RegistrationCommand());
@@ -39,6 +40,7 @@ public class MainServlet extends HttpServlet {
         commands.put("user/history-requests", new UserHistoryRequestsCommand());
         commands.put("user/requests", new UserRequestsCommand());
         commands.put("user/new-request", new NewRequestCommand());
+        commands.put("workman/edit-request", new WorkmanEditRequestCommand());
         commands.put("workman/page", new WorkmanPageCommand());
         commands.put("workman/requests", new WorkmanRequestsCommand());
     }

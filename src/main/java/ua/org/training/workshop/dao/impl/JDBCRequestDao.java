@@ -40,8 +40,10 @@ public class JDBCRequestDao implements RequestDao {
                     " inner join user_list u on r.nuser = u.id " +
                     " inner join status s on r.nstatus = s.id " +
                     " where r.id = ?";
-    private final static String REQUEST_INSERT_PREPARE_STATEMENT =
+    private final static String REQUEST_INSERT_CALLABLE_STATEMENT =
             "CALL APP_INSERT_REQUEST_LIST (?,?,?,?,?,?,?,?);";
+    private final static String REQUEST_UPDATE_CALLABLE_STATEMENT =
+            "CALL APP_UPDATE_REQUEST (?, ?, ?, ?, ?, ?);";
     private final static Logger LOGGER = Logger.getLogger(JDBCRequestDao.class);
     private Connection connection;
 
@@ -66,17 +68,29 @@ public class JDBCRequestDao implements RequestDao {
 
     @Override
     public void update(Request request) throws SQLException {
-        updateStatus(request);
-    }
-
-    private void updateStatus(Request request) {
+        try (CallableStatement callableStatement =
+                     connection.prepareCall(
+                             REQUEST_UPDATE_CALLABLE_STATEMENT)) {
+            callableStatement.setLong("nuser", request.getUser().getId());
+            callableStatement.setLong("nstatus", request.getStatus().getId());
+            callableStatement.setString("scause", request.getCause());
+            callableStatement.setBigDecimal("nprice", request.getPrice());
+            callableStatement.setLong("nid", request.getId());
+            callableStatement.setBoolean("bclosed", request.isClosed());
+            callableStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("update request " + e.getMessage());
+            throw e;
+        }
+        close();
+        LOGGER.debug("Request " + request.getTitle() + " was successfully updated!");
     }
 
     private Long insertRequest(Request request) throws SQLException {
         Long newId;
         try (CallableStatement callableStatement =
                      connection.prepareCall(
-                             REQUEST_INSERT_PREPARE_STATEMENT)) {
+                             REQUEST_INSERT_CALLABLE_STATEMENT)) {
             callableStatement.setString("stitle", request.getTitle());
             callableStatement.setString("sdescription", request.getDescription());
             callableStatement.setLong("nauthor", request.getAuthor().getId());
@@ -99,6 +113,7 @@ public class JDBCRequestDao implements RequestDao {
     @Override
     public Optional<Request> findById(Long id) {
         Request request = null;
+        LOGGER.info("try to find request by id");
         try (PreparedStatement pst =
                      connection.prepareStatement(
                              REQUEST_FIND_BY_ID_QUERY)) {
@@ -120,7 +135,7 @@ public class JDBCRequestDao implements RequestDao {
         StatusMapper statusMapper = new StatusMapper();
         Request request = requestMapper.extractFromResultSet(rs,
                 ApplicationConstants.REQUEST_QUERY_DEFAULT_PREFIX);
-
+        LOGGER.info("load request!");
         request.setAuthor(
                 accountMapper.extractFromResultSet(rs,
                         ApplicationConstants.REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX));

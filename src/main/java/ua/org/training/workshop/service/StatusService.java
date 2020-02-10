@@ -15,4 +15,10 @@ public class StatusService {
                 .orElseThrow(() -> new WorkshopException(WorkshopError.STATUS_NOT_FOUND_ERROR));
     }
 
+    public boolean hasNextStatus(Status status, Status newStatus) {
+        for (Status nextStatus : status.getNextStatuses()) {
+            if (nextStatus.getCode().equals(newStatus.getCode())) return true;
+        }
+        return false;
+    }
 }

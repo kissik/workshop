@@ -23,6 +23,7 @@ public enum WorkshopError {
 
     REQUEST_HISTORY_NOT_FOUND_ERROR(330, "error.request.history.not.found"),
     REQUEST_LIST_HISTORY_IS_EMPTY_ERROR(331, "error.request.history.list.not.found"),
+    REQUEST_UPDATE_ERROR (333, "error.request.update"),
 
     STATUS_NOT_FOUND_ERROR(350, "error.status.not.found"),
 

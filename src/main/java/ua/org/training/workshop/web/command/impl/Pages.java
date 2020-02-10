@@ -13,6 +13,7 @@ public interface Pages {
 
     String MANAGER_PAGE = "/WEB-INF/jsp/manager/page.jsp";
     String MANAGER_PAGE_REDIRECT = "redirect:app/manager/page";
+    String MANAGER_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESSED = "redirect:app/manager/page?updated=true";;
 
     String REGISTRATION_FORM_OK = "redirect:app/login";
     String REGISTRATION_FORM_PAGE = "/WEB-INF/registration-form.jsp";
@@ -25,5 +26,5 @@ public interface Pages {
 
     String WORKMAN_PAGE = "/WEB-INF/jsp/workman/page.jsp";
     String WORKMAN_PAGE_REDIRECT = "redirect:app/workman/page";
-
+    String WORKMAN_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESSED = "redirect:app/workman/page?updated=true";
 }

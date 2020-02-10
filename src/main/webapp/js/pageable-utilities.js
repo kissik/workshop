@@ -28,10 +28,10 @@ const clear = tag => {
 		tag.removeChild(tag.firstChild);
 	}
 }
-const makeHTML = data => {
+const makeHTML = (data, callback) => {
     let documentFragment = document.createDocumentFragment();
 	for(let index in data){
-	    documentFragment.appendChild(makeRow(data[index], index));
+	    documentFragment.appendChild(makeRow(data[index], index, callback));
      }
     return documentFragment;
 }
@@ -54,7 +54,7 @@ const makePages = i => {
     return anchor;
 }
 
-const showResults = (url) => {
+const showResults = (url, callback) => {
 	ajaxJS(url, (response) => {
         let tbody = document.getElementById('pageable-list');
         let div = document.getElementById('page-navigation');
@@ -67,7 +67,7 @@ const showResults = (url) => {
         let pageSize = response.size;
         let pages = Math.ceil(totalElements/pageSize);
         language = response.language;
-        tbody.appendChild(makeHTML(response.content));
+        tbody.appendChild(makeHTML(response.content, callback));
         div.appendChild(makePageNavigation(pages));
 	});
 }
@@ -94,11 +94,11 @@ const addListeners = (url) => {
     }
 }
 
-const wizard = (urlPath) => {
+const wizard = (urlPath, callback) => {
     size = document.querySelector(`#size`);
     search = document.querySelector(`#search`);
     sorting_desc = document.querySelector(`#desc`);
     sorting_asc = document.querySelector(`#asc`);
     addListeners(urlPath);
-	showResults(urlPath);
+	showResults(urlPath, callback);
 }

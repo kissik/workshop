@@ -28,8 +28,8 @@
              <input type="checkbox" class="input-modal-window" id="new-request-modal-window">
              <div class="modal hidden-new-request-modal-window">
                                  <div class="center">
-                                     <div class="contact-form contact-form-ribbon-top">
-                                         <form id="contactForm" data-toggle="validator" novalidate="true" action="/app/user/new-request">
+                                     <div class="request-form request-form-ribbon-top">
+                                         <form id="requestForm" data-toggle="validator" novalidate="true" action="/app/user/new-request">
                                              <h1><fmt:message key="newRequest.pageTitle" /></h1>
              							    <div class="form-group">
              								    <input type="text" class="form-control caps" name="title" placeholder="<fmt:message key="newRequest.label.title" />" required>

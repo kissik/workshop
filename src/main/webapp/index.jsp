@@ -11,7 +11,6 @@
 <t:generic>
     <jsp:attribute name="head">
         <link rel="stylesheet" href="../css/main-page-style.css">
-        <link rel="stylesheet" href="../css/bootstrap.min.css">
         <title>
             Workshop
         </title>

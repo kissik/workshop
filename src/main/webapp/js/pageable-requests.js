@@ -1,13 +1,13 @@
 var requests = "requests";
 
-const makeRow = (rowData, index) => {
+const makeRow = (rowData, index, callback) => {
     let tableRow = document.createElement('tr');
     let tableData = document.createElement('td');
     let anchor = document.createElement('a');
     let label = document.createElement('label');
     let hiddenId = `hidden-request-data-${index}`;
 
-    tableRow.appendChild(createHiddenRequestDiv(hiddenId, rowData));
+    tableRow.appendChild(createHiddenRequestDiv(hiddenId, rowData, callback));
 
     anchor.setAttribute('href', '#');
     anchor.onclick = () => {
@@ -53,7 +53,7 @@ const makeRow = (rowData, index) => {
     return tableRow;
 }
 
-const createHiddenRequestDiv = (hiddenId, rowData) => {
+const createHiddenRequestDiv = (hiddenId, rowData, callback) => {
 
     let hiddenRequestDiv = document.createElement('div');
 
@@ -62,7 +62,7 @@ const createHiddenRequestDiv = (hiddenId, rowData) => {
     hiddenRequestDiv.style.display = 'none';
 
     let hiddenDesk = document.createElement('div');
-    hiddenDesk.setAttribute('class','contact-form');
+    hiddenDesk.setAttribute('class','request-form');
     hiddenDesk.style.textAlign = "left";
     hiddenDesk.style.padding = "30px 15px";
     hiddenDesk.style.background = "#F4F7FB";
@@ -118,6 +118,10 @@ const createHiddenRequestDiv = (hiddenId, rowData) => {
     field = document.createElement('em');
     field.appendChild(document.createTextNode(rowData.cause));
     hiddenDesk.appendChild(field);
+
+    if(callback && typeof callback === "function") {
+        callback(hiddenDesk, rowData, hiddenId);
+    }
 
     hiddenRequestDiv.appendChild(hiddenDesk);
 

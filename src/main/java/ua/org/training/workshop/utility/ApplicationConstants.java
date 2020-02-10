@@ -17,7 +17,11 @@ public interface ApplicationConstants {
         String APP_PASSWORD_ATTRIBUTE = "password";
         String APP_USER_ATTRIBUTE = "user";
         String APP_USERNAME_ATTRIBUTE = "username";
+        String REQUEST_CAUSE_ATTRIBUTE = "cause";
         String REQUEST_DESCRIPTION_ATTRIBUTE = "description";
+        String REQUEST_ID_ATTRIBUTE = "id";
+        String REQUEST_PRICE_ATTRIBUTE = "price";
+        String REQUEST_STATUS_ATTRIBUTE = "status";
         String REQUEST_TITLE_ATTRIBUTE = "title";
     }
 
@@ -51,8 +55,11 @@ public interface ApplicationConstants {
     String HISTORY_REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX = "a";
     String HISTORY_REQUEST_QUERY_DEFAULT_PREFIX = "h";
     Object BUNDLE_REQUEST_STATUS_PREFIX = "app.request.";
+
     String REQUEST_DEFAULT_STATUS = "REGISTER";
     String REQUEST_WORKMAN_STATUS = "ACCEPT";
+    Long REQUEST_DEFAULT_ID = -1L;
+
     Integer MYSQL_DEFAULT_MAX_OPEN_PREPARED_STATEMENTS = 100;
     Integer MYSQL_DEFAULT_MAX_IDLE = 10;
     Integer MYSQL_DEFAULT_MIN_IDLE = 5;

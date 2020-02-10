@@ -108,4 +108,14 @@ public class RequestService {
                 )
                 .orElse(null);
     }
+
+    public void updateRequest(Request request) {
+        try{
+            requestRepository.createRequestDao().update(request);
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            throw new WorkshopException(WorkshopError.REQUEST_UPDATE_ERROR);
+        }
+        LOGGER.info("Request was successfully updated : " + request.toString());
+    }
 }
