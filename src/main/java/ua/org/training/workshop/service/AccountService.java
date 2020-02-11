@@ -30,12 +30,12 @@ public class AccountService {
         accountRepository = daoFactory;
     }
 
-    public Long registerAccount(Account account) throws WorkshopException {
+    public Long registerAccount(Account account, String hashPassword) throws WorkshopException {
         LOGGER.info("Register account : " + account.getUsername());
         try {
             return accountRepository
                     .createAccountDao()
-                    .create(account);
+                    .create(account, hashPassword);
         } catch (SQLException e) {
             LOGGER.error("SQLException after create account : " + e.getMessage());
         } catch (Exception e) {

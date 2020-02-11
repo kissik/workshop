@@ -3,6 +3,10 @@ package ua.org.training.workshop.security;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+import ua.org.training.workshop.dao.DaoFactory;
+import ua.org.training.workshop.dao.SecurityDao;
+import ua.org.training.workshop.dao.impl.JDBCDaoFactory;
+import ua.org.training.workshop.dao.impl.JDBCSecurityDao;
 import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.utility.ApplicationConstants;
@@ -110,5 +114,10 @@ public class SecurityService implements Serializable {
                                 .APP_USER_ATTRIBUTE))
                 .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR));
         return securityAccount.getUsername();
+    }
+
+    public static String getPasswordByUsername(String username) {
+        SecurityDao securityRepository = new JDBCSecurityDao();
+        return securityRepository.findPasswordByUsername(username);
     }
 }

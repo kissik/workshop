@@ -80,7 +80,7 @@ public class LogInCommand implements Command {
 
         if (!securityAccount.getUsername()
                 .equals(ApplicationConstants.APP_ANONYMOUS_ACCOUNT_USERNAME)
-                && BCrypt.checkpw(password, securityAccount.getPassword())) {
+                && BCrypt.checkpw(password, SecurityService.getPasswordByUsername(securityAccount.getUsername()))) {
 
             SecurityService.addLoggedUser(request, securityAccount);
 

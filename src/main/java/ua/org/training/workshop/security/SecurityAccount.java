@@ -25,7 +25,6 @@ public class SecurityAccount extends Account {
         this.setFirstNameOrigin(account.getFirstNameOrigin());
         this.setLastName(account.getLastName());
         this.setLastNameOrigin(account.getLastNameOrigin());
-        this.setPassword(account.getPassword());
         this.setRoles(new HashSet<>(account.getRoles()));
     }
 

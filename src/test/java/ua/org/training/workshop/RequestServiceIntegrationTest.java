@@ -55,7 +55,6 @@ public class RequestServiceIntegrationTest {
         account.setPhone("+380501457254");
         account.setEnabled(true);
         account.setUsername("kissik3");
-        account.setPassword("password");
         account.setDateCreated(LocalDate.now());
 
         request.setAuthor(account);

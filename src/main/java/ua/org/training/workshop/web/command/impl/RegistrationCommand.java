@@ -78,8 +78,7 @@ public class RegistrationCommand implements Command {
                     password,
                     confirmPassword,
                     errors);
-            account.setPassword(BCrypt.hashpw(
-                    password, BCrypt.gensalt(ApplicationConstants.APP_BCRYPT_SALT)));
+
             LOGGER.debug("error has errors = " + errors.haveErrors());
 
             validation(Utility.getLocale(request),
@@ -89,8 +88,10 @@ public class RegistrationCommand implements Command {
 
             if (!errors.haveErrors())
                 try {
+                    String bcryptPassword = BCrypt.hashpw(
+                            password, BCrypt.gensalt(ApplicationConstants.APP_BCRYPT_SALT));
                     LOGGER.debug("Try to register new account!");
-                    accountService.registerAccount(account);
+                    accountService.registerAccount(account, bcryptPassword);
                 } catch (WorkshopException e) {
                     LOGGER.error("New account error: " + e.getMessage());
                 }

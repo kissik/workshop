@@ -2,10 +2,11 @@ package ua.org.training.workshop.dao;
 
 import ua.org.training.workshop.domain.Account;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public interface AccountDao extends GenericDao<Account> {
-    void create(Account account, String password);
+    Long create(Account account, String password) throws SQLException;
 
     void update(Account account, String password);
 
