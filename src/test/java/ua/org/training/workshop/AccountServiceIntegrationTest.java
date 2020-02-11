@@ -77,17 +77,16 @@ public class AccountServiceIntegrationTest {
         account.setEnabled(true);
         account.setUsername("kissik3");
         account.setRoles(Arrays.asList(new Role[]{role}));
-        account.setPassword("password");
         account.setDateCreated(LocalDate.now());
 
         when(daoFactory.createAccountDao())
                 .thenReturn(accountDao);
-        when(accountDao.create(account)).thenReturn(id);
+        when(accountDao.create(account, "password")).thenReturn(id);
 
         Assert.assertEquals(id,
-                accountServiceMock.registerAccount(account));
+                accountServiceMock.registerAccount(account, "password"));
         verify(daoFactory).createAccountDao();
-        verify(accountDao).create(account);
+        verify(accountDao).create(account, "password");
     }
 
     @Test

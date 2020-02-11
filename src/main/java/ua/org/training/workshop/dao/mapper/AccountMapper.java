@@ -11,7 +11,6 @@ public class AccountMapper implements ObjectMapper<Account> {
         Account account = new Account();
         account.setId(rs.getLong(prefix + ".id"));
         account.setUsername(rs.getString(prefix + ".slogin"));
-        account.setPassword(rs.getString(prefix + ".spassword"));
         account.setFirstName(rs.getString(prefix + ".sfirst_name"));
         account.setLastName(rs.getString(prefix + ".slast_name"));
         account.setFirstNameOrigin(rs.getString(prefix + ".sfirst_name_origin"));

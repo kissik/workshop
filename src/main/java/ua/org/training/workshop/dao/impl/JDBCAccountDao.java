@@ -55,12 +55,12 @@ public class JDBCAccountDao implements AccountDao {
     }
 
     @Override
-    public Long create(Account account) throws SQLException {
+    public Long create(Account account, String password) throws SQLException {
         Long newId;
         LOGGER.info("Start transaction! --------------------------------> ");
         connection.setAutoCommit(false);
         try {
-            newId = insertAccount(account);
+            newId = insertAccount(account, password);
             addRoles(account, newId);
             connection.commit();
         } catch (SQLException e) {
@@ -124,7 +124,7 @@ public class JDBCAccountDao implements AccountDao {
         LOGGER.info("user has role: " + nrole.toString());
     }
 
-    private Long insertAccount(Account account) throws SQLException {
+    private Long insertAccount(Account account, String password) throws SQLException {
         LOGGER.info("create new user, with username = " + account.getUsername() + " attempt");
         Long newId;
         try (CallableStatement callableStatement =
@@ -135,7 +135,7 @@ public class JDBCAccountDao implements AccountDao {
             callableStatement.setString("slast_name", account.getLastName());
             callableStatement.setString("semail", account.getEmail());
             callableStatement.setString("sphone", account.getPhone());
-            callableStatement.setString("spassword", account.getPassword());
+            callableStatement.setString("spassword", password);
             callableStatement.setBoolean("benabled", account.isEnabled());
             callableStatement.setString("sfirst_name_origin", account.getFirstNameOrigin());
             callableStatement.setString("slast_name_origin", account.getLastNameOrigin());
@@ -237,8 +237,8 @@ public class JDBCAccountDao implements AccountDao {
     }
 
     @Override
-    public void create(Account account, String password) {
-
+    public Long create(Account account) {
+        return ApplicationConstants.REQUEST_DEFAULT_ID;
     }
 
     @Override
