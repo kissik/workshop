@@ -32,8 +32,8 @@
             							<div class="row">
             								<div class="col-md-12 col-sm-12 text-right">
             									<div class="big-tagline">
-            										<h2><strong><fmt:message key="app.pageTitle" /></strong> Company</h2>
-            										<p class="lead">Turn It On Again!</p>
+            										<h2><strong><fmt:message key="app.pageTitle" /></strong> <fmt:message key="app.page.header.company" /></h2>
+            										<p class="lead"><fmt:message key="app.slogan" /></p>
             											<a href="/app/registration" class="workshop-index-page-btn"><fmt:message key="app.registration"/></a>
             											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             											<a href="/app/login" class="workshop-index-page-btn"><fmt:message key="subhead.login" /></a>
@@ -51,8 +51,8 @@
             							<div class="row">
             								<div class="col-md-12 col-sm-12 text-left">
             									<div class="big-tagline">
-            										<h2 data-animation="animated zoomInRight">Find the right <strong><fmt:message key="app.pageTitle" /></strong></h2>
-            										<p class="lead" data-animation="animated fadeInLeft">Turn It On Again!</p>
+            										<h2 data-animation="animated zoomInRight"><fmt:message key="app.find.company" /> <strong><fmt:message key="app.pageTitle" /></strong></h2>
+            										<p class="lead" data-animation="animated fadeInLeft"><fmt:message key="app.slogan" /></p>
             											<a href="/app/registration" class="workshop-index-page-btn"><fmt:message key="app.registration"/></a>
             											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             											<a href="/app/login" class="workshop-index-page-btn"><fmt:message key="subhead.login" /></a>
@@ -70,8 +70,8 @@
             							<div class="row">
             								<div class="col-md-12 col-sm-12 text-center">
             									<div class="big-tagline">
-            										<h2 data-animation="animated zoomInRight"><strong><fmt:message key="app.pageTitle" /></strong> Company</h2>
-            										<p class="lead" data-animation="animated fadeInLeft">Turn It On Again!</p>
+            										<h2 data-animation="animated zoomInRight"><strong><fmt:message key="app.pageTitle" /></strong> <fmt:message key="app.page.header.company" /></h2>
+            										<p class="lead" data-animation="animated fadeInLeft"><fmt:message key="app.slogan" /></p>
             											<a href="/app/registration" class="workshop-index-page-btn"><fmt:message key="app.registration"/></a>
             											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             											<a href="/app/login" class="workshop-index-page-btn"><fmt:message key="subhead.login" /></a>
