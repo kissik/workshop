@@ -3,24 +3,17 @@ package ua.org.training.workshop.web.command.impl;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.HistoryRequest;
-import ua.org.training.workshop.domain.Request;
-import ua.org.training.workshop.domain.Status;
-import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.security.SecurityService;
 import ua.org.training.workshop.service.AccountService;
 import ua.org.training.workshop.service.HistoryRequestService;
-import ua.org.training.workshop.service.RequestService;
-import ua.org.training.workshop.service.StatusService;
 import ua.org.training.workshop.utility.ApplicationConstants;
 import ua.org.training.workshop.utility.Utility;
 import ua.org.training.workshop.web.command.Command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 
 public class UserEditHistoryRequestCommand implements Command {
 
@@ -50,20 +43,21 @@ public class UserEditHistoryRequestCommand implements Command {
                                 request.getParameter(ApplicationConstants
                                         .RequestAttributes.HISTORY_REQUEST_REVIEW_ATTRIBUTE),
                         ApplicationConstants.APP_STRING_DEFAULT_VALUE));
-                editHistoryRequest.setRating(BigDecimal.valueOf(Utility.tryParseLong(
+                editHistoryRequest.setRating(Utility.tryParseLong(
                         request.getParameter(ApplicationConstants
                                 .RequestAttributes.HISTORY_REQUEST_RATING_ATTRIBUTE),
-                        ApplicationConstants.APP_DEFAULT_RATING_VALUE)));
+                        ApplicationConstants.APP_DEFAULT_RATING_VALUE));
                 historyRequestService.update(editHistoryRequest);
             }
         } catch (WorkshopException e) {
             LOGGER.error("custom error message: " + e.getMessage());
         }
         clearRequestAttributes(request);
-        return Pages.USER_PAGE_REDIRECT_UPDATE_HISTORY_REQUEST_SUCCESSED;
+        return Pages.USER_PAGE_REDIRECT_UPDATE_HISTORY_REQUEST_SUCCESS;
     }
 
-    private void clearRequestAttributes(HttpServletRequest request) {
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.HISTORY_REQUEST_RATING_ATTRIBUTE);
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.HISTORY_REQUEST_REVIEW_ATTRIBUTE);
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.HISTORY_REQUEST_ID_ATTRIBUTE);

@@ -4,8 +4,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.domain.Account;
-import ua.org.training.workshop.domain.Request;
-import ua.org.training.workshop.domain.Status;
 import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.security.SecurityService;
@@ -19,9 +17,9 @@ import ua.org.training.workshop.web.command.Command;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class WorkmanEditRequestCommand implements Command {
+public class DeleteAccountCommand implements Command {
 
-    private final static Logger LOGGER = Logger.getLogger(WorkmanEditRequestCommand.class);
+    private final static Logger LOGGER = Logger.getLogger(DeleteAccountCommand.class);
 
     static {
         new DOMConfigurator().doConfigure(ApplicationConstants.LOG4J_XML_PATH, LogManager.getLoggerRepository());
@@ -34,38 +32,28 @@ public class WorkmanEditRequestCommand implements Command {
     @Override
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
-        Long id = Utility.tryParseLong(request.getParameter(ApplicationConstants.RequestAttributes.REQUEST_ID_ATTRIBUTE),
+        Long id = Utility.tryParseLong(request.getParameter(ApplicationConstants.RequestAttributes.ACCOUNT_ID_ATTRIBUTE),
                         ApplicationConstants.APP_DEFAULT_ID);
         try {
-            Request editRequest = requestService.getRequestById(id);
-            Account user = accountService.getAccountByUsername(
-                    SecurityService.getCurrentUserName(request.getSession())
-            );
-            Status newStatus = statusService.findByCode(
-                    Utility.getParameterString(request.getParameter(ApplicationConstants.RequestAttributes.REQUEST_STATUS_ATTRIBUTE),
-                            ApplicationConstants.APP_STRING_DEFAULT_VALUE));
+            Account deleteAccount = accountService.getAccountById(id);
 
-            if (!statusService.hasNextStatus(statusService.findByCode(editRequest.getStatus().getCode()), newStatus)) {
+            if (!SecurityService.loadAccountSecurity(request).hasRole(ApplicationConstants.APP_SUPERUSER_ROLE)) {
+                LOGGER.error("user has no rights to delete accounts!");
                 throw new WorkshopException(WorkshopError.REQUEST_UPDATE_ERROR);
             }
 
-            editRequest.setStatus(newStatus);
-            editRequest.setUser(user);
-            editRequest.setClosed(newStatus.isClose());
-            requestService.updateRequest(editRequest);
+            accountService.delete(deleteAccount.getId());
         } catch (WorkshopException e) {
             LOGGER.error("custom error message: " + e.getMessage());
+            return Pages.ADMIN_PAGE_REDIRECT_DELETE_ACCOUNT_FAILED;
         }
         clearRequestAttributes(request);
-        return Pages.WORKMAN_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESS;
+        return Pages.ADMIN_PAGE_REDIRECT_DELETE_ACCOUNT_SUCCESS;
     }
 
     @Override
     public void clearRequestAttributes(HttpServletRequest request) {
-        request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_CAUSE_ATTRIBUTE);
-        request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_ID_ATTRIBUTE);
-        request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_PRICE_ATTRIBUTE);
-        request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_STATUS_ATTRIBUTE);
+        request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.ACCOUNT_ID_ATTRIBUTE);
     }
 
 }

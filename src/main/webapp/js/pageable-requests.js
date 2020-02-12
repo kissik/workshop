@@ -82,6 +82,12 @@ const createHiddenRequestDiv = (hiddenId, rowData, callback) => {
 
     let fieldHeading = document.createElement('h1');
     fieldHeading.appendChild(document.createTextNode(rowData.title));
+    fieldHeading.appendChild(document.createElement('br'));
+    while (rowData.rating && parseInt(rowData.rating--) > 0){
+        let labelRating = document.createElement('label');
+        labelRating.setAttribute('class','heading-rating-label');
+        fieldHeading.appendChild(labelRating);
+    }
     hiddenDesk.appendChild(fieldHeading);
 
     fieldHeading = document.createElement('h2');

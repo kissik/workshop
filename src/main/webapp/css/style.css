@@ -260,6 +260,46 @@ input.form-control{
     border: 1px solid #dee2e6;
 }
 
+.rating {
+  border: none;
+  float: left;
+}
+
+.rating > input { display: none; }
+.rating > label::before {
+  margin: 0 5px;
+  font-size: 2.25em;
+  font-family: FontAwesome;
+  display: inline-block;
+  content: '\2605';
+}
+.heading-rating-label {
+  color: #FFD700;
+  margin: 0;
+  padding: 0;
+}
+.heading-rating-label::before{
+    content: ' ';
+}
+
+.heading-rating-label::after{
+    content: '\2605 ';
+}
+
+.rating > label {
+  color: #ddd;
+ float: right;
+}
+
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label { color: #FFED85;  }
+
 @media (max-width: 768px){
 .request-form{
     width: 100%;

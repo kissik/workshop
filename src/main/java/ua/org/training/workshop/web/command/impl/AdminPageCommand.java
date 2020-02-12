@@ -12,4 +12,8 @@ public class AdminPageCommand implements Command {
                           HttpServletResponse response) {
         return Pages.ADMIN_PAGE;
     }
+
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
 }

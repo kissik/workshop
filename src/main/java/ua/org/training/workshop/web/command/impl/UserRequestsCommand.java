@@ -56,4 +56,8 @@ public class UserRequestsCommand implements Command {
         }
         return ApplicationConstants.APP_STRING_DEFAULT_VALUE;
     }
+
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
 }

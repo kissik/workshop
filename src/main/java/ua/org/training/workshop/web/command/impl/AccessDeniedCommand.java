@@ -12,4 +12,8 @@ public class AccessDeniedCommand implements Command {
                           HttpServletResponse response) {
         return Pages.ACCESS_DENIED_PAGE;
     }
+
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
 }

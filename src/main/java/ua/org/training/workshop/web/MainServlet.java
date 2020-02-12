@@ -29,6 +29,7 @@ public class MainServlet extends HttpServlet {
         commands.put("access-denied", new AccessDeniedCommand());
         commands.put("admin/page", new AdminPageCommand());
         commands.put("admin/accounts", new AccountsCommand());
+        commands.put("admin/delete-account", new DeleteAccountCommand());
         commands.put("exception", new ExceptionCommand());
         commands.put("login", new LogInCommand());
         commands.put("logout", new LogOutCommand());
@@ -69,7 +70,7 @@ public class MainServlet extends HttpServlet {
         LOGGER.debug(path);
 
         Command command = commands.getOrDefault(path,
-                (req, res) -> "/index.jsp");
+                new LogInCommand());
         page = command.execute(request, response);
 
         if (page.contains("redirect:")) {

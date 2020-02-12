@@ -7,6 +7,7 @@ public interface ApplicationConstants {
         String ACCOUNT_FIRST_NAME_ATTRIBUTE = "firstName";
         String ACCOUNT_FIRST_NAME_ORIGIN_ATTRIBUTE = "firstNameOrigin";
         String ACCOUNT_EMAIL_ATTRIBUTE = "email";
+        String ACCOUNT_ID_ATTRIBUTE = "id";
         String ACCOUNT_LAST_NAME_ATTRIBUTE = "lastName";
         String ACCOUNT_LAST_NAME_ORIGIN_ATTRIBUTE = "lastNameOrigin";
         String ACCOUNT_PHONE_ATTRIBUTE = "phone";
@@ -26,6 +27,7 @@ public interface ApplicationConstants {
         String REQUEST_PRICE_ATTRIBUTE = "price";
         String REQUEST_STATUS_ATTRIBUTE = "status";
         String REQUEST_TITLE_ATTRIBUTE = "title";
+
     }
 
     String APP_ANONYMOUS_ACCOUNT_USERNAME = "anonymous";
@@ -40,6 +42,7 @@ public interface ApplicationConstants {
     String APP_MESSAGES_BUNDLE_NAME = "messages";
     String APP_PATH_REG_EXP = ".*/app/";
     String APP_STRING_DEFAULT_VALUE = "";
+    String APP_SUPERUSER_ROLE = "ADMIN";
     String[] APP_ROLES = new String[]{
             "ADMIN",
             "MANAGER",
@@ -54,16 +57,7 @@ public interface ApplicationConstants {
 
     String LOG4J_XML_PATH = "src/main/resources/log4j.xml";
 
-    String ROLE_QUERY_DEFAULT_PREFIX = "r";
-    String STATUS_QUERY_DEFAULT_PREFIX = "s";
-    String ACCOUNT_QUERY_DEFAULT_PREFIX = "u";
-    String REQUEST_QUERY_DEFAULT_PREFIX = "r";
-    String REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX = "a";
-    String REQUEST_USER_QUERY_DEFAULT_PREFIX = "u";
-    String HISTORY_REQUEST_USER_QUERY_DEFAULT_PREFIX = "u";
-    String HISTORY_REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX = "a";
-    String HISTORY_REQUEST_QUERY_DEFAULT_PREFIX = "h";
-    Object BUNDLE_REQUEST_STATUS_PREFIX = "app.request.";
+    String BUNDLE_REQUEST_STATUS_PREFIX = "app.request.";
 
     String REQUEST_DEFAULT_STATUS = "REGISTER";
     String REQUEST_WORKMAN_STATUS = "ACCEPT";

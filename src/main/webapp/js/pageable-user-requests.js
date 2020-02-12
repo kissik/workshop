@@ -30,30 +30,40 @@ const updateHistoryRequest = (hiddenDesk, rowData, hiddenId) => {
     let select = document.createElement('select');
     let div = document.createElement('div');
     let textarea = document.createElement('textarea');
-    let rating = document.createElement('input');
+    let fieldsetRating = document.querySelector(`fieldset.rating`);
+    let clone = fieldsetRating.cloneNode(true);
+    var children = clone.childNodes;
+    [].forEach.call(children, (child) => {
+        if ((child.tagName === 'INPUT')&&(child.hasAttribute('id'))){
+            child.setAttribute('id', `${child.getAttribute('id')}-${hiddenId}`);
+            console.log('id : ' + child.getAttribute('id'));
+        }
+        if ((child.tagName === 'LABEL')&&(child.hasAttribute('for'))){
+            child.setAttribute('for', `${child.getAttribute('for')}-${hiddenId}`);
+            console.log('for : ' + child.getAttribute('for'));
+        }
+    })
+
+    div.appendChild(clone);
+
     let button = document.createElement('input');
 
     button.setAttribute('type', 'submit');
     button.setAttribute('class','btn btn-form-submit');
     form.setAttribute('action', urlEditHistoryRequest);
     div.setAttribute('class','form-group');
+    textarea.appendChild(document.createTextNode(rowData.review));
     textarea.setAttribute('class','form-control caps');
     textarea.setAttribute('id',`cause-${hiddenId}`);
-    textarea.setAttribute('rows','5');
+    textarea.setAttribute('rows','3');
     textarea.setAttribute('name','review');
     textarea.setAttribute('required','true');
     textarea.setAttribute('style','background: white; margin: 10px 0; border: 1px solid #dee2e6;');
-    rating.setAttribute('name','rating');
-    rating.setAttribute('id',`price-${hiddenId}`);
-    rating.setAttribute('required','true');
-    rating.setAttribute('type','number');
-    rating.setAttribute('class','form-control');
-    rating.setAttribute('style','background: white; margin: 10px 0; border: 1px solid #dee2e6;');
     div.appendChild(textarea);
     form.appendChild(div);
     div = document.createElement('div');
     div.setAttribute('class','form-group');
-    div.appendChild(rating);
+
     form.appendChild(div);
     form.appendChild(button);
     console.log(rowData);

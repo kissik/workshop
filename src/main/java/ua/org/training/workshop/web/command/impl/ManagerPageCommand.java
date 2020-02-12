@@ -12,4 +12,8 @@ public class ManagerPageCommand implements Command {
                           HttpServletResponse response) {
         return Pages.MANAGER_PAGE;
     }
+
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
 }

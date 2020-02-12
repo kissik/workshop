@@ -72,6 +72,10 @@ public class AccountsCommand implements Command {
         return Pages.USER_INFO_PAGE;
     }
 
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
+
     private String createJSONUserList(HttpServletRequest request,
                                       HttpServletResponse response) {
         response.setContentType("application/json");

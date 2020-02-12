@@ -19,7 +19,7 @@ public class HistoryRequest {
     private String cause;
     private String language;
     private String review;
-    private BigDecimal rating;
+    private Long rating;
 
     public Long getId() {
         return id;
@@ -122,11 +122,11 @@ public class HistoryRequest {
         this.review = review;
     }
 
-    public BigDecimal getRating() {
+    public Long getRating() {
         return rating;
     }
 
-    public void setRating(BigDecimal rating) {
+    public void setRating(Long rating) {
         this.rating = rating;
     }
 }

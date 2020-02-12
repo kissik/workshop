@@ -96,7 +96,8 @@ public class LogInCommand implements Command {
         return Pages.LOGIN_PAGE;
     }
 
-    private void clearRequestAttributes(HttpServletRequest request) {
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.APP_USERNAME_ATTRIBUTE);
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.APP_PASSWORD_ATTRIBUTE);
     }
