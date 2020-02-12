@@ -106,7 +106,8 @@ public class RegistrationCommand implements Command {
         }
     }
 
-    private void clearRequestAttributes(HttpServletRequest request) {
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.ACCOUNT_CONFIRM_PASSWORD_ATTRIBUTE);
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.ACCOUNT_EMAIL_ATTRIBUTE);
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.ACCOUNT_FIRST_NAME_ATTRIBUTE);

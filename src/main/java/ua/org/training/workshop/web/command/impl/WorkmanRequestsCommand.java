@@ -33,6 +33,10 @@ public class WorkmanRequestsCommand implements Command {
         return createJSONRequestList(request, response);
     }
 
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
+
     private String createJSONRequestList(HttpServletRequest request,
                                          HttpServletResponse response) {
         response.setContentType("application/json");

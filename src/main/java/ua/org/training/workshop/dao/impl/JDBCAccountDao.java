@@ -25,6 +25,8 @@ public class JDBCAccountDao implements AccountDao {
             "CALL APP_PAGINATION_USER_LIST (?, ?, ?, ?, ?);";
     private final static String ACCOUNT_DELETE_ROLES_BY_USER_ID_QUERY =
             " delete from user_role where nuser = ? ";
+    private final static String ACCOUNT_DELETE_BY_ID_QUERY =
+            " delete from user_list where id = ? ";
     private final static String AUTHOR_FIND_BY_HISTORY_REQUEST_ID_QUERY =
             " select u.* from user_list u " +
                     " inner join history_request_list h on u.id = h.nauthor" +
@@ -109,16 +111,42 @@ public class JDBCAccountDao implements AccountDao {
         LOGGER.info("account have new role(s)");
     }
 
-    private void deleteAllAccountRoles(Long nuser) {
+    private void deleteAllAccountRoles(Long nuser) throws SQLException {
         try (PreparedStatement preparedStatement =
                      connection.prepareStatement(
                              ACCOUNT_DELETE_ROLES_BY_USER_ID_QUERY)) {
             preparedStatement.setLong(1, nuser);
             preparedStatement.execute();
         } catch (SQLException e) {
-            LOGGER.error("delete roles of user " + nuser + e.getMessage());
+            LOGGER.error("delete roles of account : " + nuser + e.getMessage());
         }
-        LOGGER.info("users roles were deleted " + nuser);
+        LOGGER.info("account roles were deleted " + nuser);
+    }
+
+    @Override
+    public void delete(Long id) throws SQLException {
+        LOGGER.info("Start transaction! --------------------------------> ");
+        connection.setAutoCommit(false);
+        try{
+            deleteAllAccountRoles(id);
+            deleteAccount(id);
+            connection.commit();
+        }catch (SQLException e){
+            LOGGER.error("SQL exception : " + e.getMessage());
+            LOGGER.info("Transaction was rollback! <--------------------------------");
+            connection.rollback();
+            throw new WorkshopException(WorkshopError.ACCOUNT_DELETE_ERROR);
+        }
+        LOGGER.info("Transaction was successfully committed! <--------------------------------");
+        close();
+    }
+
+    private void deleteAccount(Long id) throws SQLException{
+        PreparedStatement preparedStatement =
+                     connection.prepareStatement(
+                             ACCOUNT_DELETE_BY_ID_QUERY);
+        preparedStatement.setLong(1, id);
+        preparedStatement.execute();
     }
 
     private void insertAccountRole(Long nuser, Long nrole) throws SQLException {
@@ -234,11 +262,6 @@ public class JDBCAccountDao implements AccountDao {
     }
 
     @Override
-    public void delete(Long id) {
-
-    }
-
-    @Override
     public void close() {
         try {
             connection.close();
@@ -295,4 +318,3 @@ public class JDBCAccountDao implements AccountDao {
         return Optional.ofNullable(account);
     }
 }
-

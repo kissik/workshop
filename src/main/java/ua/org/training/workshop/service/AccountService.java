@@ -101,4 +101,14 @@ public class AccountService {
             throw new WorkshopException(WorkshopError.ACCOUNT_UPDATE_ERROR);
         }
     }
+
+    public void delete(Long accountId) {
+        try {
+            accountRepository.createAccountDao().delete(accountId);
+        }
+        catch (SQLException e){
+            LOGGER.error("delete error : " + e.getMessage());
+            throw new WorkshopException(WorkshopError.ACCOUNT_DELETE_ERROR);
+        }
+    }
 }

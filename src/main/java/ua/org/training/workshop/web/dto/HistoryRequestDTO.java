@@ -37,6 +37,9 @@ public class HistoryRequestDTO {
         this.cause = Utility.getParameterString(
                 historyRequest.getCause(),
                 ApplicationConstants.APP_STRING_DEFAULT_VALUE);
+        this.review = Utility.getParameterString(historyRequest.getReview(),
+                ApplicationConstants.APP_STRING_DEFAULT_VALUE);
+        this.rating = historyRequest.getRating();
         this.language = historyRequest.getLanguage();
     }
 

@@ -13,6 +13,7 @@
 <fmt:setBundle basename="messages"/>
 
 <c:url var="editUserUrl" value="${userPath}/edit" />
+<c:url var="deleteUserUrl" value="/app/admin/delete-account" />
 
 <spring:message var="editUser" code="user.edit" />
 
@@ -29,8 +30,18 @@
         <c:if test="${param.saved == true}">
             <div class="info alert"><fmt:message key="user.save" /></div>
         </c:if>
+        <c:if test="${param.deleted == true}">
+            <div class="info alert"><fmt:message key="user.delete.true" /></div>
+        </c:if>
+        <c:if test="${param.deleted == false}">
+            <div class="info alert-danger"><fmt:message key="user.delete.false" /></div>
+        </c:if>
         <h1><c:out value="${account.fullName}" /></h1>
-        <div>
+        <form action="${deleteUserUrl}">
+		    <input type="text" name=id class="hidden" value=${account.id}>
+		    <input type="submit" class="btn btn-danger" value=<fmt:message key="user.delete" /> >
+		</form>
+		<div>
 			<div>
 				<div class="form-group row">
 					<div class="col-sm-2 workshop-field-label"><fmt:message key="user.login" /></div>

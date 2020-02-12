@@ -22,4 +22,8 @@ public class ExceptionCommand implements Command {
         LOGGER.debug("Generated exception");
         throw new RuntimeException("Generated exception");
     }
+
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
 }

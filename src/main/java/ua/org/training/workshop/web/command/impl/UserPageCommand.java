@@ -12,4 +12,8 @@ public class UserPageCommand implements Command {
                           HttpServletResponse response) {
         return Pages.USER_PAGE;
     }
+
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
 }

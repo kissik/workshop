@@ -68,10 +68,11 @@ public class ManagerEditRequestCommand implements Command {
             LOGGER.error("custom error message: " + e.getMessage());
         }
         clearRequestAttributes(request);
-        return Pages.MANAGER_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESSED;
+        return Pages.MANAGER_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESS;
     }
 
-    private void clearRequestAttributes(HttpServletRequest request) {
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_CAUSE_ATTRIBUTE);
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_ID_ATTRIBUTE);
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_PRICE_ATTRIBUTE);

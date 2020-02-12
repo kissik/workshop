@@ -6,6 +6,8 @@ public interface Pages {
 
     String ADMIN_PAGE = "/WEB-INF/jsp/admin/page.jsp";
     String ADMIN_PAGE_REDIRECT = "redirect:app/admin/page";
+    String ADMIN_PAGE_REDIRECT_DELETE_ACCOUNT_FAILED = "redirect:app/admin/page?deleted=false";
+    String ADMIN_PAGE_REDIRECT_DELETE_ACCOUNT_SUCCESS = "redirect:app/admin/page?deleted=true";
 
     String FIRST_PAGE = "redirect:";
 
@@ -13,7 +15,7 @@ public interface Pages {
 
     String MANAGER_PAGE = "/WEB-INF/jsp/manager/page.jsp";
     String MANAGER_PAGE_REDIRECT = "redirect:app/manager/page";
-    String MANAGER_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESSED = "redirect:app/manager/page?updated=true";;
+    String MANAGER_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESS = "redirect:app/manager/page?updated=true";;
 
     String REGISTRATION_FORM_OK = "redirect:app/login";
     String REGISTRATION_FORM_PAGE = "/WEB-INF/registration-form.jsp";
@@ -22,10 +24,11 @@ public interface Pages {
     String USER_EDIT_PAGE = "/WEB-INF/jsp/admin/edit-user-form.jsp";
     String USER_PAGE = "/WEB-INF/jsp/user/page.jsp";
     String USER_PAGE_REDIRECT = "redirect:app/user/page";
-    String USER_PAGE_REDIRECT_NEW_REQUEST_SUCCESSED = "redirect:app/user/page?created=true";
-    String USER_PAGE_REDIRECT_UPDATE_HISTORY_REQUEST_SUCCESSED = "redirect:app/user/page?updated=true";
+    String USER_PAGE_REDIRECT_NEW_REQUEST_SUCCESS = "redirect:app/user/page?created=true";
+    String USER_PAGE_REDIRECT_UPDATE_HISTORY_REQUEST_SUCCESS = "redirect:app/user/page?updated=true";
 
     String WORKMAN_PAGE = "/WEB-INF/jsp/workman/page.jsp";
     String WORKMAN_PAGE_REDIRECT = "redirect:app/workman/page";
-    String WORKMAN_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESSED = "redirect:app/workman/page?updated=true";
+    String WORKMAN_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESS = "redirect:app/workman/page?updated=true";
+
 }

@@ -51,7 +51,7 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
                      connection.prepareCall(
                              HISTORY_REQUEST_UPDATE_CALLABLE_STATEMENT)) {
             callableStatement.setString("sreview", historyRequest.getReview());
-            callableStatement.setBigDecimal("nrating", historyRequest.getRating());
+            callableStatement.setLong("nrating", historyRequest.getRating());
             callableStatement.setLong("nid", historyRequest.getId());
             callableStatement.executeUpdate();
         } catch (SQLException e) {

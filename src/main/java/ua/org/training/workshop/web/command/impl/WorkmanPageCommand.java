@@ -12,4 +12,8 @@ public class WorkmanPageCommand implements Command {
                           HttpServletResponse response) {
         return Pages.WORKMAN_PAGE;
     }
+
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
 }

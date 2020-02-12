@@ -13,6 +13,7 @@ public enum WorkshopError {
     ACCOUNT_CREATE_NEW_ERROR(201, "error.account.create"),
     ACCOUNT_LIST_IS_EMPTY_ERROR(202, "error.account.list.empty"),
     ACCOUNT_UPDATE_ERROR(210, "error.account.update"),
+    ACCOUNT_DELETE_ERROR(220, "error.account.delete"),
 
     ROLE_NOT_FOUND_ERROR(250, "error.role.not.found"),
     ROLE_LIST_IS_EMPTY_ERROR(251, "error.role.list.empty"),

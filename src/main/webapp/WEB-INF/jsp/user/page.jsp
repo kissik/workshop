@@ -27,30 +27,30 @@
              </h1>
              <input type="checkbox" class="input-modal-window" id="new-request-modal-window">
              <div class="modal hidden-new-request-modal-window">
-                                 <div class="center">
-                                     <div class="request-form request-form-ribbon-top">
-                                         <form id="requestForm" data-toggle="validator" novalidate="true" action="/app/user/new-request">
-                                             <h1><fmt:message key="newRequest.pageTitle" /></h1>
-             							    <div class="form-group">
-             								    <input type="text" class="form-control caps" name="title" placeholder="<fmt:message key="newRequest.label.title" />" required>
-             								</div>
-             								<div class="form-group">
-             								    <textarea class="form-control caps" rows="5" placeholder="<fmt:message key="newRequest.label.description" />" name="description" required></textarea>
-             								</div>
-             								<div class="form-group">
-                                                 <button type="submit" id="form-submit" class="btn btn-form-submit">
-             								        <span><fmt:message key="newRequest.label.submit" /></span>
-             								    </button>
-             								</div>
-             								<div class="form-group">
-                                                 <label class="btn btn-form-submit btn-form-reset" for="new-request-modal-window">
-                                                     <fmt:message key="newRequest.label.reset" />
-                                                 </label>
-                                             </div>
-             							</form>
-                                     </div>
-                             	</div>
-                             </div>
+                <div class="center">
+                    <div class="request-form request-form-ribbon-top">
+                        <form id="requestForm" data-toggle="validator" novalidate="true" action="/app/user/new-request">
+                            <h1><fmt:message key="newRequest.pageTitle" /></h1>
+             				<div class="form-group">
+             				    <input type="text" class="form-control caps" name="title" placeholder="<fmt:message key="newRequest.label.title" />" required>
+             				</div>
+             				<div class="form-group">
+             				    <textarea class="form-control caps" rows="5" placeholder="<fmt:message key="newRequest.label.description" />" name="description" required></textarea>
+             				</div>
+             				<div class="form-group">
+                                <button type="submit" id="form-submit" class="btn btn-form-submit">
+             				        <span><fmt:message key="newRequest.label.submit" /></span>
+             					</button>
+             				</div>
+             				<div class="form-group">
+                                <label class="btn btn-form-submit btn-form-reset" for="new-request-modal-window">
+                                    <fmt:message key="newRequest.label.reset" />
+                                </label>
+                            </div>
+             			</form>
+                    </div>
+                </div>
+             </div>
              <div class="workshop-grid-container">
              <div class="workshop-grid-left-3 wrapper">
                 <div class="list-group-flush components">
@@ -64,6 +64,15 @@
                         <fmt:message key="request.were.closed" />
                     </label>
                 </div>
+             </div>
+             <div class="hidden">
+                <fieldset class="rating">
+                    <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5"></label>
+                    <input type="radio" id="star4" name="rating" value="4" /><label class = "full" for="star4"></label>
+                	<input type="radio" id="star3" name="rating" value="3" /><label class = "full" for="star3"></label>
+                	<input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2"></label>
+                	<input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1"></label>
+                </fieldset>
              </div>
              <div class="workshop-grid-right-9">
              <div class="form-group">

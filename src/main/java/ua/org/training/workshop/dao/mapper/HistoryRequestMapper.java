@@ -16,7 +16,7 @@ public class HistoryRequestMapper implements ObjectMapper<HistoryRequest> {
         historyRequest.setCause(rs.getString("h.scause"));
         historyRequest.setLanguage(rs.getString("h.slang"));
         historyRequest.setReview(rs.getString("h.sreview"));
-        historyRequest.setRating(rs.getBigDecimal("h.nrating"));
+        historyRequest.setRating(rs.getLong("h.nrating"));
         return historyRequest;
     }
 }

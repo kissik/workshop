@@ -62,10 +62,11 @@ public class NewRequestCommand implements Command {
             LOGGER.error("custom error message: " + e.getMessage());
         }
         clearRequestAttributes(request);
-        return Pages.USER_PAGE_REDIRECT_NEW_REQUEST_SUCCESSED;
+        return Pages.USER_PAGE_REDIRECT_NEW_REQUEST_SUCCESS;
     }
 
-    private void clearRequestAttributes(HttpServletRequest request) {
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_DESCRIPTION_ATTRIBUTE);
         request.getSession().removeAttribute(ApplicationConstants.RequestAttributes.REQUEST_TITLE_ATTRIBUTE);
     }

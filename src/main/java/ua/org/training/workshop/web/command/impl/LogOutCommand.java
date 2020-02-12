@@ -29,4 +29,8 @@ public class LogOutCommand implements Command {
         return Pages.FIRST_PAGE;
     }
 
+    @Override
+    public void clearRequestAttributes(HttpServletRequest request) {
+    }
+
 }
