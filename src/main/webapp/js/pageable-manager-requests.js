@@ -2,10 +2,10 @@ var urlPath = `/app/manager/${requests}`;
 var urlEditRequest = `/app/manager/edit-request`;
 
 window.onload = () => {
-    wizard(urlPath, update_request);
+    wizard(urlPath, updateRequest);
 }
 
-const update_request = (hiddenDesk, rowData, hiddenId) => {
+const updateRequest = (hiddenDesk, rowData, hiddenId) => {
     let form = document.createElement('form');
     form.setAttribute('id',`form-${hiddenId}`);
     let requestId = document.createElement('input');

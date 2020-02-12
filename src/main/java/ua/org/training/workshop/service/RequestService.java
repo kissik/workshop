@@ -4,7 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.DaoFactory;
-import ua.org.training.workshop.domain.Account;
+import ua.org.training.workshop.domain.HistoryRequest;
 import ua.org.training.workshop.domain.Request;
 import ua.org.training.workshop.domain.Status;
 import ua.org.training.workshop.enums.WorkshopError;
@@ -13,6 +13,7 @@ import ua.org.training.workshop.utility.ApplicationConstants;
 import ua.org.training.workshop.utility.Page;
 import ua.org.training.workshop.utility.PageService;
 import ua.org.training.workshop.utility.Utility;
+import ua.org.training.workshop.web.dto.HistoryRequestDTO;
 import ua.org.training.workshop.web.dto.RequestDTO;
 
 import java.sql.SQLException;
@@ -53,49 +54,60 @@ public class RequestService {
     }
 
     public Request getRequestById(Long id) throws WorkshopException {
-        return requestRepository
+        return loadAggregateFields(requestRepository
                 .createRequestDao()
                 .findById(id)
-                .orElseThrow(() -> new WorkshopException(WorkshopError.REQUEST_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new WorkshopException(WorkshopError.REQUEST_NOT_FOUND_ERROR)));
     }
 
-    public String getPage(Locale locale, Page page) {
+    public String getPage(Locale locale, Page<Request> page) {
         return getDTOPage(locale, requestRepository
                 .createRequestDao()
                 .getPage(page));
     }
 
-    public String getPageByAuthor(Page page, Locale locale, Account author) {
+    public String getPageByAuthor(Page<Request> page, Locale locale, Long authorId) {
         return getDTOPage(locale, requestRepository
                 .createRequestDao()
-                .getPageByAuthor(page, author));
+                .getPageByAuthor(page, authorId));
     }
 
-    public String getPageByLanguageAndAuthor(Page page,
+    public String getPageByLanguageAndAuthor(Page<Request> page,
                                              Locale locale,
-                                             Account author) throws WorkshopException {
+                                             Long authorId) throws WorkshopException {
         return getDTOPage(locale, requestRepository
                 .createRequestDao()
                 .getPageByLanguageAndAuthor(page,
                         Utility.getLanguageString(locale),
-                        author));
+                        authorId));
     }
 
-    public String getPageByLanguageAndStatus(Page page,
+    public String getPageByLanguageAndStatus(Page<Request> page,
                                              Locale locale,
-                                             Status status) throws WorkshopException {
+                                             Long statusId) throws WorkshopException {
         return getDTOPage(locale, requestRepository
                 .createRequestDao()
                 .getPageByLanguageAndStatus(page,
                         Utility.getLanguageString(locale),
-                        status));
+                        statusId));
     }
 
-    private String getDTOPage(Locale locale, Page page) {
+    private String getDTOPage(Locale locale, Page<Request> page) {
+        PageService<RequestDTO> pageService = new PageService<>();
+        Page<RequestDTO> requestDTOPage = createDTOPage(locale, page);
 
-        page.setContent(formatRequest(locale, (Optional<List<Request>>) page.getContent()));
+        return pageService.getPage(requestDTOPage);
+    }
 
-        return PageService.getPage(page);
+    private Page<RequestDTO> createDTOPage(Locale locale, Page<Request> page) {
+        Page<RequestDTO> historyRequestDTOPage = new Page<>();
+        historyRequestDTOPage.setLanguage(page.getLanguage());
+        historyRequestDTOPage.setPageNumber(page.getPageNumber());
+        historyRequestDTOPage.setSize(page.getSize());
+        historyRequestDTOPage.setTotalElements(page.getTotalElements());
+        historyRequestDTOPage
+                .setContent(formatRequest(locale, page.getContent()));
+        return historyRequestDTOPage;
     }
 
     private Optional<List<RequestDTO>> formatRequest(Locale locale, Optional<List<Request>> requestsList) {
@@ -103,10 +115,36 @@ public class RequestService {
                 .map(requestList -> Optional.of(
                         requestList
                                 .stream()
-                                .map(request -> new RequestDTO(locale, request))
+                                .map(request -> new RequestDTO(locale, loadAggregateFields(request)))
                                 .collect(Collectors.toList()))
                 )
                 .orElse(null);
+    }
+
+    private Request loadAggregateFields(Request request) {
+        try{
+            Status status = requestRepository
+                    .createStatusDao()
+                    .findByRequestId(request.getId())
+                    .orElseThrow(() -> new WorkshopException(WorkshopError.STATUS_NOT_FOUND_ERROR));
+            status.setNextStatuses(requestRepository
+                    .createStatusDao()
+                    .findNextStatusesForCurrentStatusById(status.getId())
+                    .orElseThrow(() -> new WorkshopException(WorkshopError.STATUS_LIST_IS_EMPTY_ERROR))
+            );
+            request.setStatus(status);
+            request.setUser(requestRepository
+                    .createAccountDao()
+                    .findAuthorByRequestId(request.getId())
+                    .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR)));
+            request.setAuthor(requestRepository
+                    .createAccountDao()
+                    .findUserByRequestId(request.getId())
+                    .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR)));
+        }catch(WorkshopException e){
+            LOGGER.error("load aggreagate fields error : " + e.getMessage());
+        }
+        return request;
     }
 
     public void updateRequest(Request request) {

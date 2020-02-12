@@ -20,6 +20,7 @@ public class RoleService {
     public List<Role> findAll() throws WorkshopException {
         return roleRepository
                 .createRoleDao()
-                .findAll().orElseThrow(() -> new WorkshopException(WorkshopError.ROLE_LIST_IS_EMPTY_ERROR));
+                .findAll()
+                .orElseThrow(() -> new WorkshopException(WorkshopError.ROLE_LIST_IS_EMPTY_ERROR));
     }
 }

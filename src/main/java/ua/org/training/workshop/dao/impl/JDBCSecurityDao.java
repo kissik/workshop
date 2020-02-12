@@ -49,4 +49,13 @@ public class JDBCSecurityDao implements SecurityDao {
         }
         return password;
     }
+
+    private void close() throws WorkshopException {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            LOGGER.error("cannot close connection : " + e.getMessage());
+            throw new WorkshopException(WorkshopError.DATABASE_CONNECTION_ERROR);
+        }
+    }
 }

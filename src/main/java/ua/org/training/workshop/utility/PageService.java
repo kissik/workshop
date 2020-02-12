@@ -4,11 +4,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-public class PageService {
+public class PageService<T> {
 
     private static final Long PAGEABLE_PAGE_DEFAULT_VALUE = 0L;
     private static final String PAGEABLE_PAGE_ATTRIBUTE = "page";
@@ -17,7 +17,7 @@ public class PageService {
     private static final String PAGEABLE_SIZE_ATTRIBUTE = "size";
     private static final String PAGEABLE_SORTING_ATTRIBUTE = "sorting";
 
-    public static String getPage(Page page) {
+    public String getPage(Page<T> page) {
         ObjectMapper jsonMapper = new ObjectMapper();
         String jsonString = "";
 
@@ -30,13 +30,11 @@ public class PageService {
         return jsonString;
     }
 
-    private static Map<String, Object> makeMap(Page page) {
+    private Map<String, Object> makeMap(Page<T> page) {
 
         Map<String, Object> mappedObject = new HashMap<>();
 
-        mappedObject.put("content", ((Optional) page.getContent()).orElse(
-                ApplicationConstants.APP_STRING_DEFAULT_VALUE
-        ));
+        mappedObject.put("content", page.getContent().orElse(new ArrayList<>()));
         mappedObject.put("size", page.getSize());
         mappedObject.put("totalElements", page.getTotalElements());
         mappedObject.put("language", page.getLanguage());
@@ -44,9 +42,9 @@ public class PageService {
         return mappedObject;
     }
 
-    public static Page createPage(HttpServletRequest request) {
-        Page page;
-        page = new Page();
+    public Page<T> createPage(HttpServletRequest request) {
+        Page<T> page;
+        page = new Page<>();
         page.setPageNumber(
                 Utility.tryParseLong(
                         request.getParameter(PAGEABLE_PAGE_ATTRIBUTE),

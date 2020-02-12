@@ -2,6 +2,7 @@ package ua.org.training.workshop;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -119,12 +120,12 @@ public class AccountServiceIntegrationTest {
 
     @Test
     public void testSetAccountRoles() {
-        Long id = 11L;
-        Account account = accountService.getAccountById(id);
+        String username = "snow_white";
+        Account account = accountService.getAccountByUsername(username);
         List<Role> roles = Collections.singletonList(roleService.findByCode("USER"));
         account.setRoles(roles);
         accountService.saveAccountRoles(account);
-        SecurityAccount securityAccount = new SecurityAccount(accountService.getAccountById(id));
+        SecurityAccount securityAccount = new SecurityAccount(accountService.getAccountByUsername(username));
         Assert.assertFalse(securityAccount.hasRole("ADMIN"));
         Assert.assertFalse(securityAccount.hasRole("MANAGER"));
         Assert.assertFalse(securityAccount.hasRole("WORKMAN"));

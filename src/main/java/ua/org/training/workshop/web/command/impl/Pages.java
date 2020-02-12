@@ -23,6 +23,7 @@ public interface Pages {
     String USER_PAGE = "/WEB-INF/jsp/user/page.jsp";
     String USER_PAGE_REDIRECT = "redirect:app/user/page";
     String USER_PAGE_REDIRECT_NEW_REQUEST_SUCCESSED = "redirect:app/user/page?created=true";
+    String USER_PAGE_REDIRECT_UPDATE_HISTORY_REQUEST_SUCCESSED = "redirect:app/user/page?updated=true";
 
     String WORKMAN_PAGE = "/WEB-INF/jsp/workman/page.jsp";
     String WORKMAN_PAGE_REDIRECT = "redirect:app/workman/page";

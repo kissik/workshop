@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public interface ObjectMapper<T> {
 
-    T extractFromResultSet(ResultSet rs, String prefix) throws SQLException;
+    T extractFromResultSet(ResultSet rs) throws SQLException;
 
 }
 

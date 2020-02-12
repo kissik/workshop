@@ -25,16 +25,14 @@ public class StatusDTO {
         this.value = Utility.getBundleMessage(locale, ApplicationConstants.BUNDLE_REQUEST_STATUS_PREFIX
                 + code.toLowerCase());
         StatusService statusService = new StatusService();
-        this.nextStatuses = statusService
-                .findByCode(status.getCode())
+        this.nextStatuses = status
                 .getNextStatuses()
                 .stream()
-                .map(nextStatus ->
-                        new Pair(
-                                nextStatus.getCode(),
-                                Utility.getBundleMessage(locale,
-                                        ApplicationConstants.BUNDLE_REQUEST_STATUS_PREFIX
-                                                + nextStatus.getCode().toLowerCase()))
+                .map(nextStatus -> new Pair<>(
+                        nextStatus.getCode(),
+                        Utility.getBundleMessage(locale,
+                                ApplicationConstants.BUNDLE_REQUEST_STATUS_PREFIX
+                                        + nextStatus.getCode().toLowerCase()))
                 )
                 .collect(Collectors.toList());
     }

@@ -26,6 +26,7 @@ public enum WorkshopError {
     REQUEST_UPDATE_ERROR (333, "error.request.update"),
 
     STATUS_NOT_FOUND_ERROR(350, "error.status.not.found"),
+    STATUS_LIST_IS_EMPTY_ERROR (355, "error.status.list.not.found"),
 
     RIGHT_VIOLATION_ERROR(500, "error.right.violation"),
 

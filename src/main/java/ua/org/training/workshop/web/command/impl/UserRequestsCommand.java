@@ -3,7 +3,7 @@ package ua.org.training.workshop.web.command.impl;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import ua.org.training.workshop.domain.Account;
+import ua.org.training.workshop.domain.Request;
 import ua.org.training.workshop.security.SecurityService;
 import ua.org.training.workshop.service.AccountService;
 import ua.org.training.workshop.service.RequestService;
@@ -39,14 +39,14 @@ public class UserRequestsCommand implements Command {
         response.setContentType("application/json");
         response.setCharacterEncoding(ApplicationConstants.APP_ENCODING);
         LOGGER.info("Send json page to user client!");
-        Page page = PageService.createPage(request);
-        Account author = accountService.getAccountByUsername(
-                SecurityService.getCurrentUserName(request.getSession()));
+        PageService<Request> pageService = new PageService<>();
+        Page<Request> page = pageService.createPage(request);
         String jsonString = requestService
                 .getPageByLanguageAndAuthor(
                         page,
                         Utility.getLocale(request),
-                        author);
+                        accountService.getAccountByUsername(
+                                SecurityService.getCurrentUserName(request.getSession())).getId());
         try {
             PrintWriter writer = response.getWriter();
             writer.print(jsonString);

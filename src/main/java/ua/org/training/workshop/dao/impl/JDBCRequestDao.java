@@ -4,12 +4,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.RequestDao;
-import ua.org.training.workshop.dao.mapper.AccountMapper;
 import ua.org.training.workshop.dao.mapper.RequestMapper;
-import ua.org.training.workshop.dao.mapper.StatusMapper;
-import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Request;
-import ua.org.training.workshop.domain.Status;
 import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
 import ua.org.training.workshop.utility.ApplicationConstants;
@@ -36,10 +32,10 @@ public class JDBCRequestDao implements RequestDao {
             "CALL APP_PAGINATION_REQUEST_LIST_BY_LANGUAGE_AND_STATUS (?, ?, ?, ?, ?, ?, ?);";
     private final static String REQUEST_FIND_BY_ID_QUERY =
             " select * from request_list r " +
-                    " inner join user_list a on r.nauthor = a.id " +
-                    " inner join user_list u on r.nuser = u.id " +
-                    " inner join status s on r.nstatus = s.id " +
                     " where r.id = ?";
+    private final static String DELETE_REQUEST_BY_ID_QUERY =
+            " delete from request_list " +
+                    " where id = ?";
     private final static String REQUEST_INSERT_CALLABLE_STATEMENT =
             "CALL APP_INSERT_REQUEST_LIST (?,?,?,?,?,?,?,?);";
     private final static String REQUEST_UPDATE_CALLABLE_STATEMENT =
@@ -68,6 +64,25 @@ public class JDBCRequestDao implements RequestDao {
 
     @Override
     public void update(Request request) throws SQLException {
+        LOGGER.info("Start transaction! --------------------------------> ");
+        connection.setAutoCommit(false);
+        try {
+            updateRequest(request);
+            if (request.isClosed())
+                deleteRequest(request.getId());
+            connection.commit();
+        }catch(SQLException e){
+            LOGGER.error("update request error : " + e.getMessage());
+            LOGGER.info("Transaction was rollback! <--------------------------------");
+            connection.rollback();
+            close();
+            throw new WorkshopException(WorkshopError.REQUEST_UPDATE_ERROR);
+        }
+        LOGGER.info("Transaction was successfully committed! <--------------------------------");
+        close();
+    }
+
+    private void updateRequest(Request request) throws SQLException {
         try (CallableStatement callableStatement =
                      connection.prepareCall(
                              REQUEST_UPDATE_CALLABLE_STATEMENT)) {
@@ -82,7 +97,6 @@ public class JDBCRequestDao implements RequestDao {
             LOGGER.error("update request " + e.getMessage());
             throw e;
         }
-        close();
         LOGGER.debug("Request " + request.getTitle() + " was successfully updated!");
     }
 
@@ -131,27 +145,25 @@ public class JDBCRequestDao implements RequestDao {
 
     private Request loadRequest(ResultSet rs) throws SQLException {
         RequestMapper requestMapper = new RequestMapper();
-        AccountMapper accountMapper = new AccountMapper();
-        StatusMapper statusMapper = new StatusMapper();
-        Request request = requestMapper.extractFromResultSet(rs,
-                ApplicationConstants.REQUEST_QUERY_DEFAULT_PREFIX);
-        LOGGER.info("load request!");
-        request.setAuthor(
-                accountMapper.extractFromResultSet(rs,
-                        ApplicationConstants.REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX));
-        request.setUser(
-                accountMapper.extractFromResultSet(rs,
-                        ApplicationConstants.REQUEST_USER_QUERY_DEFAULT_PREFIX));
-        request.setStatus(
-                statusMapper.extractFromResultSet(rs,
-                        ApplicationConstants.STATUS_QUERY_DEFAULT_PREFIX));
+        return requestMapper.extractFromResultSet(rs);
+    }
 
-        return request;
+    private void deleteRequest(Long id){
+        LOGGER.info("try to delete request by id");
+        try (PreparedStatement pst =
+                     connection.prepareStatement(
+                             DELETE_REQUEST_BY_ID_QUERY)) {
+            pst.setLong(1, id);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.debug("delete request by " + id + " sql exception : " + e.getMessage());
+        }
     }
 
     @Override
     public void delete(Long id) {
-
+        deleteRequest(id);
+        close();
     }
 
     @Override
@@ -164,7 +176,7 @@ public class JDBCRequestDao implements RequestDao {
         }
     }
 
-    public Page getPage(Page page) {
+    public Page<Request> getPage(Page<Request> page) {
         List<Request> requests = new ArrayList<>();
         try (CallableStatement callableStatement =
                      connection.prepareCall(
@@ -189,14 +201,14 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public Page getPageByAuthor(Page page, Account author) {
+    public Page<Request> getPageByAuthor(Page<Request> page, Long authorId) {
         List<Request> requests = new ArrayList<>();
         try (CallableStatement callableStatement =
                      connection.prepareCall(
                              REQUEST_FIND_PAGE_BY_AUTHOR_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
-            callableStatement.setLong("nauthor", author.getId());
+            callableStatement.setLong("nauthor", authorId);
             callableStatement.setString("ssearch", page.getSearch());
             callableStatement.setString("ssorting", page.getSorting());
             callableStatement.registerOutParameter("ncount", Types.BIGINT);
@@ -215,14 +227,14 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public Page getPageByLanguageAndAuthor(Page page, String language, Account author) {
+    public Page<Request> getPageByLanguageAndAuthor(Page<Request> page, String language, Long authorId) {
         List<Request> requests = new ArrayList<>();
         try (CallableStatement callableStatement =
                      connection.prepareCall(
                              REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
-            callableStatement.setLong("nauthor", author.getId());
+            callableStatement.setLong("nauthor", authorId);
             callableStatement.setString("slang", language);
             callableStatement.setString("ssearch", page.getSearch());
             callableStatement.setString("ssorting", page.getSorting());
@@ -242,17 +254,17 @@ public class JDBCRequestDao implements RequestDao {
     }
 
     @Override
-    public Page getPageByLanguageAndStatus(
-            Page page,
+    public Page<Request> getPageByLanguageAndStatus(
+            Page<Request> page,
             String language,
-            Status status) {
+            Long statusId) {
         List<Request> requests = new ArrayList<>();
         try (CallableStatement callableStatement =
                      connection.prepareCall(
                              REQUEST_FIND_PAGE_BY_LANGUAGE_AND_STATUS_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
-            callableStatement.setLong("nstatus", status.getId());
+            callableStatement.setLong("nstatus", statusId);
             callableStatement.setString("slang", language);
             callableStatement.setString("ssearch", page.getSearch());
             callableStatement.setString("ssorting", page.getSorting());

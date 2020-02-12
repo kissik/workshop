@@ -7,16 +7,16 @@ import java.sql.SQLException;
 
 public class HistoryRequestMapper implements ObjectMapper<HistoryRequest> {
     @Override
-    public HistoryRequest extractFromResultSet(ResultSet rs, String prefix) throws SQLException {
+    public HistoryRequest extractFromResultSet(ResultSet rs) throws SQLException {
         HistoryRequest historyRequest = new HistoryRequest();
-        historyRequest.setId(rs.getLong(prefix + ".id"));
-        historyRequest.setTitle(rs.getString(prefix + ".stitle"));
-        historyRequest.setDescription(rs.getString(prefix + ".sdescription"));
-        historyRequest.setPrice(rs.getBigDecimal(prefix + ".nprice"));
-        historyRequest.setCause(rs.getString(prefix + ".scause"));
-        historyRequest.setLanguage(rs.getString(prefix + ".slang"));
-        historyRequest.setReview(rs.getString(prefix + ".sreview"));
-        historyRequest.setRating(rs.getLong(prefix + ".nrating"));
+        historyRequest.setId(rs.getLong("h.id"));
+        historyRequest.setTitle(rs.getString("h.stitle"));
+        historyRequest.setDescription(rs.getString("h.sdescription"));
+        historyRequest.setPrice(rs.getBigDecimal("h.nprice"));
+        historyRequest.setCause(rs.getString("h.scause"));
+        historyRequest.setLanguage(rs.getString("h.slang"));
+        historyRequest.setReview(rs.getString("h.sreview"));
+        historyRequest.setRating(rs.getBigDecimal("h.nrating"));
         return historyRequest;
     }
 }

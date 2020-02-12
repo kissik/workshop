@@ -16,7 +16,7 @@ public class StatusService {
     }
 
     public boolean hasNextStatus(Status status, Status newStatus) {
-        for (Status nextStatus : status.getNextStatuses()) {
+        for (Status nextStatus : statusRepository.createStatusDao().findNextStatusesForCurrentStatusById(status.getId()).orElseThrow(() -> new WorkshopException(WorkshopError.STATUS_LIST_IS_EMPTY_ERROR))) {
             if (nextStatus.getCode().equals(newStatus.getCode())) return true;
         }
         return false;
