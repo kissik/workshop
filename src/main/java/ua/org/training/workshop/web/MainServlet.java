@@ -36,8 +36,9 @@ public class MainServlet extends HttpServlet {
         commands.put("manager/page", new ManagerPageCommand());
         commands.put("manager/requests", new ManagerRequestsCommand());
         commands.put("registration", new RegistrationCommand());
-        commands.put("user/page", new UserPageCommand());
+        commands.put("user/edit-history-request", new UserEditHistoryRequestCommand());
         commands.put("user/history-requests", new UserHistoryRequestsCommand());
+        commands.put("user/page", new UserPageCommand());
         commands.put("user/requests", new UserRequestsCommand());
         commands.put("user/new-request", new NewRequestCommand());
         commands.put("workman/edit-request", new WorkmanEditRequestCommand());

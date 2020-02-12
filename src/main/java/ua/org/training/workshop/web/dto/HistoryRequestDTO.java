@@ -10,6 +10,7 @@ import java.util.Locale;
  * @author kissik
  */
 public class HistoryRequestDTO {
+    private Long id;
     private String title;
     private String description;
     private StatusDTO status;
@@ -24,6 +25,7 @@ public class HistoryRequestDTO {
     private Long rating;
 
     public HistoryRequestDTO(Locale locale, HistoryRequest historyRequest) {
+        this.id = historyRequest.getId();
         this.title = historyRequest.getTitle();
         this.description = historyRequest.getDescription();
         this.status = new StatusDTO(locale, historyRequest.getStatus());
@@ -136,5 +138,13 @@ public class HistoryRequestDTO {
 
     public void setRating(Long rating) {
         this.rating = rating;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

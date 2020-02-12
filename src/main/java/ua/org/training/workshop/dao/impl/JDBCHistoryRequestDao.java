@@ -4,10 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.HistoryRequestDao;
-import ua.org.training.workshop.dao.mapper.AccountMapper;
 import ua.org.training.workshop.dao.mapper.HistoryRequestMapper;
-import ua.org.training.workshop.dao.mapper.StatusMapper;
-import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.HistoryRequest;
 import ua.org.training.workshop.enums.WorkshopError;
 import ua.org.training.workshop.exception.WorkshopException;
@@ -30,11 +27,11 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
     private final static String HISTORY_REQUEST_FIND_PAGE_CALLABLE_STATEMENT =
             "CALL APP_PAGINATION_HISTORY_REQUEST_LIST (?, ?, ?, ?, ?);";
     private final static String HISTORY_REQUEST_FIND_BY_ID_QUERY =
-            " select * from request_list_history h " +
-                    " inner join user_list a on h.nauthor = a.id " +
-                    " inner join user_list u on h.nuser = u.id " +
-                    " inner join status s on h.nstatus = s.id " +
+            " select * from history_request_list h " +
                     " where h.id = ?";
+    private final static String HISTORY_REQUEST_UPDATE_CALLABLE_STATEMENT =
+            "CALL APP_UPDATE_HISTORY_REQUEST (?, ?, ?);";
+    ;
     private final static Logger LOGGER = Logger.getLogger(JDBCHistoryRequestDao.class);
 
     private Connection connection;
@@ -50,6 +47,18 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
 
     @Override
     public void update(HistoryRequest historyRequest) throws SQLException {
+        try (CallableStatement callableStatement =
+                     connection.prepareCall(
+                             HISTORY_REQUEST_UPDATE_CALLABLE_STATEMENT)) {
+            callableStatement.setString("sreview", historyRequest.getReview());
+            callableStatement.setBigDecimal("nrating", historyRequest.getRating());
+            callableStatement.setLong("nid", historyRequest.getId());
+            callableStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("update history request " + e.getMessage());
+            throw e;
+        }
+        LOGGER.debug("History request " + historyRequest.getTitle() + " was successfully updated!");
     }
 
     private void updateStatus(HistoryRequest historyRequest) {
@@ -79,25 +88,12 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
 
     private HistoryRequest loadHistoryRequest(ResultSet rs) throws SQLException {
         HistoryRequestMapper historyRequestMapper = new HistoryRequestMapper();
-        AccountMapper accountMapper = new AccountMapper();
-        StatusMapper statusMapper = new StatusMapper();
-        HistoryRequest historyRequest = historyRequestMapper.extractFromResultSet(rs,
-                ApplicationConstants.HISTORY_REQUEST_QUERY_DEFAULT_PREFIX);
-        historyRequest.setAuthor(
-                accountMapper.extractFromResultSet(rs,
-                        ApplicationConstants.HISTORY_REQUEST_AUTHOR_QUERY_DEFAULT_PREFIX));
-        historyRequest.setUser(
-                accountMapper.extractFromResultSet(rs,
-                        ApplicationConstants.HISTORY_REQUEST_USER_QUERY_DEFAULT_PREFIX));
-        historyRequest.setStatus(
-                statusMapper.extractFromResultSet(rs,
-                        ApplicationConstants.STATUS_QUERY_DEFAULT_PREFIX));
-        return historyRequest;
+        return historyRequestMapper.extractFromResultSet(rs);
     }
 
     @Override
     public void delete(Long id) {
-
+        throw new UnsupportedOperationException("It is strictly prohibited deleting history requests!");
     }
 
     @Override
@@ -110,7 +106,7 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
         }
     }
 
-    public Page getPage(Page page) {
+    public Page<HistoryRequest> getPage(Page<HistoryRequest> page) {
         List<HistoryRequest> historyRequests = new ArrayList<>();
         try (CallableStatement callableStatement =
                      connection.prepareCall(
@@ -135,14 +131,14 @@ public class JDBCHistoryRequestDao implements HistoryRequestDao {
     }
 
     @Override
-    public Page getPageByLanguageAndAuthor(Page page, String language, Account author) {
+    public Page<HistoryRequest> getPageByLanguageAndAuthor(Page<HistoryRequest> page, String language, Long authorId) {
         List<HistoryRequest> historyRequests = new ArrayList<>();
         try (CallableStatement callableStatement =
                      connection.prepareCall(
                              HISTORY_REQUEST_FIND_PAGE_BY_LANGUAGE_AND_AUTHOR_CALLABLE_STATEMENT)) {
             callableStatement.setLong("nlimit", page.getSize());
             callableStatement.setLong("noffset", page.getOffset());
-            callableStatement.setLong("nauthor", author.getId());
+            callableStatement.setLong("nauthor", authorId);
             callableStatement.setString("slang", language);
             callableStatement.setString("ssearch", page.getSearch());
             callableStatement.setString("ssorting", page.getSorting());

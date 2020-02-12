@@ -16,4 +16,11 @@ public interface AccountDao extends GenericDao<Account> {
 
     Optional<Account> findByEmail(String email);
 
+    Optional<Account> findAuthorByRequestId(Long id);
+
+    Optional<Account> findUserByRequestId(Long id);
+
+    Optional<Account> findAuthorByHistoryRequestId(Long id);
+
+    Optional<Account> findUserByHistoryRequestId(Long id);
 }

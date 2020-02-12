@@ -18,7 +18,6 @@ import ua.org.training.workshop.web.command.Command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 
 public class WorkmanEditRequestCommand implements Command {
 
@@ -36,7 +35,7 @@ public class WorkmanEditRequestCommand implements Command {
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
         Long id = Utility.tryParseLong(request.getParameter(ApplicationConstants.RequestAttributes.REQUEST_ID_ATTRIBUTE),
-                        ApplicationConstants.REQUEST_DEFAULT_ID);
+                        ApplicationConstants.APP_DEFAULT_ID);
         try {
             Request editRequest = requestService.getRequestById(id);
             Account user = accountService.getAccountByUsername(

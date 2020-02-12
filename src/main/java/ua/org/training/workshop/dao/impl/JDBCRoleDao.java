@@ -25,6 +25,11 @@ public class JDBCRoleDao implements RoleDao {
             " select * from role r where scode = ?";
     private final static String ROLE_FIND_ALL_QUERY =
             " select * from role r";
+    private final static String FIND_ROLES_BY_ACCOUNT_ID_QUERY =
+            " select * from user_role ur" +
+                    " inner join role r " +
+                    " on ur.nrole = r.id" +
+                    " where ur.nuser = ? ";
 
     private Connection connection;
 
@@ -40,9 +45,9 @@ public class JDBCRoleDao implements RoleDao {
             ResultSet rs = pst.executeQuery();
             RoleMapper roleMapper = new RoleMapper();
             Role role = null;
-            while (rs.next()) {
+            if (rs.next()) {
                 role = roleMapper
-                        .extractFromResultSet(rs, ApplicationConstants.ROLE_QUERY_DEFAULT_PREFIX);
+                        .extractFromResultSet(rs);
             }
             return Optional.ofNullable(role);
         } catch (SQLException e) {
@@ -63,27 +68,45 @@ public class JDBCRoleDao implements RoleDao {
     }
 
     @Override
-    public Page getPage(Page page) {
+    public Page<Role> getPage(Page<Role> page) {
         return null;
     }
 
     @Override
     public Optional<List<Role>> findAll() {
-        Map<Long, Role> roles = new HashMap<>();
+        List<Role> roles = new ArrayList<>();
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(
                     ROLE_FIND_ALL_QUERY);
             RoleMapper roleMapper = new RoleMapper();
             while (rs.next()) {
-                Role role = roleMapper
-                        .extractFromResultSet(rs, ApplicationConstants.ROLE_QUERY_DEFAULT_PREFIX);
-                roles.put(role.getId(), role);
+                roles.add(roleMapper
+                        .extractFromResultSet(rs));
             }
         } catch (SQLException e) {
             LOGGER.error("find all roles error : " + e.getMessage());
         }
         close();
-        return Optional.of(new ArrayList<>(roles.values()));
+        return Optional.of(roles);
+    }
+
+    @Override
+    public Optional<List<Role>> findRolesByAccountId(Long accountId) {
+        List<Role> roles = new ArrayList<>();
+        try (PreparedStatement pst = connection.prepareStatement(
+                FIND_ROLES_BY_ACCOUNT_ID_QUERY)) {
+            pst.setLong(1, accountId);
+            ResultSet rs = pst.executeQuery();
+            RoleMapper roleMapper = new RoleMapper();
+            while (rs.next()) {
+                roles.add(roleMapper
+                        .extractFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("find roles for user by id" + e.getMessage());
+        }
+        close();
+        return Optional.of(roles);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class RequestDTO {
     private StatusDTO status;
     private AccountDTO author;
     private AccountDTO user;
-    private String closed = "app.literal.false";
+    private String closed = ApplicationConstants.BUNDLE_DEFAULT_IS_CLOSED_MESSAGE;
     private String dateCreated;
     private String dateUpdated;
     private String price;

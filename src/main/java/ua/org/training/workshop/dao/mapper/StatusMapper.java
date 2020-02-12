@@ -7,12 +7,12 @@ import java.sql.SQLException;
 
 public class StatusMapper implements ObjectMapper<Status> {
     @Override
-    public Status extractFromResultSet(ResultSet rs, String prefix) throws SQLException {
+    public Status extractFromResultSet(ResultSet rs) throws SQLException {
         Status status = new Status();
-        status.setId(rs.getLong(prefix + ".id"));
-        status.setCode(rs.getString(prefix + ".scode"));
-        status.setName(rs.getString(prefix + ".sname"));
-        status.setClose(rs.getBoolean(prefix + ".bclose"));
+        status.setId(rs.getLong("s.id"));
+        status.setCode(rs.getString("s.scode"));
+        status.setName(rs.getString("s.sname"));
+        status.setClose(rs.getBoolean("s.bclose"));
         return status;
     }
 }

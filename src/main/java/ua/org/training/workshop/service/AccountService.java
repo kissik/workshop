@@ -47,17 +47,27 @@ public class AccountService {
     }
 
     public Account getAccountById(Long id) throws WorkshopException {
-        return accountRepository
+        Account account = accountRepository
                 .createAccountDao()
                 .findById(id)
                 .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR));
+        account.setRoles(accountRepository
+                .createRoleDao()
+                .findRolesByAccountId(account.getId())
+                .orElseThrow(() -> new WorkshopException((WorkshopError.ROLE_LIST_IS_EMPTY_ERROR))));
+        return account;
     }
 
     public Account getAccountByUsername(String username) throws WorkshopException {
-        return accountRepository
+        Account account = accountRepository
                 .createAccountDao()
                 .findByUsername(username)
                 .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR));
+        account.setRoles(accountRepository
+                .createRoleDao()
+                .findRolesByAccountId(account.getId())
+                .orElseThrow(() -> new WorkshopException((WorkshopError.ROLE_LIST_IS_EMPTY_ERROR))));
+        return account;
     }
 
     public Account getAccountByPhone(String phone) throws WorkshopException {
@@ -74,8 +84,9 @@ public class AccountService {
                 .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR));
     }
 
-    public String getPage(Page page) {
-        return PageService.getPage(accountRepository
+    public String getPage(Page<Account> page) {
+        PageService<Account> pageService = new PageService<>();
+        return pageService.getPage(accountRepository
                 .createAccountDao()
                 .getPage(page));
     }

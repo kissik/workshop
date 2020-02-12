@@ -77,8 +77,8 @@ public class AccountsCommand implements Command {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         LOGGER.info("Send json page to client!");
-
-        Page page = PageService.createPage(request);
+        PageService<Account> pageService = new PageService<>();
+        Page<Account> page = pageService.createPage(request);
 
         String jsonString = accountService.getPage(page);
         try {

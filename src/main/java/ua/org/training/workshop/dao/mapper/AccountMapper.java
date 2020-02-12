@@ -7,17 +7,17 @@ import java.sql.SQLException;
 
 public class AccountMapper implements ObjectMapper<Account> {
     @Override
-    public Account extractFromResultSet(ResultSet rs, String prefix) throws SQLException {
+    public Account extractFromResultSet(ResultSet rs) throws SQLException {
         Account account = new Account();
-        account.setId(rs.getLong(prefix + ".id"));
-        account.setUsername(rs.getString(prefix + ".slogin"));
-        account.setFirstName(rs.getString(prefix + ".sfirst_name"));
-        account.setLastName(rs.getString(prefix + ".slast_name"));
-        account.setFirstNameOrigin(rs.getString(prefix + ".sfirst_name_origin"));
-        account.setLastNameOrigin(rs.getString(prefix + ".slast_name_origin"));
-        account.setEmail(rs.getString(prefix + ".semail"));
-        account.setPhone(rs.getString(prefix + ".sphone"));
-        account.setEnabled(rs.getBoolean(prefix + ".benabled"));
+        account.setId(rs.getLong("u.id"));
+        account.setUsername(rs.getString("u.slogin"));
+        account.setFirstName(rs.getString("u.sfirst_name"));
+        account.setLastName(rs.getString("u.slast_name"));
+        account.setFirstNameOrigin(rs.getString("u.sfirst_name_origin"));
+        account.setLastNameOrigin(rs.getString("u.slast_name_origin"));
+        account.setEmail(rs.getString("u.semail"));
+        account.setPhone(rs.getString("u.sphone"));
+        account.setEnabled(rs.getBoolean("u.benabled"));
         return account;
     }
 }

@@ -28,6 +28,15 @@ public class JDBCStatusDao implements StatusDao {
                     " inner join status s " +
                     " on ns.nnextstatus = s.id " +
                     " where ns.nstatus = ? ";
+
+    private static final String STATUS_FIND_BY_HISTORY_REQUEST_ID_QUERY =
+            " select s.* from status s" +
+                    " inner join history_request_list h on h.nstatus = s.id" +
+                    " where h.id = ?";
+    private static final String STATUS_FIND_BY_REQUEST_ID_QUERY =
+            " select s.* from status s" +
+                    " inner join request_list r on r.nstatus = s.id" +
+                    " where r.id = ?";
     private final static String STATUS_FIND_BY_CODE_QUERY =
             " select * from status s where scode = ?";
     private final static String STATUS_FIND_BY_ID_QUERY =
@@ -51,12 +60,9 @@ public class JDBCStatusDao implements StatusDao {
             pst.setString(1, code);
             ResultSet rs = pst.executeQuery();
             StatusMapper statusMapper = new StatusMapper();
-            while (rs.next()) {
+            if (rs.next()) {
                 status = statusMapper
-                        .extractFromResultSet(rs,
-                                ApplicationConstants.STATUS_QUERY_DEFAULT_PREFIX);
-                status.setNextStatuses(
-                        findNextStatusesForCurrentStatusById(status.getId()));
+                        .extractFromResultSet(rs);
             }
         } catch (SQLException e) {
             LOGGER.debug("get status by code sql exception : " + e.getMessage());
@@ -65,23 +71,60 @@ public class JDBCStatusDao implements StatusDao {
         return Optional.ofNullable(status);
     }
 
-    private List<Status> findNextStatusesForCurrentStatusById(Long id) {
-        Map<Long, Status> statuses = new HashMap<>();
+    @Override
+    public Optional<Status> findByRequestId(Long requestId) {
+        Status status = null;
+        try (PreparedStatement pst = connection.prepareStatement(
+                STATUS_FIND_BY_REQUEST_ID_QUERY)) {
+            pst.setLong(1, requestId);
+            ResultSet rs = pst.executeQuery();
+            StatusMapper statusMapper = new StatusMapper();
+            if (rs.next()) {
+                status = statusMapper
+                        .extractFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            LOGGER.debug("get status by id sql exception : " + e.getMessage());
+        }
+        close();
+        return Optional.ofNullable(status);
+    }
+
+    @Override
+    public Optional<Status> findByHistoryRequestId(Long historyRequestId) {
+        Status status = null;
+        try (PreparedStatement pst = connection.prepareStatement(
+                STATUS_FIND_BY_HISTORY_REQUEST_ID_QUERY)) {
+            pst.setLong(1, historyRequestId);
+            ResultSet rs = pst.executeQuery();
+            StatusMapper statusMapper = new StatusMapper();
+            if (rs.next()) {
+                status = statusMapper
+                        .extractFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            LOGGER.debug("get status by id sql exception : " + e.getMessage());
+        }
+        close();
+        return Optional.ofNullable(status);
+    }
+
+    public Optional<List<Status>> findNextStatusesForCurrentStatusById(Long id) {
+        List<Status> statuses = new ArrayList<>();
         try (PreparedStatement pst = connection.prepareStatement(
                 STATUS_FIND_NEXT_STATUSES_BY_CURRENT_ID_STATUS_QUERY)) {
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
             StatusMapper statusMapper = new StatusMapper();
             while (rs.next()) {
-                Status status = statusMapper
-                        .extractFromResultSet(rs,
-                                ApplicationConstants.STATUS_QUERY_DEFAULT_PREFIX);
-                statuses.put(status.getId(), status);
+                statuses.add(statusMapper
+                        .extractFromResultSet(rs));
             }
         } catch (SQLException e) {
             LOGGER.debug("find next statuses for status by id" + e.getMessage());
         }
-        return new ArrayList<>(statuses.values());
+        close();
+        return Optional.of(statuses);
     }
 
     @Override
@@ -97,12 +140,9 @@ public class JDBCStatusDao implements StatusDao {
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
             StatusMapper statusMapper = new StatusMapper();
-            while (rs.next()) {
+            if (rs.next()) {
                 status = statusMapper
-                        .extractFromResultSet(rs,
-                                ApplicationConstants.STATUS_QUERY_DEFAULT_PREFIX);
-                status.setNextStatuses(
-                        findNextStatusesForCurrentStatusById(status.getId()));
+                        .extractFromResultSet(rs);
             }
         } catch (SQLException e) {
             LOGGER.debug("get status by id sql exception : " + e.getMessage());
@@ -112,7 +152,7 @@ public class JDBCStatusDao implements StatusDao {
     }
 
     @Override
-    public Page getPage(Page page) {
+    public Page<Status> getPage(Page<Status> page) {
         return null;
     }
 

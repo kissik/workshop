@@ -17,6 +17,9 @@ public interface ApplicationConstants {
         String APP_PASSWORD_ATTRIBUTE = "password";
         String APP_USER_ATTRIBUTE = "user";
         String APP_USERNAME_ATTRIBUTE = "username";
+        String HISTORY_REQUEST_ID_ATTRIBUTE = "id";
+        String HISTORY_REQUEST_REVIEW_ATTRIBUTE = "review";
+        String HISTORY_REQUEST_RATING_ATTRIBUTE = "rating";
         String REQUEST_CAUSE_ATTRIBUTE = "cause";
         String REQUEST_DESCRIPTION_ATTRIBUTE = "description";
         String REQUEST_ID_ATTRIBUTE = "id";
@@ -28,11 +31,15 @@ public interface ApplicationConstants {
     String APP_ANONYMOUS_ACCOUNT_USERNAME = "anonymous";
     int APP_BCRYPT_SALT = 11;
     String APP_ENCODING = "UTF-8";
+
     String APP_DEFAULT_LANGUAGE = "en";
+    Long APP_DEFAULT_ID = -1L;
+    Integer APP_DEFAULT_PRICE = 0;
+    Long APP_DEFAULT_RATING_VALUE = 1L;
+
     String APP_MESSAGES_BUNDLE_NAME = "messages";
     String APP_PATH_REG_EXP = ".*/app/";
     String APP_STRING_DEFAULT_VALUE = "";
-    Integer APP_DEFAULT_PRICE = 0;
     String[] APP_ROLES = new String[]{
             "ADMIN",
             "MANAGER",
@@ -40,9 +47,11 @@ public interface ApplicationConstants {
             "USER"};
     String BUNDLE_ACCESS_DENIED_LOGGED_USERS = "access.denied.logged.user";
     String BUNDLE_ACCESS_DENIED_MESSAGE = "access.denied.message";
-    String BUNDLE_LANGUAGE_FOR_REQUEST = "locale.string";
     String BUNDLE_CURRENCY_STRING = "locale.currency.alpha";
     String BUNDLE_CURRENCY_RATE_INTEGER = "locale.currency.rate";
+    String BUNDLE_DEFAULT_IS_CLOSED_MESSAGE = "app.literal.false";
+    String BUNDLE_LANGUAGE_FOR_REQUEST = "locale.string";
+
     String LOG4J_XML_PATH = "src/main/resources/log4j.xml";
 
     String ROLE_QUERY_DEFAULT_PREFIX = "r";
@@ -58,7 +67,6 @@ public interface ApplicationConstants {
 
     String REQUEST_DEFAULT_STATUS = "REGISTER";
     String REQUEST_WORKMAN_STATUS = "ACCEPT";
-    Long REQUEST_DEFAULT_ID = -1L;
 
     Integer MYSQL_DEFAULT_MAX_OPEN_PREPARED_STATEMENTS = 100;
     Integer MYSQL_DEFAULT_MAX_IDLE = 10;

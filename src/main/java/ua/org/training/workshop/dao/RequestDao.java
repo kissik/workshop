@@ -1,14 +1,20 @@
 package ua.org.training.workshop.dao;
 
-import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Request;
-import ua.org.training.workshop.domain.Status;
 import ua.org.training.workshop.utility.Page;
 
 public interface RequestDao extends GenericDao<Request> {
-    Page getPageByAuthor(Page page, Account author);
+    Page<Request> getPageByAuthor(
+            Page<Request> page,
+            Long authorId);
 
-    Page getPageByLanguageAndAuthor(Page page, String language, Account author);
+    Page<Request> getPageByLanguageAndAuthor(
+            Page<Request> page,
+            String language,
+            Long authorId);
 
-    Page getPageByLanguageAndStatus(Page page, String language, Status status);
+    Page<Request> getPageByLanguageAndStatus(
+            Page<Request> page,
+            String language,
+            Long statusId);
 }

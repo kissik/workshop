@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.AccountDao;
 import ua.org.training.workshop.dao.mapper.AccountMapper;
-import ua.org.training.workshop.dao.mapper.RoleMapper;
 import ua.org.training.workshop.domain.Account;
 import ua.org.training.workshop.domain.Role;
 import ua.org.training.workshop.enums.WorkshopError;
@@ -26,13 +25,24 @@ public class JDBCAccountDao implements AccountDao {
             "CALL APP_PAGINATION_USER_LIST (?, ?, ?, ?, ?);";
     private final static String ACCOUNT_DELETE_ROLES_BY_USER_ID_QUERY =
             " delete from user_role where nuser = ? ";
-    private final static String ACCOUNT_FIND_ROLES_BY_USER_ID_QUERY =
-            " select * from user_role ur" +
-                    " inner join role r " +
-                    " on ur.nrole = r.id" +
-                    " where ur.nuser = ? ";
+    private final static String AUTHOR_FIND_BY_HISTORY_REQUEST_ID_QUERY =
+            " select u.* from user_list u " +
+                    " inner join history_request_list h on u.id = h.nauthor" +
+                    " where h.id = ?";
+    private final static String USER_FIND_BY_HISTORY_REQUEST_ID_QUERY =
+            " select u.* from user_list u " +
+                    " inner join history_request_list h on u.id = h.nuser" +
+                    " where h.id = ?";
     private final static String ACCOUNT_FIND_BY_ID_QUERY =
             " select * from user_list u where u.id = ?";
+    private final static String AUTHOR_FIND_BY_REQUEST_ID_QUERY =
+            " select u.* from user_list u " +
+                    " inner join request_list r on u.id = r.nauthor" +
+                    " where r.id = ?";
+    private final static String USER_FIND_BY_REQUEST_ID_QUERY =
+            " select u.* from user_list u " +
+                    " inner join request_list r on u.id = r.nuser" +
+                    " where r.id = ?";
     private final static String ACCOUNT_FIND_BY_USERNAME_QUERY =
             " select * from user_list u where slogin = ?";
     private final static String ACCOUNT_FIND_BY_PHONE_QUERY =
@@ -67,6 +77,7 @@ public class JDBCAccountDao implements AccountDao {
             LOGGER.error("SQL exception : " + e.getMessage());
             LOGGER.info("Transaction was rollback! <--------------------------------");
             connection.rollback();
+            close();
             throw new WorkshopException(WorkshopError.ACCOUNT_CREATE_NEW_ERROR);
         }
         LOGGER.info("Transaction was successfully committed! <--------------------------------");
@@ -151,51 +162,54 @@ public class JDBCAccountDao implements AccountDao {
     }
 
     @Override
+    public Optional<Account> findAuthorByRequestId(Long id) {
+        return findByUniqueLongAttribute(id, AUTHOR_FIND_BY_REQUEST_ID_QUERY);
+    }
+
+    @Override
+    public Optional<Account> findUserByRequestId(Long id) {
+        return findByUniqueLongAttribute(id, USER_FIND_BY_REQUEST_ID_QUERY);
+    }
+
+    @Override
+    public Optional<Account> findAuthorByHistoryRequestId(Long id) {
+        return findByUniqueLongAttribute(id, AUTHOR_FIND_BY_HISTORY_REQUEST_ID_QUERY);
+    }
+
+    @Override
+    public Optional<Account> findUserByHistoryRequestId(Long id) {
+        return findByUniqueLongAttribute(id, USER_FIND_BY_HISTORY_REQUEST_ID_QUERY);
+    }
+
+    @Override
     public Optional<Account> findById(Long id) {
+        return findByUniqueLongAttribute(id, ACCOUNT_FIND_BY_ID_QUERY);
+    }
+
+    private Optional<Account> findByUniqueLongAttribute(Long id, String query){
+
         AccountMapper accountMapper = new AccountMapper();
         Account account = null;
 
         try (PreparedStatement pst =
                      connection.prepareStatement(
-                             ACCOUNT_FIND_BY_ID_QUERY)) {
+                             query)) {
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
 
-            while (rs.next()) {
-                account = accountMapper.extractFromResultSet(rs,
-                        ApplicationConstants.ACCOUNT_QUERY_DEFAULT_PREFIX);
+            if (rs.next()) {
+                account = accountMapper.extractFromResultSet(rs);
             }
 
         } catch (SQLException e) {
             LOGGER.debug("get account by " + id + " sql exception : " + e.getMessage());
         }
-
-        if (account != null) account.setRoles(findRolesById(account.getId()));
         close();
         return Optional.ofNullable(account);
     }
 
-    private List<Role> findRolesById(Long id) {
-        Map<Long, Role> roles = new HashMap<>();
-        try (PreparedStatement pst = connection.prepareStatement(
-                ACCOUNT_FIND_ROLES_BY_USER_ID_QUERY)) {
-            pst.setLong(1, id);
-            ResultSet rs = pst.executeQuery();
-            RoleMapper roleMapper = new RoleMapper();
-            while (rs.next()) {
-                Role role = roleMapper
-                        .extractFromResultSet(rs,
-                                ApplicationConstants.ROLE_QUERY_DEFAULT_PREFIX);
-                roles.put(role.getId(), role);
-            }
-        } catch (SQLException e) {
-            LOGGER.error("find roles for user by id" + e.getMessage());
-        }
-        return new ArrayList<>(roles.values());
-    }
-
     @Override
-    public Page getPage(Page page) {
+    public Page<Account> getPage(Page<Account> page) {
         List<Account> accounts = new ArrayList<>();
         try (CallableStatement callableStatement =
                      connection.prepareCall(ACCOUNT_FIND_PAGE_CALLABLE_STATEMENT)) {
@@ -208,10 +222,8 @@ public class JDBCAccountDao implements AccountDao {
             page.setTotalElements(callableStatement.getLong("ncount"));
             AccountMapper accountMapper = new AccountMapper();
             while (rs.next()) {
-                Account account = accountMapper
-                        .extractFromResultSet(rs,
-                                ApplicationConstants.ACCOUNT_QUERY_DEFAULT_PREFIX);
-                accounts.add(account);
+                accounts.add(accountMapper
+                        .extractFromResultSet(rs));
             }
         } catch (SQLException e) {
             LOGGER.error("find all SQL exception " + e.getMessage());
@@ -238,7 +250,7 @@ public class JDBCAccountDao implements AccountDao {
 
     @Override
     public Long create(Account account) {
-        return ApplicationConstants.REQUEST_DEFAULT_ID;
+        return ApplicationConstants.APP_DEFAULT_ID;
     }
 
     @Override
@@ -248,36 +260,34 @@ public class JDBCAccountDao implements AccountDao {
 
     @Override
     public Optional<Account> findByUsername(String username) {
-        return findByUniqueAttribute(username,
+        return findByUniqueStringAttribute(username,
                 ACCOUNT_FIND_BY_USERNAME_QUERY);
     }
 
     @Override
     public Optional<Account> findByPhone(String phone) {
-        return findByUniqueAttribute(phone,
+        return findByUniqueStringAttribute(phone,
                 ACCOUNT_FIND_BY_PHONE_QUERY);
     }
 
     @Override
     public Optional<Account> findByEmail(String email) {
-        return findByUniqueAttribute(email,
+        return findByUniqueStringAttribute(email,
                 ACCOUNT_FIND_BY_EMAIL_QUERY);
     }
 
-    private Optional<Account> findByUniqueAttribute(String uniqueAttribute,
-                                                    String query) {
+    private Optional<Account> findByUniqueStringAttribute(String uniqueAttribute,
+                                                          String query) {
         Account account = null;
         try (PreparedStatement pst =
                      connection.prepareStatement(query)) {
             pst.setString(1, uniqueAttribute);
             ResultSet rs = pst.executeQuery();
             AccountMapper accountMapper = new AccountMapper();
-            while (rs.next()) {
+            if (rs.next()) {
                 account = accountMapper
-                        .extractFromResultSet(rs,
-                                ApplicationConstants.ACCOUNT_QUERY_DEFAULT_PREFIX);
+                        .extractFromResultSet(rs);
             }
-            if (account != null) account.setRoles(findRolesById(account.getId()));
         } catch (SQLException e) {
             LOGGER.error("get account by " + uniqueAttribute + " sql exception : " + e.getMessage());
         }
@@ -285,3 +295,4 @@ public class JDBCAccountDao implements AccountDao {
         return Optional.ofNullable(account);
     }
 }
+

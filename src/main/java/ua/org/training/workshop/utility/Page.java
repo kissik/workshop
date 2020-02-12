@@ -1,16 +1,19 @@
 package ua.org.training.workshop.utility;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * @author kissik
  */
-public class Page {
+public class Page<T> {
     private Long pageNumber;
     private Long size;
     private String sorting;
     private String search;
     private Long totalElements;
     private String language;
-    private Object content;
+    private Optional<List<T>> content;
 
     public Long getPageNumber() {
         return pageNumber;
@@ -56,11 +59,11 @@ public class Page {
         this.totalElements = totalElements;
     }
 
-    public Object getContent() {
+    public Optional<List<T>> getContent() {
         return content;
     }
 
-    public void setContent(Object content) {
+    public void setContent(Optional<List<T>> content) {
         this.content = content;
     }
 
