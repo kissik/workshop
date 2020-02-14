@@ -1,7 +1,7 @@
 [![Awesome][icon-awesome]][awesome]
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-# Workshop  
+# workshop  
 <div align="center">
 	<img src="src/main/webapp/img/print-screen.png" alt="workshop">
 </div>

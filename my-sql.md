@@ -5,8 +5,8 @@
 1. [Download](https://dev.mysql.com/downloads/mysql/) MySQL server  
 1. Install MySQL server  
 1. Start MySQL server  
-1. run [scheme.sql](src/main/resources/scheme.sql)  
-1. run [data.sql](src/main/resources/data.sql)  
+1. run [scheme.sql](src/main/resources/mysql/scheme.sql)  
+1. run [data.sql](src/main/resources/mysql/data.sql)  
 1. Configure [application.properties](src/main/resources/application.properties):  
 ```mysql.url.connection.string=jdbc:mysql://```**localhost:3306**```/workshop?useUnicode=yes&characterEncoding=UTF-8```  
 ```mysql.user=```**user**  
