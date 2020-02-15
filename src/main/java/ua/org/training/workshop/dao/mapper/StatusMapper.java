@@ -12,7 +12,7 @@ public class StatusMapper implements ObjectMapper<Status> {
         status.setId(rs.getLong("s.id"));
         status.setCode(rs.getString("s.scode"));
         status.setName(rs.getString("s.sname"));
-        status.setClose(rs.getBoolean("s.bclose"));
+        status.setClosed(rs.getBoolean("s.bclosed"));
         return status;
     }
 }

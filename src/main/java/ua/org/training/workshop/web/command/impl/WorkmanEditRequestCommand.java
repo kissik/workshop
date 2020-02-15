@@ -35,7 +35,7 @@ public class WorkmanEditRequestCommand implements Command {
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
         Long id = Utility.tryParseLong(request.getParameter(ApplicationConstants.RequestAttributes.REQUEST_ID_ATTRIBUTE),
-                        ApplicationConstants.APP_DEFAULT_ID);
+                ApplicationConstants.APP_DEFAULT_ID);
         try {
             Request editRequest = requestService.getRequestById(id);
             Account user = accountService.getAccountByUsername(
@@ -51,7 +51,7 @@ public class WorkmanEditRequestCommand implements Command {
 
             editRequest.setStatus(newStatus);
             editRequest.setUser(user);
-            editRequest.setClosed(newStatus.isClose());
+            editRequest.setClosed(newStatus.isClosed());
             requestService.updateRequest(editRequest);
         } catch (WorkshopException e) {
             LOGGER.error("custom error message: " + e.getMessage());

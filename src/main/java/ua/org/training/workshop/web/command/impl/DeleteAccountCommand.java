@@ -33,7 +33,7 @@ public class DeleteAccountCommand implements Command {
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
         Long id = Utility.tryParseLong(request.getParameter(ApplicationConstants.RequestAttributes.ACCOUNT_ID_ATTRIBUTE),
-                        ApplicationConstants.APP_DEFAULT_ID);
+                ApplicationConstants.APP_DEFAULT_ID);
         try {
             Account deleteAccount = accountService.getAccountById(id);
 

@@ -15,7 +15,7 @@ public class RequestMapper implements ObjectMapper<Request> {
         request.setClosed(rs.getBoolean("r.bclosed"));
         request.setPrice(rs.getBigDecimal("r.nprice"));
         request.setCause(rs.getString("r.scause"));
-        request.setLanguage(rs.getString("r.slang"));
+        request.setLanguage(rs.getString("r.slanguage"));
         return request;
     }
 }

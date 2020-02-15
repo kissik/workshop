@@ -36,14 +36,14 @@ public class ManagerEditRequestCommand implements Command {
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
         Long id = Utility.tryParseLong(request.getParameter(ApplicationConstants.RequestAttributes.REQUEST_ID_ATTRIBUTE),
-                        ApplicationConstants.APP_DEFAULT_ID);
+                ApplicationConstants.APP_DEFAULT_ID);
         try {
             Request editRequest = requestService.getRequestById(id);
             BigDecimal price = BigDecimal.valueOf(Utility.tryParseInteger(
                     request.getParameter(
                             ApplicationConstants
                                     .RequestAttributes.REQUEST_PRICE_ATTRIBUTE),
-                            ApplicationConstants.APP_DEFAULT_PRICE));
+                    ApplicationConstants.APP_DEFAULT_PRICE));
             Account user = accountService.getAccountByUsername(
                     SecurityService.getCurrentUserName(request.getSession())
             );
@@ -62,7 +62,7 @@ public class ManagerEditRequestCommand implements Command {
             editRequest.setUser(user);
             editRequest.setPrice(price);
             editRequest.setCause(cause);
-            editRequest.setClosed(newStatus.isClose());
+            editRequest.setClosed(newStatus.isClosed());
             requestService.updateRequest(editRequest);
         } catch (WorkshopException e) {
             LOGGER.error("custom error message: " + e.getMessage());

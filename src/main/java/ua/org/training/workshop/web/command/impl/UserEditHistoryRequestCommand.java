@@ -30,7 +30,7 @@ public class UserEditHistoryRequestCommand implements Command {
     public String execute(HttpServletRequest request,
                           HttpServletResponse response) {
         Long id = Utility.tryParseLong(request.getParameter(ApplicationConstants.RequestAttributes.HISTORY_REQUEST_ID_ATTRIBUTE),
-                        ApplicationConstants.APP_DEFAULT_ID);
+                ApplicationConstants.APP_DEFAULT_ID);
         try {
             HistoryRequest editHistoryRequest = historyRequestService.getHistoryRequestById(id);
             LOGGER.info("upload history request : " + editHistoryRequest.getTitle());
@@ -42,7 +42,7 @@ public class UserEditHistoryRequestCommand implements Command {
                         Utility.getParameterString(
                                 request.getParameter(ApplicationConstants
                                         .RequestAttributes.HISTORY_REQUEST_REVIEW_ATTRIBUTE),
-                        ApplicationConstants.APP_STRING_DEFAULT_VALUE));
+                                ApplicationConstants.APP_STRING_DEFAULT_VALUE));
                 editHistoryRequest.setRating(Utility.tryParseLong(
                         request.getParameter(ApplicationConstants
                                 .RequestAttributes.HISTORY_REQUEST_RATING_ATTRIBUTE),

@@ -71,7 +71,7 @@ public class JDBCRequestDao implements RequestDao {
             if (request.isClosed())
                 deleteRequest(request.getId());
             connection.commit();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             LOGGER.error("update request error : " + e.getMessage());
             LOGGER.info("Transaction was rollback! <--------------------------------");
             connection.rollback();
@@ -148,7 +148,7 @@ public class JDBCRequestDao implements RequestDao {
         return requestMapper.extractFromResultSet(rs);
     }
 
-    private void deleteRequest(Long id){
+    private void deleteRequest(Long id) {
         LOGGER.info("try to delete request by id");
         try (PreparedStatement pst =
                      connection.prepareStatement(

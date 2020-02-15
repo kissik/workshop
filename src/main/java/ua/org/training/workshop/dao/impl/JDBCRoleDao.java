@@ -12,7 +12,9 @@ import ua.org.training.workshop.utility.ApplicationConstants;
 import ua.org.training.workshop.utility.Page;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class JDBCRoleDao implements RoleDao {
 

@@ -15,7 +15,8 @@ public interface Pages {
 
     String MANAGER_PAGE = "/WEB-INF/jsp/manager/page.jsp";
     String MANAGER_PAGE_REDIRECT = "redirect:app/manager/page";
-    String MANAGER_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESS = "redirect:app/manager/page?updated=true";;
+    String MANAGER_PAGE_REDIRECT_UPDATE_REQUEST_SUCCESS = "redirect:app/manager/page?updated=true";
+    ;
 
     String REGISTRATION_FORM_OK = "redirect:app/login";
     String REGISTRATION_FORM_PAGE = "/WEB-INF/registration-form.jsp";

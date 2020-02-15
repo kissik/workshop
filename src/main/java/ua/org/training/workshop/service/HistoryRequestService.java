@@ -85,7 +85,7 @@ public class HistoryRequestService {
     }
 
     private HistoryRequest loadAggregateFields(HistoryRequest historyRequest) {
-        try{
+        try {
             historyRequest.setStatus(historyRequestRepository
                     .createStatusDao()
                     .findByHistoryRequestId(historyRequest.getId())
@@ -98,7 +98,7 @@ public class HistoryRequestService {
                     .createAccountDao()
                     .findUserByHistoryRequestId(historyRequest.getId())
                     .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR)));
-        }catch(WorkshopException e){
+        } catch (WorkshopException e) {
             LOGGER.error("load aggreagate fields error : " + e.getMessage());
         }
         return historyRequest;
@@ -107,7 +107,7 @@ public class HistoryRequestService {
     public void update(HistoryRequest historyRequest) {
         try {
             historyRequestRepository.createHistoryRequestDao().update(historyRequest);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             LOGGER.error("update history request error : " + e.getMessage());
         }
         LOGGER.info("history request " + historyRequest.getTitle() + " was successfully changed");

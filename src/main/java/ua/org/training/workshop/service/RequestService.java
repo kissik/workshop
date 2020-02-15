@@ -4,7 +4,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import ua.org.training.workshop.dao.DaoFactory;
-import ua.org.training.workshop.domain.HistoryRequest;
 import ua.org.training.workshop.domain.Request;
 import ua.org.training.workshop.domain.Status;
 import ua.org.training.workshop.enums.WorkshopError;
@@ -13,7 +12,6 @@ import ua.org.training.workshop.utility.ApplicationConstants;
 import ua.org.training.workshop.utility.Page;
 import ua.org.training.workshop.utility.PageService;
 import ua.org.training.workshop.utility.Utility;
-import ua.org.training.workshop.web.dto.HistoryRequestDTO;
 import ua.org.training.workshop.web.dto.RequestDTO;
 
 import java.sql.SQLException;
@@ -122,7 +120,7 @@ public class RequestService {
     }
 
     private Request loadAggregateFields(Request request) {
-        try{
+        try {
             Status status = requestRepository
                     .createStatusDao()
                     .findByRequestId(request.getId())
@@ -141,14 +139,14 @@ public class RequestService {
                     .createAccountDao()
                     .findUserByRequestId(request.getId())
                     .orElseThrow(() -> new WorkshopException(WorkshopError.ACCOUNT_NOT_FOUND_ERROR)));
-        }catch(WorkshopException e){
+        } catch (WorkshopException e) {
             LOGGER.error("load aggreagate fields error : " + e.getMessage());
         }
         return request;
     }
 
     public void updateRequest(Request request) {
-        try{
+        try {
             requestRepository.createRequestDao().update(request);
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());

@@ -13,7 +13,9 @@ import ua.org.training.workshop.utility.ApplicationConstants;
 import ua.org.training.workshop.utility.Page;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class JDBCAccountDao implements AccountDao {
 
@@ -127,11 +129,11 @@ public class JDBCAccountDao implements AccountDao {
     public void delete(Long id) throws SQLException {
         LOGGER.info("Start transaction! --------------------------------> ");
         connection.setAutoCommit(false);
-        try{
+        try {
             deleteAllAccountRoles(id);
             deleteAccount(id);
             connection.commit();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             LOGGER.error("SQL exception : " + e.getMessage());
             LOGGER.info("Transaction was rollback! <--------------------------------");
             connection.rollback();
@@ -141,10 +143,10 @@ public class JDBCAccountDao implements AccountDao {
         close();
     }
 
-    private void deleteAccount(Long id) throws SQLException{
+    private void deleteAccount(Long id) throws SQLException {
         PreparedStatement preparedStatement =
-                     connection.prepareStatement(
-                             ACCOUNT_DELETE_BY_ID_QUERY);
+                connection.prepareStatement(
+                        ACCOUNT_DELETE_BY_ID_QUERY);
         preparedStatement.setLong(1, id);
         preparedStatement.execute();
     }
@@ -214,7 +216,7 @@ public class JDBCAccountDao implements AccountDao {
         return findByUniqueLongAttribute(id, ACCOUNT_FIND_BY_ID_QUERY);
     }
 
-    private Optional<Account> findByUniqueLongAttribute(Long id, String query){
+    private Optional<Account> findByUniqueLongAttribute(Long id, String query) {
 
         AccountMapper accountMapper = new AccountMapper();
         Account account = null;

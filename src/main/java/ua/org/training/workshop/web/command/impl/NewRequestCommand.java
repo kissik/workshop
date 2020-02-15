@@ -52,7 +52,7 @@ public class NewRequestCommand implements Command {
             newRequest.setStatus(status);
             newRequest.setAuthor(author);
             newRequest.setUser(author);
-            newRequest.setClosed(status.isClose());
+            newRequest.setClosed(status.isClosed());
             newRequest.setLanguage(
                     Utility.getLanguageString(
                             Utility.getLocale(request)));

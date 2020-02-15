@@ -29,8 +29,8 @@ public class SessionLocaleFilter implements Filter {
                 .RequestAttributes
                 .APP_LANG_ATTRIBUTE;
         if ((req.getParameter(languageAttribute) != null) &&
-            (!req.getParameter(languageAttribute)
-                    .equals(req.getSession().getAttribute(languageAttribute)))) {
+                (!req.getParameter(languageAttribute)
+                        .equals(req.getSession().getAttribute(languageAttribute)))) {
             req.getSession().setAttribute(languageAttribute,
                     req.getParameter(languageAttribute));
             LOGGER.debug("locale was changed on: " + req.getParameter(languageAttribute));

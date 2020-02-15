@@ -16,6 +16,7 @@ public class SessionListener implements HttpSessionListener {
     }
 
     private final static Logger LOGGER = Logger.getLogger(SessionListener.class);
+
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
 
@@ -26,7 +27,7 @@ public class SessionListener implements HttpSessionListener {
         try {
             SecurityService.removeLoggedUserContext(httpSessionEvent
                     .getSession());
-        }catch(WorkshopException e){
+        } catch (WorkshopException e) {
             LOGGER.info(e.getMessage());
         }
     }

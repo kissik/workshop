@@ -2,7 +2,7 @@ package ua.org.training.workshop.utility;
 
 public interface ApplicationConstants {
 
-    interface RequestAttributes{
+    interface RequestAttributes {
         String ACCOUNT_CONFIRM_PASSWORD_ATTRIBUTE = "confirmPassword";
         String ACCOUNT_FIRST_NAME_ATTRIBUTE = "firstName";
         String ACCOUNT_FIRST_NAME_ORIGIN_ATTRIBUTE = "firstNameOrigin";

@@ -10,7 +10,7 @@ public class Status {
     private Long id;
     private String code;
     private String name;
-    private boolean close;
+    private boolean closed;
     private Collection<Status> nextStatuses = new HashSet<>();
 
     public Long getId() {
@@ -37,12 +37,12 @@ public class Status {
         this.name = name;
     }
 
-    public boolean isClose() {
-        return close;
+    public boolean isClosed() {
+        return closed;
     }
 
-    public void setClose(boolean close) {
-        this.close = close;
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public Collection<Status> getNextStatuses() {

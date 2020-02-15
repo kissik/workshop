@@ -15,7 +15,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class JDBCStatusDao implements StatusDao {
 
@@ -26,7 +28,7 @@ public class JDBCStatusDao implements StatusDao {
     private final static String STATUS_FIND_NEXT_STATUSES_BY_CURRENT_ID_STATUS_QUERY =
             " select * from next_statuses ns " +
                     " inner join status s " +
-                    " on ns.nnextstatus = s.id " +
+                    " on ns.nnext_status = s.id " +
                     " where ns.nstatus = ? ";
 
     private static final String STATUS_FIND_BY_HISTORY_REQUEST_ID_QUERY =

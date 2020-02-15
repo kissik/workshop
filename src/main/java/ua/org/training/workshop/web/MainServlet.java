@@ -23,8 +23,10 @@ public class MainServlet extends HttpServlet {
     static {
         new DOMConfigurator().doConfigure(ApplicationConstants.LOG4J_XML_PATH, LogManager.getLoggerRepository());
     }
+
     private final static Logger LOGGER = Logger.getLogger(MainServlet.class);
     private Map<String, Command> commands = new HashMap<>();
+
     public void init() {
         commands.put("access-denied", new AccessDeniedCommand());
         commands.put("admin/page", new AdminPageCommand());
