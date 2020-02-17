@@ -24,15 +24,7 @@ public class JDBCSecurityDao implements SecurityDao {
 
     private final static Logger LOGGER = Logger.getLogger(JDBCSecurityDao.class);
 
-    private final static Connection connection = getConnection();
-
-    private static Connection getConnection() {
-        try {
-            return ConnectionPoolHolder.getDataSource().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private final static Connection connection = ConnectionPoolHolder.getConnection();
 
     @Override
     public String findPasswordByUsername(String username) {
@@ -44,9 +36,11 @@ public class JDBCSecurityDao implements SecurityDao {
             if (rs.next()) {
                 password = rs.getString("spassword");
             }
+            pst.close();
         } catch (SQLException e) {
             LOGGER.debug("get password by " + username + " sql exception : " + e.getMessage());
         }
+
         return password;
     }
 

@@ -31,7 +31,7 @@
                         <input type="password" class="form-control" id="password" name="password"  placeholder="<fmt:message key="login.password.input" />">
     				</div>
     				<div class="form-group">
-    					<div class="col-sm-2"><input class="btn btn-primary" type="submit" value="<fmt:message key="login.in" />" /></div>
+    					<input class="btn btn-primary" type="submit" value="<fmt:message key="login.in" />" />
     				</div>
             </form>
         </div>
